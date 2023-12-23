@@ -16,6 +16,7 @@ type Inquiry = {
 type InquiryStore = {
   inquiry: Inquiry;
   setItemInquiry: (i: Inquiry) => void;
+  resetInquiry: () => void;
 };
 const useInquiryItem = create<InquiryStore>((set) => ({
   inquiry: {
@@ -33,6 +34,24 @@ const useInquiryItem = create<InquiryStore>((set) => ({
   setItemInquiry: (i) => {
     set((state) => {
       return { inquiry: i };
+    });
+  },
+  resetInquiry: () => {
+    set((state) => {
+      return {
+        inquiry: {
+          CustomerName: "",
+          CustomerAddress: "",
+          SalesPerson: "",
+          PortOfOrigin: "",
+          PortOfDestination: "",
+          Weight: "",
+          Dimensions: "",
+          TransitTime: "",
+          ShipmentTerms: "",
+          CarrierName: "",
+        },
+      };
     });
   },
 }));

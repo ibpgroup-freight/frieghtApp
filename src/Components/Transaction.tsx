@@ -23,7 +23,7 @@ function Transaction() {
   const stepNextText: stepNextText = {
     0: "Inquiry",
     1: "Quotation",
-    2: "Generate Job",
+    2: "View Job",
   };
   return (
     <div className="w-full flex flex-col items-center space-y-10">

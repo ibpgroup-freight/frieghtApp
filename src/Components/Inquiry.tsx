@@ -81,7 +81,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
       <div className="px-5 flex justify-between w-full">
         <div className="flex flex-col space-y-1">
           {Column1Items.map((i) => (
-            <div key={i.name}>
+            <div key={i.name} className="px-4">
               <label className="text-xl" key={i.name}>
                 {i.label}
               </label>
@@ -102,7 +102,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
         </div>
         <div className="flex flex-col space-y-1">
           {Column2.map((i) => (
-            <div key={i.name}>
+            <div key={i.name} className="px-4">
               <label className="text-xl" key={i.name}>
                 {i.label}
               </label>
@@ -123,7 +123,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
         </div>
         <div className="flex flex-col space-y-1">
           {Column3.map((i) => (
-            <div key={i.name}>
+            <div key={i.name} className="px-4">
               <label className="text-xl" key={i.name}>
                 {i.label}
               </label>

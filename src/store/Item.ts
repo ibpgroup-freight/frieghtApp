@@ -14,6 +14,7 @@ type ItemsStore = {
   items: Item[];
   AddItem: (item: Item) => void;
   RemoveItem: (id: string) => void;
+  resetItems: () => void;
 };
 const useItemStore = create<ItemsStore>((set) => ({
   totalItems: 0,
@@ -31,6 +32,11 @@ const useItemStore = create<ItemsStore>((set) => ({
         totalItems: state.totalItems - 1,
         items: state.items.filter((i) => i.id !== id),
       };
+    });
+  },
+  resetItems: () => {
+    set((state) => {
+      return { totalItems: 0, items: [] };
     });
   },
 }));
