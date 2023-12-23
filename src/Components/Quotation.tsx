@@ -2,6 +2,7 @@ import React, { useState, useReducer } from "react";
 import AddQuotation from "./AddQuotation";
 import { useContext } from "react";
 import { ModalCtx } from "../store/Modal";
+import useItemStore from "../store/Item";
 type InquiryAndQuotationProps = {
   step: number;
   setstepNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -47,6 +48,7 @@ const QuotationReducer = (state: initialState, action: action) => {
 };
 function Quotation(props: InquiryAndQuotationProps) {
   const ctx = useContext(ModalCtx);
+  const { items } = useItemStore();
   const [state, dispatch] = useReducer(QuotationReducer, initialState);
   const [showQuotation, setshowQuotation] = useState(false);
   const Column1 = [
@@ -59,34 +61,65 @@ function Quotation(props: InquiryAndQuotationProps) {
     { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
   return (
-    <div className={`px-5 flex justify-evenly w-full relativ`}>
-      {showQuotation && <AddQuotation closeQuotation={setshowQuotation} />}
-      <table className="border border-slate-400 border-spacing-x-10 border-spacing-y-2">
-        <thead>
-          <tr>
-            {Column1.map((i) => (
-              <th className="border border-slate-300 p-4">{i.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            {Column1.map((i) => (
-              <td className="border border-slate-300 p-4">{i.label}</td>
-            ))}
-          </tr>
-        </tbody>
-      </table>
-      <div className="absolute right-40">
+    <div>
+      <div className={`px-5 flex justify-evenly w-full relativ`}>
+        {showQuotation && <AddQuotation closeQuotation={setshowQuotation} />}
+        <table className="border border-slate-400 border-spacing-x-10 border-spacing-y-2">
+          <thead>
+            <tr>
+              {Column1.map((i) => (
+                <th className="border border-slate-300 p-4" key={i.name}>
+                  {i.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          {items && (
+            <tbody>
+              {items.map((i) => (
+                <tr>
+                  <td className="border border-slate-300 p-4">
+                    {i.QuoteValidity}
+                  </td>
+                  <td className="border border-slate-300 p-4">{i.Charges}</td>
+                  <td className="border border-slate-300 p-4">
+                    {i.ChargeDescription}
+                  </td>
+                  <td className="border border-slate-300 p-4">{i.UnitPerKg}</td>
+                  <td className="border border-slate-300 p-4">{i.Currency}</td>
+                  <td className="border border-slate-300 p-4">
+                    {i.AmountPerUnit}
+                  </td>
+                  <td className="border border-slate-300 p-4">
+                    {i.CostAndSellSection}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </table>
+        <div className="absolute right-40">
+          <button
+            className="text-2xl rounded-full text-green-600"
+            onClick={(e) => {
+              console.log("Here");
+              setshowQuotation(true);
+              ctx.setToggle();
+            }}
+          >
+            + Add
+          </button>
+        </div>
+      </div>
+      <div className="flex w-full justify-center">
         <button
-          className="text-2xl rounded-full text-green-600"
-          onClick={(e) => {
-            console.log("Here");
-            setshowQuotation(true);
-            ctx.setToggle();
+          className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
+          onClick={() => {
+            console.log("Done");
+            props.setstepNumber((p) => p + 1);
           }}
         >
-          + Add
+          Proceed To {props.actionName}
         </button>
       </div>
     </div>

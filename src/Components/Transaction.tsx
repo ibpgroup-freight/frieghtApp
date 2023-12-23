@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Inquiry from "../Components/Inquiry";
 import Quotation from "./Quotation";
+import GenerateJob from "./GenerateJob";
 type InquiryAndQuotationProps = {
   step: number;
   setstepNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -17,7 +18,7 @@ function Transaction() {
   const stepNumber: StepVal = {
     0: (props) => <Inquiry {...props} />,
     1: (props) => <Quotation {...props} />,
-    2: () => <div>"Generate Job",</div>,
+    2: (props) => <GenerateJob {...props} />,
   };
   const stepNextText: stepNextText = {
     0: "Inquiry",

@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import useInquiryItem from "../store/Inquiry";
 type InquiryAndQuotationProps = {
   step: number;
   setstepNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -57,6 +58,8 @@ const InquiryReducer = (state: initialState, action: action) => {
 };
 function Inquiry(props: InquiryAndQuotationProps) {
   const [state, dispatch] = useReducer(InquiryReducer, initialState);
+  const { inquiry, setItemInquiry } = useInquiryItem();
+  console.log(inquiry);
   const Column1Items = [
     { label: "Enter Customer Name", name: "CustomerName" },
     { label: "Enter Customer Address", name: "CustomerAddress" },
@@ -139,6 +142,16 @@ function Inquiry(props: InquiryAndQuotationProps) {
             </div>
           ))}
         </div>
+      </div>
+      <div className="flex w-full justify-center">
+        <button
+          className="bg-blue-500 text-white rounded-md px-5 py-3 text-2xl text-center"
+          onClick={() => {
+            setItemInquiry(state);
+          }}
+        >
+          Add Inquiry
+        </button>
       </div>
       <div className="flex w-full justify-center">
         <button

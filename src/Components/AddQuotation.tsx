@@ -1,13 +1,57 @@
 import React from "react";
 import { useContext } from "react";
 import { ModalCtx } from "../store/Modal";
+import useItemStore from "../store/Item";
 type qprops = {
   closeQuotation: React.Dispatch<React.SetStateAction<boolean>>;
 };
+type InitialState = {
+  id: string;
+  QuoteValidity: string;
+  Charges: string;
+  ChargeDescription: string;
+  UnitPerKg: string;
+  Currency: string;
+  AmountPerUnit: string;
+  CostAndSellSection: string;
+};
+type action = {
+  type: keyof InitialState;
+  payload: {
+    value: string;
+  };
+};
+const InitialState: InitialState = {
+  id: "",
+  QuoteValidity: "",
+  Charges: "",
+  ChargeDescription: "",
+  UnitPerKg: "",
+  Currency: "",
+  AmountPerUnit: "",
+  CostAndSellSection: "",
+};
+const AddQuotationReducer = (state: InitialState, action: action) => {
+  switch (action.type) {
+    case "AmountPerUnit":
+    case "ChargeDescription":
+    case "Charges":
+    case "CostAndSellSection":
+    case "Currency":
+    case "QuoteValidity":
+    case "UnitPerKg":
+      return { ...state, [action.type]: action.payload.value };
+    default:
+      return { ...state };
+  }
+};
 function AddQuotation({ closeQuotation }: qprops) {
   const [val, setval] = React.useState("");
-  const ctx = useContext(ModalCtx);
+  const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
+  const { AddItem, items } = useItemStore();
 
+  const ctx = useContext(ModalCtx);
+  console.log("stateItems", items);
   const Column1 = [
     { label: "Quote Validity", name: "QuoteValidity" },
     { label: "Charges", name: "Charges" },
@@ -34,13 +78,21 @@ function AddQuotation({ closeQuotation }: qprops) {
       <div className="flex justify-evenly">
         <div className="flex flex-col space-y-2 items-center">
           {Column1.map((i) => (
-            <div className="flex flex-col items-center justify-start">
+            <div
+              className="flex flex-col items-center justify-start"
+              key={i.name}
+            >
               <label className="text-xl">{i.name}</label>
               <input
                 type="text"
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
-                value={val}
-                onChange={(e) => setval(e.target.value)}
+                value={state[i.name as keyof InitialState]}
+                onChange={(e) =>
+                  dispatch({
+                    type: i.name as keyof InitialState,
+                    payload: { value: e.target.value },
+                  })
+                }
                 name={i.name}
               />
             </div>
@@ -48,13 +100,21 @@ function AddQuotation({ closeQuotation }: qprops) {
         </div>
         <div className="flex flex-col space-y-3 items-center">
           {Column2.map((i) => (
-            <div className="flex flex-col items-center justify-start">
+            <div
+              className="flex flex-col items-center justify-start"
+              key={i.name}
+            >
               <label className="text-xl">{i.name}</label>
               <input
                 type="text"
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
-                value={val}
-                onChange={(e) => setval(e.target.value)}
+                value={state[i.name as keyof InitialState]}
+                onChange={(e) =>
+                  dispatch({
+                    type: i.name as keyof InitialState,
+                    payload: { value: e.target.value },
+                  })
+                }
                 name={i.name}
               />
             </div>
@@ -63,7 +123,14 @@ function AddQuotation({ closeQuotation }: qprops) {
       </div>
 
       <div className="flex justify-center mt-5">
-        <button className="p-4 bg-blue-600 text-white rounded-md">
+        <button
+          className="p-4 bg-blue-600 text-white rounded-md"
+          onClick={() => {
+            AddItem(state);
+            closeQuotation((p) => !p);
+            ctx.setToggle();
+          }}
+        >
           Submit
         </button>
       </div>
