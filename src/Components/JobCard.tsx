@@ -1,5 +1,6 @@
 import React from "react";
 import useJob from "../store/Jobs";
+import { useNavigate } from "react-router-dom";
 
 type Inquiry = {
   CustomerName: string;
@@ -24,6 +25,7 @@ type Item = {
   CostAndSellSection: string;
 };
 type Job = {
+  id: string;
   inquiry: Inquiry;
   Items: Item[];
 };
@@ -31,50 +33,39 @@ type pageProps = {
   job: Job;
 };
 function JobCard({ job }: pageProps) {
-  const Column1 = [
-    { label: "Quote Validity", name: "QuoteValidity" },
-    { label: "Charges", name: "Charges" },
-    { label: "Charge Description", name: "ChargeDescription" },
-    { label: "Unit Per Kg", name: "UnitPerKg" },
-    { label: "Currency", name: "Currency" },
-    { label: "Amount Per Unit", name: "AmountPerUnit" },
-    { label: "Cost And Sell Section", name: "CostAndSellSection" },
-  ];
+  const navigate = useNavigate();
   return (
-    <div>
-      <table className="border border-slate-400 border-spacing-x-10 border-spacing-y-2">
-        <thead>
-          <tr>
-            {Column1.map((i) => (
-              <th className="border border-slate-300 p-4" key={i.name}>
-                {i.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        {job && (
-          <tbody>
-            {job.Items.map((i) => (
-              <tr>
-                <td className="border border-slate-300 p-4">{i.QuoteValidity}</td>
-                <td className="border border-slate-300 p-4">{i.Charges}</td>
-                <td className="border border-slate-300 p-4">
-                  {i.ChargeDescription}
-                </td>
-                <td className="border border-slate-300 p-4">{i.UnitPerKg}</td>
-                <td className="border border-slate-300 p-4">{i.Currency}</td>
-                <td className="border border-slate-300 p-4">
-                  {i.AmountPerUnit}
-                </td>
-                <td className="border border-slate-300 p-4">
-                  {i.CostAndSellSection}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        )}
-      </table>
-    </div>
+    <>
+      {job && (
+        <>
+          {job.Items.map((i) => (
+            <>
+              <td className="border border-slate-300 p-4">{job.id}</td>
+
+              <td className="border border-slate-300 p-4">{i.QuoteValidity}</td>
+              <td className="border border-slate-300 p-4">{i.Charges}</td>
+              <td className="border border-slate-300 p-4">
+                {i.ChargeDescription}
+              </td>
+              <td className="border border-slate-300 p-4">{i.UnitPerKg}</td>
+              <td className="border border-slate-300 p-4">{i.Currency}</td>
+              <td className="border border-slate-300 p-4">{i.AmountPerUnit}</td>
+              <td className="border border-slate-300 p-4">
+                {i.CostAndSellSection}
+              </td>
+              <td
+                className="border border-slate-300 p-4 cursor-pointer"
+                onClick={() => {
+                  navigate(`/jobDetail/${job.id}`, { state: { job:job } });
+                }}
+              >
+                Edit
+              </td>
+            </>
+          ))}
+        </>
+      )}
+    </>
   );
 }
 

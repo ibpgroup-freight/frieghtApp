@@ -77,7 +77,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
     { label: "Enter Carrier Name", name: "CarrierName" },
   ];
   return (
-    <div className="w-full flex flex-col justify-center space-y-10 py-12">
+    <div className="w-full flex flex-col justify-center space-y-7 py-5">
       <div className="px-5 flex justify-between w-full">
         <div className="flex flex-col space-y-1">
           {Column1Items.map((i) => (
@@ -87,6 +87,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
               </label>
               <input
                 type="text"
+                required
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
                 name={i.name}
                 value={state[i.name as keyof initialState]}
@@ -108,6 +109,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
               </label>
               <input
                 type="text"
+                required
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
                 name={i.name}
                 value={state[i.name as keyof initialState]}
@@ -129,6 +131,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
               </label>
               <input
                 type="text"
+                required
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
                 name={i.name}
                 value={state[i.name as keyof initialState]}
@@ -143,7 +146,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
           ))}
         </div>
       </div>
-      <div className="flex w-full justify-center">
+      {/* <div className="flex w-full justify-center">
         <button
           className="bg-blue-500 text-white rounded-md px-5 py-3 text-2xl text-center"
           onClick={() => {
@@ -152,16 +155,17 @@ function Inquiry(props: InquiryAndQuotationProps) {
         >
           Add Inquiry
         </button>
-      </div>
+      </div> */}
       <div className="flex w-full justify-center">
         <button
           className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
           onClick={() => {
             console.log("Done");
+            setItemInquiry(state);
             props.setstepNumber((p) => p + 1);
           }}
         >
-          Proceed To {props.actionName}
+          Add And Proceed To {props.actionName}
         </button>
       </div>
     </div>

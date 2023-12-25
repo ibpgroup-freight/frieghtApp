@@ -24,6 +24,7 @@ type Item = {
   CostAndSellSection: string;
 };
 type Job = {
+  id: string;
   inquiry: Inquiry;
   Items: Item[];
 };

@@ -3,9 +3,11 @@ import logo from "./logo.svg";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Header from "./Components/Header";
-import Dashboard from "./Pages/Dashboard";
 import SideBar from "./Components/SIdeBar";
-const Home = React.lazy(() => import("./Pages/Home"));
+const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
+const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
+const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
+
 function App() {
   return (
     <div className="App">
@@ -14,8 +16,9 @@ function App() {
         <SideBar />
         <Suspense fallback={<div>Loading</div>}>
           <Routes>
-            <Route path="/home" Component={Home} />
-            <Route path="/dashboard" Component={Dashboard} />
+            <Route path="/home" Component={CreateJob} />
+            <Route path="/" Component={Dashboard} />
+            <Route path="/jobDetail/:id" Component={JobDetail} />
           </Routes>
         </Suspense>
       </div>

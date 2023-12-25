@@ -2,7 +2,35 @@ import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
-// Create styles
+import { useSearchParams } from "react-router-dom";
+type Inquiry = {
+  CustomerName: string;
+  CustomerAddress: string;
+  SalesPerson: string;
+  PortOfOrigin: string;
+  PortOfDestination: string;
+  Weight: string;
+  Dimensions: string;
+  TransitTime: string;
+  ShipmentTerms: string;
+  CarrierName: string;
+};
+type Item = {
+  id: string;
+  QuoteValidity: string;
+  Charges: string;
+  ChargeDescription: string;
+  UnitPerKg: string;
+  Currency: string;
+  AmountPerUnit: string;
+  CostAndSellSection: string;
+};
+type Job = {
+  id: string;
+  inquiry: Inquiry;
+  Items: Item[];
+};
+
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
@@ -47,10 +75,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-
-function JobPDF() {
+type jobPdfProps = {
+  job?: Job;
+};
+function JobPDF({ job }: jobPdfProps) {
   const { inquiry } = useInquiryItem();
-  const { items } = useItemStore();
+  const { items: itemStoreItems } = useItemStore();
+  const items = job ? job.Items : itemStoreItems;
   return (
     <PDFViewer className="w-3/4 h-full">
       <Document>
@@ -65,48 +96,64 @@ function JobPDF() {
             <View style={{ justifyContent: "flex-start" }}>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Customer Name</Text>
-                <Text style={styles.inquiryText}>{inquiry.CustomerName}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.CustomerName : inquiry.CustomerName}
+                </Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Customer Address</Text>
                 <Text style={styles.inquiryText}>
-                  {inquiry.CustomerAddress}
+                  {job ? job.inquiry.CustomerName : inquiry.CustomerAddress}
                 </Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Sales Person</Text>
-                <Text style={styles.inquiryText}>{inquiry.SalesPerson}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.SalesPerson : inquiry.SalesPerson}
+                </Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>CarrierName</Text>
-                <Text style={styles.inquiryText}>{inquiry.CarrierName}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.CarrierName : inquiry.CarrierName}
+                </Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Weight</Text>
-                <Text style={styles.inquiryText}>{inquiry.Weight}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.Weight : inquiry.Weight}
+                </Text>
               </View>
             </View>
             <View style={{ justifyContent: "flex-start" }}>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Customer Address</Text>
-                <Text style={styles.inquiryText}>{inquiry.Dimensions}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.Dimensions : inquiry.Dimensions}
+                </Text>
               </View>
 
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Port Of Destination</Text>
                 <Text style={styles.inquiryText}>
-                  {inquiry.PortOfDestination}
+                  {job
+                    ? job.inquiry.PortOfDestination
+                    : inquiry.PortOfDestination}
                 </Text>
               </View>
 
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Port Of Origin</Text>
-                <Text style={styles.inquiryText}>{inquiry.PortOfOrigin}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.PortOfOrigin : inquiry.PortOfOrigin}
+                </Text>
               </View>
 
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Transit Time</Text>
-                <Text style={styles.inquiryText}>{inquiry.TransitTime}</Text>
+                <Text style={styles.inquiryText}>
+                  {job ? job.inquiry.TransitTime : inquiry.TransitTime}
+                </Text>
               </View>
             </View>
 
