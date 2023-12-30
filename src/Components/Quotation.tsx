@@ -62,7 +62,7 @@ function Quotation(props: InquiryAndQuotationProps) {
   ];
   return (
     <div>
-      <div className={`px-5 flex justify-evenly w-full`}>
+      <div className={`px-5 flex justify-evenly w-full relative`}>
         {showQuotation && <AddQuotation closeQuotation={setshowQuotation} />}
         <table className="border border-slate-400 border-spacing-x-10 border-spacing-y-2">
           <thead>

@@ -5,9 +5,12 @@ import {
   faPlaneDeparture,
   faTruck,
   faShip,
+  faFileInvoiceDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
+import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
 function SideBar() {
   const Options = [
     {
@@ -28,22 +31,33 @@ function SideBar() {
       option: "RoadFreightDropDown",
       icon: faTruck,
     },
+    {
+      path: "/generateInvoice",
+      name: "Invoice",
+      icon: faFileInvoiceDollar,
+    },
+    {
+      path: "/manageContacts",
+      name: "Contacts",
+      icon: faAddressBook,
+    },
   ];
   const [showDropDown, setShowDropDown] = useState("");
+  const navigate = useNavigate();
   console.log(showDropDown);
   return (
-    <aside className="bg-blue-600 text-white flex flex-col w-1/6 items-center h-screen py-20">
+    <aside className="bg-blue-600 text-white flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center h-screen py-20">
       <ul className="space-y-10 w-full">
         {Options.map((o) => (
           <li
-            className="text-2xl relative flex flex-row justify-between px-4 items-center"
+            className="text-2xl relative flex flex-row justify-between px-4 items-center cursor-pointer"
             key={o.path}
-            onMouseEnter={() => setShowDropDown(o.name)}
+            onMouseEnter={() => (o.option ? setShowDropDown(o.name) : () => {})}
             onMouseLeave={() => setShowDropDown("")}
+            onClick={() => (!o.option ? navigate(`${o.path}`) : () => {})}
           >
             {o.name}
             <FontAwesomeIcon icon={o.icon as IconProp} />
-
             {showDropDown === o.name && (
               <div className="absolute top-full z-20">
                 <DropDown dropdown={o.option as keyof DropdownType} />

@@ -2,8 +2,19 @@ import React from "react";
 import { useContext } from "react";
 import { ModalCtx } from "../store/Modal";
 import useItemStore from "../store/Item";
+type Item = {
+  id: string;
+  QuoteValidity: string;
+  Charges: string;
+  ChargeDescription: string;
+  UnitPerKg: string;
+  Currency: string;
+  AmountPerUnit: string;
+  CostAndSellSection: string;
+};
 type qprops = {
   closeQuotation: React.Dispatch<React.SetStateAction<boolean>>;
+  AddItemToInvoice?: (item: Item) => void;
 };
 type InitialState = {
   id: string;
@@ -45,13 +56,12 @@ const AddQuotationReducer = (state: InitialState, action: action) => {
       return { ...state };
   }
 };
-function AddQuotation({ closeQuotation }: qprops) {
+function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
   const [val, setval] = React.useState("");
   const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
   const { AddItem, items } = useItemStore();
 
   const ctx = useContext(ModalCtx);
-  console.log("stateItems", items);
   const Column1 = [
     { label: "Quote Validity", name: "QuoteValidity" },
     { label: "Charges", name: "Charges" },
@@ -64,7 +74,7 @@ function AddQuotation({ closeQuotation }: qprops) {
     { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
   return (
-    <div className="absolute bg-white w-9/12 border border-slate-500 z-50 py-10 rounded-md">
+    <div className="left-0 right-0 absolute bg-white border border-slate-500 z-50 py-10 rounded-md">
       <div
         className="text-white bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl absolute right-9"
         onClick={(e) => {
@@ -126,7 +136,7 @@ function AddQuotation({ closeQuotation }: qprops) {
         <button
           className="p-4 bg-blue-600 text-white rounded-md"
           onClick={() => {
-            AddItem(state);
+            !AddItemToInvoice ? AddItem(state) : AddItemToInvoice(state);
             closeQuotation((p) => !p);
             ctx.setToggle();
           }}

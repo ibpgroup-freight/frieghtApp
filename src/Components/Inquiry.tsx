@@ -16,6 +16,7 @@ const initialState = {
   TransitTime: "",
   ShipmentTerms: "",
   CarrierName: "",
+  ContainerType: "",
 };
 type initialState = {
   CustomerName: string;
@@ -28,6 +29,7 @@ type initialState = {
   TransitTime: string;
   ShipmentTerms: string;
   CarrierName: string;
+  ContainerType: string;
 };
 type actionType = keyof initialState;
 type action = {
@@ -47,6 +49,7 @@ const InquiryReducer = (state: initialState, action: action) => {
     case "Dimensions":
     case "TransitTime":
     case "ShipmentTerms":
+    case "ContainerType":
     case "CarrierName":
       return {
         ...state,
@@ -61,20 +64,25 @@ function Inquiry(props: InquiryAndQuotationProps) {
   const { inquiry, setItemInquiry } = useInquiryItem();
   console.log(inquiry);
   const Column1Items = [
-    { label: "Enter Customer Name", name: "CustomerName" },
-    { label: "Enter Customer Address", name: "CustomerAddress" },
-    { label: "Enter Sales Person", name: "SalesPerson" },
-    { label: "Enter Port Of Origin", name: "PortOfOrigin" },
-    { label: "Enter Port Of Destination", name: "PortOfDestination" },
+    { label: "Enter Customer Name", name: "CustomerName", type: "text" },
+    { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
+    { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
+    { label: "Enter Port Of Origin", name: "PortOfOrigin", type: "text" },
+    {
+      label: "Enter Port Of Destination",
+      name: "PortOfDestination",
+      type: "text",
+    },
   ];
   const Column2 = [
-    { label: "Enter Weight", name: "Weight" },
-    { label: "Enter Dimensions", name: "Dimensions" },
-    { label: "Enter Transit Time", name: "TransitTime" },
+    { label: "Enter Weight", name: "Weight", type: "number" },
+    { label: "Enter Dimensions", name: "Dimensions", type: "number" },
+    { label: "Enter Transit Time", name: "TransitTime", type: "date" },
+    { label: "Container Type", name: "ContainerType", type: "text" },
   ];
   const Column3 = [
-    { label: "Enter Shipment Terms", name: "ShipmentTerms" },
-    { label: "Enter Carrier Name", name: "CarrierName" },
+    { label: "Enter Shipment Terms", name: "ShipmentTerms", type: "text" },
+    { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
   ];
   return (
     <div className="w-full flex flex-col justify-center space-y-7 py-5">
@@ -86,7 +94,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
                 {i.label}
               </label>
               <input
-                type="text"
+                type={i.type}
                 required
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
                 name={i.name}
@@ -108,7 +116,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
                 {i.label}
               </label>
               <input
-                type="text"
+                type={i.type}
                 required
                 className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
                 name={i.name}
