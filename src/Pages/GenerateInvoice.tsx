@@ -73,12 +73,12 @@ function GenerateInvoice() {
 
   const [items, setitems] = useState<Item[]>([]);
   const Column1 = [
-    { label: "Quote Validity", name: "QuoteValidity" },
-    { label: "Charges", name: "Charges" },
-    { label: "Charge Description", name: "ChargeDescription" },
-    { label: "Unit Per Kg", name: "UnitPerKg" },
-    { label: "Currency", name: "Currency" },
-    { label: "Amount Per Unit", name: "AmountPerUnit" },
+    { label: "Quote Validity", name: "QuoteValidity", type: "text" },
+    { label: "Charges", name: "Charges", type: "text" },
+    { label: "Charge Description", name: "ChargeDescription", type: "text" },
+    { label: "Unit Per Kg", name: "UnitPerKg", type: "number" },
+    { label: "Currency", name: "Currency", type: "number" },
+    { label: "Amount Per Unit", name: "AmountPerUnit", type: "number" },
     { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
   const Column1Items = [
