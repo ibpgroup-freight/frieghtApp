@@ -1,44 +1,25 @@
 import { create } from "zustand";
-import Inquiry from "../Components/Inquiry";
-
-type Inquiry = {
-  CustomerName: string;
-  CustomerAddress: string;
-  SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
-  Weight: string;
-  Dimensions: string;
-  TransitTime: string;
-  ShipmentTerms: string;
-  CarrierName: string;
-};
-type Item = {
-  id: string;
-  QuoteValidity: string;
-  Charges: string;
-  ChargeDescription: string;
-  UnitPerKg: string;
-  Currency: string;
-  AmountPerUnit: string;
-  CostAndSellSection: string;
-};
-type Job = {
-  id: string;
-  inquiry: Inquiry;
-  Items: Item[];
-};
-type JobStore = {
-  Jobs: Job[];
-  setJob: (i: Job) => void;
-};
-const useJob = create<JobStore>((set) => ({
+import { db } from "../firebase";
+import { addDoc, collection } from "firebase/firestore";
+const useJob = create<JobStore>((set, get) => ({
   Jobs: [],
-  setJob: (j) => {
-    set((state) => {
-      state.Jobs.push(j);
-      return { ...state };
-    });
+  populateJobs: (j) => {
+    set((state) => ({ ...state, Jobs: j }));
+  },
+  setJob: async (j) => {
+    try {
+      await addDoc(collection(db, "jobs"), {
+        inquiry: j.inquiry,
+        Items: j.Items,
+        jobid: j.jobid,
+      });
+      set((state) => {
+        state.Jobs.push(j);
+        return { ...state };
+      });
+    } catch (e) {
+      throw e;
+    }
   },
 }));
 

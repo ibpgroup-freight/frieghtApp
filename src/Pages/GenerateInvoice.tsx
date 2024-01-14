@@ -4,7 +4,7 @@ import AddQuotation from "../Components/AddQuotation";
 import { ModalCtx } from "../store/Modal";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-const initialState = {
+const inq = {
   CustomerName: "",
   CustomerAddress: "",
   SalesPerson: "",
@@ -15,27 +15,9 @@ const initialState = {
   TransitTime: "",
   ShipmentTerms: "",
   CarrierName: "",
+  ContainerType: "",
 };
-type initialState = {
-  CustomerName: string;
-  CustomerAddress: string;
-  SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
-  Weight: string;
-  Dimensions: string;
-  TransitTime: string;
-  ShipmentTerms: string;
-  CarrierName: string;
-};
-type actionType = keyof initialState;
-type action = {
-  type: actionType;
-  payload: {
-    value: string;
-  };
-};
-const InquiryReducer = (state: initialState, action: action) => {
+const InquiryReducer = (state: Inquiry, action: action) => {
   switch (action.type) {
     case "CustomerName":
     case "CustomerAddress":
@@ -56,22 +38,12 @@ const InquiryReducer = (state: initialState, action: action) => {
   }
 };
 
-type Item = {
-  id: string;
-  QuoteValidity: string;
-  Charges: string;
-  ChargeDescription: string;
-  UnitPerKg: string;
-  Currency: string;
-  AmountPerUnit: string;
-  CostAndSellSection: string;
-};
 function GenerateInvoice() {
   const [showQuotation, setshowQuotation] = useState(false);
   const ctx = useContext(ModalCtx);
-  const [state, dispatch] = React.useReducer(InquiryReducer, initialState);
+  const [state, dispatch] = React.useReducer(InquiryReducer, inq);
 
-  const [items, setitems] = useState<Item[]>([]);
+  const [items, setitems] = useState<QuotationItem[]>([]);
   const Column1 = [
     { label: "Quote Validity", name: "QuoteValidity", type: "text" },
     { label: "Charges", name: "Charges", type: "text" },
@@ -97,7 +69,9 @@ function GenerateInvoice() {
         {showQuotation && (
           <AddQuotation
             closeQuotation={setshowQuotation}
-            AddItemToInvoice={(item: Item) => setitems((p) => [...p, item])}
+            AddItemToInvoice={(item: QuotationItem) =>
+              setitems((p) => [...p, item])
+            }
           />
         )}
       </div>
@@ -120,12 +94,12 @@ function GenerateInvoice() {
               <input
                 type="text"
                 required
-                className="border-2 border-slate-300 px-2 py-1 rounded-md w-full focus:outline-none "
+                className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
                 name={i.name}
-                value={state[i.name as keyof initialState]}
+                value={state[i.name as keyof Inquiry]}
                 onChange={(e) =>
                   dispatch({
-                    type: i.name as keyof initialState,
+                    type: i.name as keyof Inquiry,
                     payload: { value: e.target.value },
                   })
                 }
@@ -138,8 +112,8 @@ function GenerateInvoice() {
         <h1 className="text-xl text-center text-blue-900 font-serif">
           Add Services
         </h1>
-        <div className={`px-5 flex justify-evenly w-full`}>
-          <table className="border border-slate-400 border-spacing-x-10 border-spacing-y-2">
+        <div className="w-3/5 md:w-full overflow-auto">
+          <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
             <thead>
               <tr>
                 {Column1.map((i) => (

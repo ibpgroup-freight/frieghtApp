@@ -11,7 +11,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
-function SideBar() {
+function SideBar({ showSideBar }: { showSideBar: boolean }) {
   const Options = [
     {
       path: "/airfreight",
@@ -44,9 +44,12 @@ function SideBar() {
   ];
   const [showDropDown, setShowDropDown] = useState("");
   const navigate = useNavigate();
-  console.log(showDropDown);
   return (
-    <aside className="bg-blue-600 text-white flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center h-screen py-20">
+    <aside
+      className={`bg-blue-600 z-9999  fixed w-3/5 md:relative lg:block text-white md:flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center h-screen py-20 ${
+        showSideBar ? "block" : "hidden"
+      }`}
+    >
       <ul className="space-y-10 w-full">
         {Options.map((o) => (
           <li

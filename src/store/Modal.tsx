@@ -1,9 +1,6 @@
 import React, { createContext, useState } from "react";
 
-type Model = {
-  toggle: boolean;
-  setToggle: () => void;
-};
+
 export const ModalCtx = createContext<Model>({
   toggle: false,
   setToggle: () => {},

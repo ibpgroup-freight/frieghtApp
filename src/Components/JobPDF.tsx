@@ -3,33 +3,6 @@ import useItemStore from "../store/Item";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useSearchParams } from "react-router-dom";
-type Inquiry = {
-  CustomerName: string;
-  CustomerAddress: string;
-  SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
-  Weight: string;
-  Dimensions: string;
-  TransitTime: string;
-  ShipmentTerms: string;
-  CarrierName: string;
-};
-type Item = {
-  id: string;
-  QuoteValidity: string;
-  Charges: string;
-  ChargeDescription: string;
-  UnitPerKg: string;
-  Currency: string;
-  AmountPerUnit: string;
-  CostAndSellSection: string;
-};
-type Job = {
-  id: string;
-  inquiry: Inquiry;
-  Items: Item[];
-};
 
 const styles = StyleSheet.create({
   page: {

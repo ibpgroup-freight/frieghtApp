@@ -10,6 +10,9 @@ import InvoicePdf from "./Components/InvoicePdf";
 import useUser from "./store/User";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase";
+import "react-toastify/dist/ReactToastify.css";
+import HamburgerIcon from "./Components/Hamburger";
+import { ToastContainer } from "react-toastify";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -20,6 +23,7 @@ const GenerateInvoice = React.lazy(() => import("./Pages/GenerateInvoice"));
 function App() {
   const { isloggedIn, AuthStateLogIn } = useUser();
   const [isloading, setisloading] = useState(true);
+  const [showSideBar, setshowSideBar] = useState<boolean>(false);
   useEffect(() => {
     setisloading((p) => true);
     const sub = onAuthStateChanged(auth, (user) => {
@@ -62,11 +66,22 @@ function App() {
           </div>
         }
       >
+        <ToastContainer
+          position="top-right"
+          
+        />
         {isloggedIn ? (
           <div>
+            <HamburgerIcon
+              onClick={() => {
+                console.log("Clicked");
+                setshowSideBar((p) => !p);
+              }}
+            />
+
             <Header />
             <div className="flex">
-              <SideBar />
+              <SideBar showSideBar={showSideBar} />
               <Routes>
                 <Route path="/home" Component={CreateJob} />
                 <Route path="/" Component={Dashboard} />

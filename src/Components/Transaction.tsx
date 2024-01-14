@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Inquiry from "../Components/Inquiry";
 import Quotation from "./Quotation";
 import GenerateJob from "./GenerateJob";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeftLong } from "@fortawesome/free-solid-svg-icons";
 type InquiryAndQuotationProps = {
@@ -29,14 +29,17 @@ function Transaction() {
     2: "View Job",
   };
   const [searchparams, setsearchparams] = useSearchParams();
+  const state = useLocation();
+  useEffect(() => {}, []);
   console.log("searchparams", searchparams.get("method"));
+  console.log("State", state);
   return (
-    <div className="w-full flex flex-col items-center space-y-10 px-5">
+    <div className="w-full flex flex-col items-center p-1 md:space-y-10 md:px-5">
       <div className="w-full space-y-5 mt-5 flex flex-col ">
-        <div className="flex flex-row items-center justify-start">
+        <div className="flex flex-col lg:flex-row items-start md:items-center justify-start">
           {step !== 0 && (
             <button
-              className="bg-blue-700 flex items-center text-white rounded-md px-6 py-2 text-2xl my-5"
+              className="bg-blue-700 flex items-center text-white rounded-md px-6 py-2 text-2xl lg:my-5"
               onClick={() => {
                 setstep((p) => p - 1);
               }}

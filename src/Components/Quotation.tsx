@@ -3,21 +3,9 @@ import AddQuotation from "./AddQuotation";
 import { useContext } from "react";
 import { ModalCtx } from "../store/Modal";
 import useItemStore from "../store/Item";
-type InquiryAndQuotationProps = {
-  step: number;
-  setstepNumber: React.Dispatch<React.SetStateAction<number>>;
-  actionName: string;
-};
-type initialState = {
-  QuoteValidity: string;
-  Charges: string;
-  ChargeDescription: string;
-  UnitPerKg: string;
-  Currency: string;
-  AmountPerUnit: string;
-  CostAndSellSection: string;
-};
-const initialState = {
+
+const quotation: QuotationItem = {
+  id: "",
   QuoteValidity: "",
   Charges: "",
   ChargeDescription: "",
@@ -26,13 +14,8 @@ const initialState = {
   AmountPerUnit: "",
   CostAndSellSection: "",
 };
-type action = {
-  type: keyof initialState;
-  payload: {
-    value: string;
-  };
-};
-const QuotationReducer = (state: initialState, action: action) => {
+
+const QuotationReducer = (state: QuotationItem, action: QuotationAction) => {
   switch (action.type) {
     case "AmountPerUnit":
     case "ChargeDescription":
@@ -49,7 +32,7 @@ const QuotationReducer = (state: initialState, action: action) => {
 function Quotation(props: InquiryAndQuotationProps) {
   const ctx = useContext(ModalCtx);
   const { items } = useItemStore();
-  const [state, dispatch] = useReducer(QuotationReducer, initialState);
+  const [state, dispatch] = useReducer(QuotationReducer, quotation);
   const [showQuotation, setshowQuotation] = useState(false);
   const Column1 = [
     { label: "Quote Validity", name: "QuoteValidity" },
@@ -62,42 +45,49 @@ function Quotation(props: InquiryAndQuotationProps) {
   ];
   return (
     <div>
-      <div className={`px-5 flex justify-evenly w-full relative`}>
+      <div className={`md:px-5 flex justify-evenly  w-full `}>
         {showQuotation && <AddQuotation closeQuotation={setshowQuotation} />}
-        <table className="border border-slate-400 border-spacing-x-10 border-spacing-y-2">
-          <thead>
-            <tr>
-              {Column1.map((i) => (
-                <th className="border border-slate-300 p-4" key={i.name}>
-                  {i.label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          {items && (
-            <tbody>
-              {items.map((i) => (
-                <tr>
-                  <td className="border border-slate-300 p-4">
-                    {i.QuoteValidity}
-                  </td>
-                  <td className="border border-slate-300 p-4">{i.Charges}</td>
-                  <td className="border border-slate-300 p-4">
-                    {i.ChargeDescription}
-                  </td>
-                  <td className="border border-slate-300 p-4">{i.UnitPerKg}</td>
-                  <td className="border border-slate-300 p-4">{i.Currency}</td>
-                  <td className="border border-slate-300 p-4">
-                    {i.AmountPerUnit}
-                  </td>
-                  <td className="border border-slate-300 p-4">
-                    {i.CostAndSellSection}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-        </table>
+        <div className="w-3/5 md:w-full overflow-auto">
+          <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
+            <thead>
+              <tr>
+                {Column1.map((i) => (
+                  <th className="border border-slate-300 p-4" key={i.name}>
+                    {i.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            {items && (
+              <tbody>
+                {items.map((i) => (
+                  <tr>
+                    <td className="border border-slate-300 p-4">
+                      {i.QuoteValidity}
+                    </td>
+                    <td className="border border-slate-300 p-4">{i.Charges}</td>
+                    <td className="border border-slate-300 p-4">
+                      {i.ChargeDescription}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      {i.UnitPerKg}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      {i.Currency}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      {i.AmountPerUnit}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      {i.CostAndSellSection}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
+          </table>
+        </div>
+
         <div className="absolute right-40">
           <button
             className="text-2xl rounded-full text-green-600"

@@ -6,11 +6,6 @@ import {
 import { auth } from "../firebase.js";
 import useUser from "../store/User";
 import { useNavigate } from "react-router-dom";
-interface registrationTypes {
-  displayName: string;
-  email: string;
-  password: string;
-}
 
 function Authenticate() {
   const [Loading, setLoading] = useState(false);
