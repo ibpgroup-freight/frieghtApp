@@ -6,6 +6,8 @@ import useItemStore from "../store/Item";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { toast } from "react-toastify";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 type InquiryAndQuotationProps = {
   step: number;
   setstepNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -17,6 +19,7 @@ function GenerateJob(props: InquiryAndQuotationProps) {
   const { items, resetItems } = useItemStore();
   const [searchparams, setsearchparams] = useSearchParams();
   const JobMode = searchparams.get("method");
+  const isEditing = searchparams.get("editJob");
   const JobInitials = JobMode?.slice(-2);
   const [isloading, setisloading] = useState<boolean>(false);
 
@@ -26,12 +29,20 @@ function GenerateJob(props: InquiryAndQuotationProps) {
   const createJob = useCallback(async () => {
     try {
       setisloading((p) => true);
-      await setJob({
-        inquiry,
-        Items: items,
-        jobid:
-          JobInitials + `-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-      });
+      if (isEditing) {
+        await updateDoc(doc(db, "jobs", isEditing), {
+          inquiry,
+          Items: items,
+        });
+      } else {
+        await setJob({
+          inquiry,
+          Items: items,
+          jobid:
+            JobInitials + `-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+        });
+      }
+
       resetInquiry();
       resetItems();
       navigate("/");
@@ -41,7 +52,7 @@ function GenerateJob(props: InquiryAndQuotationProps) {
     } finally {
       setisloading((p) => false);
     }
-  }, [items, JobInitials, inquiry]);
+  }, [items, JobInitials, inquiry, isEditing]);
   return (
     <div className="w-full h-5/6 relative -top-10 flex justify-evenly py-2">
       <JobPDF />
