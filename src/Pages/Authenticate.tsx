@@ -6,9 +6,9 @@ import {
 import { auth } from "../firebase.js";
 import useUser from "../store/User";
 import { useNavigate } from "react-router-dom";
-
+import CustomLoader from "../Components/CustomLoader";
 function Authenticate() {
-  const [Loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState<boolean>(false);
   const [signup, setsignup] = useState(false);
   const { AuthStateLogIn } = useUser();
   const nameRef = useRef<HTMLInputElement | null>(null);
@@ -75,17 +75,19 @@ function Authenticate() {
           ref={passwordRef}
         />
         <button
-          className="bg-blue-600 text-white rounded-md px-2 py-3 "
+          className="bg-sky-500 text-white rounded-md px-2 py-3 "
           onClick={signup ? registerUser : logInUser}
+          disabled={Loading}
         >
-          Submit
+          {Loading ? <CustomLoader customStyle="h-3 w-12 color-white" /> : "Submit"}
         </button>
-        <h1
+
+        <button
           className="cursor-pointer text-violet-700"
           onClick={() => setsignup((p) => !p)}
         >
           {signup ? "Login" : "Signup"} Instead
-        </h1>
+        </button>
       </div>
     </section>
   );
