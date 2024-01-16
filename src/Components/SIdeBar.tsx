@@ -46,7 +46,7 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
   const navigate = useNavigate();
   return (
     <aside
-      className={`bg-blue-600 z-9999  fixed w-3/5 md:relative lg:block text-white md:flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center h-screen py-20 ${
+      className={`bg-blue-600 z-9999  absolute w-3/5 md:relative lg:block text-white md:flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center min-h-screen py-20 ${
         showSideBar ? "block" : "hidden"
       }`}
     >

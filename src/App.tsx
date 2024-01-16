@@ -15,6 +15,7 @@ import HamburgerIcon from "./Components/Hamburger";
 import { ToastContainer } from "react-toastify";
 import CustomLoader from "./Components/CustomLoader";
 import { FormikProvider } from "formik";
+import TestingInvoice from "./Components/TestingInvoice";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/generateInvoice" Component={GenerateInvoice} />
                 <Route path="/manageContacts" Component={Contacts} />
                 <Route path="/invoicePdf" Component={InvoicePdf} />
+                <Route path="/testPdf" Component={TestingInvoice} />
 
                 <Route path="*" Component={NotFound} />
               </Routes>

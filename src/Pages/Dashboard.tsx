@@ -21,9 +21,14 @@ function Dashboard() {
   ];
   const { Jobs, populateJobs } = useJob();
   const [loading, setisloading] = useState<boolean>(false);
+  const [refresh, setrefresh] = useState<boolean>(false);
+
   const navigate = useNavigate();
   useEffect(() => {
     getJobs();
+  }, [refresh]);
+  const handleDelete = useCallback(() => {
+    setrefresh(true);
   }, []);
   const getJobs = useCallback(async () => {
     try {
@@ -39,6 +44,7 @@ function Dashboard() {
       toast.error("Couldnt Fetch Jobs ,Try Again");
     } finally {
       setisloading(false);
+      setrefresh(false);
     }
   }, [populateJobs]);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -77,7 +83,7 @@ function Dashboard() {
               {Jobs &&
                 currentItems.map((j) => (
                   <tr key={j.id}>
-                    <JobCard job={j} key={j.jobid} />
+                    <JobCard job={j} key={j.jobid} ondelete={handleDelete} />
                   </tr>
                 ))}
             </tbody>

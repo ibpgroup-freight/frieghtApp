@@ -56,7 +56,7 @@ type ItemsStore = {
   AddItem: (item: QuotationItem) => void;
   RemoveItem: (id: string) => void;
   resetItems: () => void;
-  setitemsArray: (items:QuotationItem[]) => void;
+  setitemsArray: (items: QuotationItem[]) => void;
 };
 
 type Job = {
@@ -87,3 +87,29 @@ interface registrationTypes {
   email: string;
   password: string;
 }
+
+type InvoiceStore = {
+  jobInfo: cargoInfo;
+  Items: QuotationItem[];
+  setInfo: (j: cargoInfo) => void;
+  setItems: (j: QuotationItem[]) => void;
+};
+
+type cargoInfo = {
+  CustomerName: string;
+  CustomerAddress: string;
+  SalesPerson: string;
+  PortOfOrigin: string;
+  PortOfDestination: string;
+  TransitTime: string;
+  CarrierName: string;
+  ContainerType: string;
+  TodaysDate: string;
+  CustomerPhone: string;
+  CustomerEmail: string;
+  CustomerTRN: string;
+  Jobid: string;
+  Discount: number;
+  OutstandingDues: number;
+  VATAmount: number;
+};
