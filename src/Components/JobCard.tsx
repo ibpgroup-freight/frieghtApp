@@ -18,7 +18,7 @@ function JobCard({ job }: pageProps) {
     job && (
       <>
         {job.Items?.map((i) => (
-          <>
+          <React.Fragment key={i.id}>
             <td className="border border-slate-300 p-4 text-blue-500 font-bold">
               {job.jobid}
             </td>
@@ -34,7 +34,14 @@ function JobCard({ job }: pageProps) {
             <td className="border border-slate-300 p-4">
               {i.CostAndSellSection}
             </td>
-            <td className=" flex space-x-2 px-2 justify-center self-center my-2 items-center">
+            <td className=" flex flex-col space-y-2 px-2 justify-center self-center my-2 items-start">
+              <ButtonBlue
+                text="View"
+                onclick={() => {
+                  navigate(`/jobDetail/${job.jobid}`, { state: { job: job } });
+                }}
+                customStyle={"bg-yellow-500"}
+              />
               <ButtonBlue
                 text="Edit"
                 onclick={() => {
@@ -51,7 +58,7 @@ function JobCard({ job }: pageProps) {
                 customStyle={"bg-red-400"}
               />
             </td>
-          </>
+          </React.Fragment>
         ))}
       </>
     )

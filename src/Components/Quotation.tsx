@@ -3,6 +3,8 @@ import AddQuotation from "./AddQuotation";
 import { useContext } from "react";
 import { ModalCtx } from "../store/Modal";
 import useItemStore from "../store/Item";
+import useInquiryItem from "../store/Inquiry";
+import { toast } from "react-toastify";
 
 const quotation: QuotationItem = {
   id: "",
@@ -32,6 +34,7 @@ const QuotationReducer = (state: QuotationItem, action: QuotationAction) => {
 function Quotation(props: InquiryAndQuotationProps) {
   const ctx = useContext(ModalCtx);
   const { items } = useItemStore();
+  const { inquiry } = useInquiryItem();
   const [state, dispatch] = useReducer(QuotationReducer, quotation);
   const [showQuotation, setshowQuotation] = useState(false);
   const Column1 = [
@@ -43,6 +46,7 @@ function Quotation(props: InquiryAndQuotationProps) {
     { label: "Amount Per Unit", name: "AmountPerUnit" },
     { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
+  console.log("Inq", inquiry);
   return (
     <div>
       <div className={`md:px-5 flex justify-evenly  w-full `}>
@@ -105,7 +109,7 @@ function Quotation(props: InquiryAndQuotationProps) {
         <button
           className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
           onClick={() => {
-            console.log("Done");
+            if (items.length <= 0) return toast.info("Add Some Items First");
             props.setstepNumber((p) => p + 1);
           }}
         >

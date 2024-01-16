@@ -13,6 +13,8 @@ import { auth } from "./firebase";
 import "react-toastify/dist/ReactToastify.css";
 import HamburgerIcon from "./Components/Hamburger";
 import { ToastContainer } from "react-toastify";
+import CustomLoader from "./Components/CustomLoader";
+import { FormikProvider } from "formik";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -37,39 +39,11 @@ function App() {
     });
     return () => sub();
   }, []);
-  if (isloading)
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        <Oval
-          visible={true}
-          height="80"
-          width="80"
-          color="#0000FF"
-          secondaryColor="#0000FF"
-          ariaLabel="oval-loading"
-        />
-      </div>
-    );
+  if (isloading) return <CustomLoader />;
   return (
     <div className="App">
-      <Suspense
-        fallback={
-          <div className="w-full h-screen flex justify-center items-center">
-            <Oval
-              visible={true}
-              height="80"
-              width="80"
-              color="#0000FF"
-              secondaryColor="#0000FF"
-              ariaLabel="oval-loading"
-            />
-          </div>
-        }
-      >
-        <ToastContainer
-          position="top-right"
-          
-        />
+      <Suspense fallback={<CustomLoader />}>
+        <ToastContainer position="top-right" />
         {isloggedIn ? (
           <div>
             <HamburgerIcon
