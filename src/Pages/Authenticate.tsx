@@ -75,11 +75,15 @@ function Authenticate() {
           ref={passwordRef}
         />
         <button
-          className="bg-sky-500 text-white rounded-md px-2 py-3 "
+          className="bg-sky-500  text-white rounded-md px-2 py-3 "
           onClick={signup ? registerUser : logInUser}
           disabled={Loading}
         >
-          {Loading ? <CustomLoader customStyle="h-3 w-12 color-white" /> : "Submit"}
+          {Loading ? (
+            <CustomLoader customStyle="w-17 !h-12 color-white" height={50} />
+          ) : (
+            "Submit"
+          )}
         </button>
 
         <button

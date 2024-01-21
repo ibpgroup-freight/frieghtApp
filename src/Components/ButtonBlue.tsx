@@ -14,7 +14,11 @@ function ButtonBlue(props: {
       onClick={props.onclick}
       disabled={props.disabled}
     >
-      {!props.isloading ? props.text : <CustomLoader customStyle="w-8 h-12" />}
+      {!props.isloading ? (
+        props.text
+      ) : (
+        <CustomLoader customStyle="w-8 !h-12" height={18} />
+      )}
     </button>
   );
 }

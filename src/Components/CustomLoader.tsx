@@ -1,13 +1,19 @@
 import React from "react";
 import { Oval } from "react-loader-spinner";
-function CustomLoader({ customStyle }: { customStyle?: string }) {
+function CustomLoader({
+  customStyle,
+  height,
+}: {
+  customStyle?: string;
+  height?: number;
+}) {
   return (
     <div
       className={`w-full h-screen flex justify-center items-center ${customStyle}`}
     >
       <Oval
         visible={true}
-        height={customStyle ? "18" : "80"}
+        height={height ? height : "80"}
         width={customStyle ? "22" : "80"}
         color="#0000FF"
         secondaryColor="#0000FF"

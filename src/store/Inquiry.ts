@@ -12,6 +12,7 @@ type Inquiry = {
   TransitTime: string;
   ShipmentTerms: string;
   CarrierName: string;
+  CustomContainerType: string;
   ContainerType: string;
 };
 type InquiryStore = {
@@ -32,6 +33,7 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     ShipmentTerms: "",
     ContainerType: "",
     CarrierName: "",
+    CustomContainerType: "",
   },
   setItemInquiry: (i) => {
     set((state) => {
@@ -53,6 +55,7 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           ShipmentTerms: "",
           CarrierName: "",
           ContainerType: "",
+          CustomContainerType: "",
         },
       };
     });

@@ -34,6 +34,7 @@ type Inquiry = {
   ShipmentTerms: string;
   CarrierName: string;
   ContainerType: string;
+  CustomContainerType: string;
 };
 type actionType = keyof Inquiry;
 type action = {

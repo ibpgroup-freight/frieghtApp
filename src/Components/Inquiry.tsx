@@ -2,61 +2,85 @@ import React, { useReducer } from "react";
 import useInquiryItem from "../store/Inquiry";
 import * as Yup from "yup";
 import { ErrorMessage, Field, useFormik, FormikProvider } from "formik";
-const validationSchema = Yup.object().shape({
-  CustomerName: Yup.string()
-    .required("Customer Name is required")
-    .min(5, "Atleast 5 Characters Long"),
-  CustomerAddress: Yup.string()
-    .required("Customer Address is required")
-    .min(5, "Atleast 5 Characters Long"),
-  SalesPerson: Yup.string()
-    .required("Sales Person is required")
-    .min(5, "Atleast 5 Characters Long"),
-  PortOfOrigin: Yup.string()
-    .required("Port of Origin is required")
-    .min(5, "Atleast 3 Characters Long"),
-  PortOfDestination: Yup.string()
-    .required("Port of Destination is required")
-    .min(5, "Atleast 3 Characters Long"),
-  Weight: Yup.string().required("Weight is required"),
-  Dimensions: Yup.string()
-    .required("Dimensions are required")
-    .min(5, "Atleast 5 Characters Long"),
-  TransitTime: Yup.string().required("Transit Time is required"),
-  ShipmentTerms: Yup.string().required("Shipment Terms are required"),
-  ContainerType: Yup.string()
-    .required("Container Type is required")
-    .min(5, "Atleast 5 Characters Long"),
-  CarrierName: Yup.string()
-    .required("Carrier Name is required")
-    .min(5, "Atleast 5 Characters Long"),
-  // Add validation rules for other fields
-});
-const InquiryReducer = (state: Inquiry, action: action) => {
-  switch (action.type) {
-    case "CustomerName":
-    case "CustomerAddress":
-    case "SalesPerson":
-    case "PortOfOrigin":
-    case "PortOfDestination":
-    case "Weight":
-    case "Dimensions":
-    case "TransitTime":
-    case "ShipmentTerms":
-    case "ContainerType":
-    case "CarrierName":
-      return {
-        ...state,
-        [action.type.toString()]: action.payload.value,
-      };
-    default:
-      return { ...state };
-  }
-};
+const validationSchema = Yup.object().shape(
+  {
+    CustomerName: Yup.string()
+      .required("Customer Name is required")
+      .min(5, "Atleast 5 Characters Long"),
+    CustomerAddress: Yup.string()
+      .required("Customer Address is required")
+      .min(5, "Atleast 5 Characters Long"),
+    SalesPerson: Yup.string()
+      .required("Sales Person is required")
+      .min(5, "Atleast 5 Characters Long"),
+    PortOfOrigin: Yup.string()
+      .required("Port of Origin is required")
+      .min(5, "Atleast 3 Characters Long"),
+    PortOfDestination: Yup.string()
+      .required("Port of Destination is required")
+      .min(5, "Atleast 3 Characters Long"),
+    Weight: Yup.string().required("Weight is required"),
+    Dimensions: Yup.string()
+      .required("Dimensions are required")
+      .min(5, "Atleast 5 Characters Long"),
+    TransitTime: Yup.string().required("Transit Time is required"),
+    ShipmentTerms: Yup.string().required("Shipment Terms are required"),
+    ContainerType: Yup.string().when(
+      "CustomContainerType",
+      ([CustomContainerType], schema) => {
+        return CustomContainerType
+          ? schema.notRequired()
+          : schema
+              .min(5, "At least 5 Characters Long")
+              .required(
+                "Either Container Type Or Custom Container Type is required"
+              );
+      }
+    ),
+    CarrierName: Yup.string()
+      .required("Carrier Name is required")
+      .min(5, "Atleast 5 Characters Long"),
+    CustomContainerType: Yup.string().when(
+      "ContainerType",
+      ([ContainerType], schema) => {
+        return ContainerType
+          ? schema.notRequired()
+          : schema.required(
+              "Either Container Type Or Custom Container Type is required"
+            );
+      }
+    ),
+
+    // Add validation rules for other fields
+  },
+  [["CustomContainerType", "ContainerType"]]
+);
+// const InquiryReducer = (state: Inquiry, action: action) => {
+//   switch (action.type) {
+//     case "CustomerName":
+//     case "CustomerAddress":
+//     case "SalesPerson":
+//     case "PortOfOrigin":
+//     case "PortOfDestination":
+//     case "Weight":
+//     case "Dimensions":
+//     case "TransitTime":
+//     case "ShipmentTerms":
+//     case "ContainerType":
+//     case "CustomContainerType":
+//     case "CarrierName":
+//       return {
+//         ...state,
+//         [action.type.toString()]: action.payload.value,
+//       };
+//     default:
+//       return { ...state };
+//   }
+// };
 function Inquiry(props: InquiryAndQuotationProps) {
   const { inquiry, setItemInquiry } = useInquiryItem();
 
-  const [state, dispatch] = useReducer(InquiryReducer, inquiry);
+  // const [state, dispatch] = useReducer(InquiryReducer, inquiry);
   const formik = useFormik({
     initialValues: inquiry,
     validationSchema: validationSchema,
@@ -103,7 +127,14 @@ function Inquiry(props: InquiryAndQuotationProps) {
         "40 FR",
         "20 RF",
         "40 RF",
+        "RORO",
+        "Break Bulk",
       ],
+    },
+    {
+      label: "Custom Container Type",
+      name: "CustomContainerType",
+      type: "text",
     },
   ];
   const Column3 = [
@@ -111,15 +142,31 @@ function Inquiry(props: InquiryAndQuotationProps) {
       label: "Enter Shipment Terms",
       name: "ShipmentTerms",
       type: "select",
-      options: ["Exworks", "FOB", "FCA"],
+      options: [
+        "Exworks",
+        "FOB",
+        "FCA",
+        "EXW",
+        "FCA",
+        "FAS",
+        "FOB",
+        "CFR",
+        "CIF",
+        "CPT",
+        "CIP",
+        "DPU",
+        "DAP",
+        "DDP",
+      ],
     },
+
     { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
   ];
   return (
     <FormikProvider value={formik}>
-      <div className="w-full flex flex-col justify-center space-y-7 py-5 flex-wrap">
+      <div className="w-full flex flex-col justify-center space-y-7 py-5 flex-wrap ">
         <form onSubmit={formik.handleSubmit}>
-          <div className="px-5 flex flex-col lg:flex-row justify-between w-full">
+          <div className="px-5 flex flex-col lg:flex-row justify-between w-full my-5">
             <div className="flex flex-col space-y-1">
               {Column1Items.map((i) => (
                 <div key={i.name} className="px-4">

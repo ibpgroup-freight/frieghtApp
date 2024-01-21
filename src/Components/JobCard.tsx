@@ -68,7 +68,7 @@ function JobCard({ job, ondelete }: pageProps) {
               <ButtonBlue
                 text="Delete"
                 onclick={deleteJob.bind(null, job.id!)}
-                customStyle={"bg-red-400"}
+                customStyle={"bg-red-400 "}
                 isloading={isdeleting}
                 disabled={isdeleting}
               />

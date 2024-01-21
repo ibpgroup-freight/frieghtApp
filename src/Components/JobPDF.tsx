@@ -52,9 +52,13 @@ type jobPdfProps = {
   job?: Job;
 };
 function JobPDF({ job }: jobPdfProps) {
-  const { inquiry } = useInquiryItem();
+  const { inquiry: inquiryStoreItems } = useInquiryItem();
   const { items: itemStoreItems } = useItemStore();
   const items = job ? job.Items : itemStoreItems;
+  const inquiry = job ? job.inquiry : inquiryStoreItems;
+  console.log(job?.inquiry.ContainerType);
+  console.log(job?.inquiry.CustomContainerType);
+
   return (
     <PDFViewer className="w-3/4 h-full">
       <Document>
@@ -69,63 +73,54 @@ function JobPDF({ job }: jobPdfProps) {
             <View style={{ justifyContent: "flex-start" }}>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Customer Name</Text>
-                <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.CustomerName : inquiry.CustomerName}
-                </Text>
+                <Text style={styles.inquiryText}>{inquiry.CustomerName}</Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Customer Address</Text>
                 <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.CustomerName : inquiry.CustomerAddress}
+                  {inquiry.CustomerAddress}
                 </Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Sales Person</Text>
-                <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.SalesPerson : inquiry.SalesPerson}
-                </Text>
+                <Text style={styles.inquiryText}>{inquiry.SalesPerson}</Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>CarrierName</Text>
-                <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.CarrierName : inquiry.CarrierName}
-                </Text>
+                <Text style={styles.inquiryText}>{inquiry.CarrierName}</Text>
               </View>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Weight</Text>
-                <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.Weight : inquiry.Weight}
-                </Text>
+                <Text style={styles.inquiryText}>{inquiry.Weight}</Text>
               </View>
             </View>
             <View style={{ justifyContent: "flex-start" }}>
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Customer Address</Text>
-                <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.Dimensions : inquiry.Dimensions}
-                </Text>
+                <Text style={styles.inquiryText}>{inquiry.Dimensions}</Text>
               </View>
 
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Port Of Destination</Text>
                 <Text style={styles.inquiryText}>
-                  {job
-                    ? job.inquiry.PortOfDestination
-                    : inquiry.PortOfDestination}
+                  {inquiry.PortOfDestination}
                 </Text>
               </View>
 
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Port Of Origin</Text>
-                <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.PortOfOrigin : inquiry.PortOfOrigin}
-                </Text>
+                <Text style={styles.inquiryText}>{inquiry.PortOfOrigin}</Text>
               </View>
 
               <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Transit Time</Text>
+                <Text style={styles.inquiryText}>{inquiry.TransitTime}</Text>
+              </View>
+              <View style={styles.inquiryView}>
+                <Text style={styles.inquiryHeading}>Container Type</Text>
                 <Text style={styles.inquiryText}>
-                  {job ? job.inquiry.TransitTime : inquiry.TransitTime}
+                  {inquiry?.ContainerType ?? ""}
+                  {inquiry?.CustomContainerType?.split(",").join("") ?? ""}
                 </Text>
               </View>
             </View>

@@ -3,33 +3,33 @@ import useItemStore from "../store/Item";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-type Inquiry = {
-  CustomerName: string;
-  CustomerAddress: string;
-  SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
-  Weight: string;
-  Dimensions: string;
-  TransitTime: string;
-  ShipmentTerms: string;
-  CarrierName: string;
-};
-type Item = {
-  id: string;
-  QuoteValidity: string;
-  Charges: string;
-  ChargeDescription: string;
-  UnitPerKg: string;
-  Currency: string;
-  AmountPerUnit: string;
-  CostAndSellSection: string;
-};
-type Job = {
-  id: string;
-  inquiry: Inquiry;
-  Items: Item[];
-};
+// type Inquiry = {
+//   CustomerName: string;
+//   CustomerAddress: string;
+//   SalesPerson: string;
+//   PortOfOrigin: string;
+//   PortOfDestination: string;
+//   Weight: string;
+//   Dimensions: string;
+//   TransitTime: string;
+//   ShipmentTerms: string;
+//   CarrierName: string;
+// };
+// type Item = {
+//   id: string;
+//   QuoteValidity: string;
+//   Charges: string;
+//   ChargeDescription: string;
+//   UnitPerKg: string;
+//   Currency: string;
+//   AmountPerUnit: string;
+//   CostAndSellSection: string;
+// };
+// type Job = {
+//   id: string;
+//   inquiry: Inquiry;
+//   Items: Item[];
+// };
 
 const styles = StyleSheet.create({
   page: {
@@ -81,7 +81,7 @@ type InvoicePdfProps = {
 function InvoicePdf() {
   const { inquiry } = useInquiryItem();
   const { job } = useLocation().state;
-  const items = job ? job.items : [];
+  const items: Job["Items"] = job ? job.items : [];
   console.log(job, "invoice");
   return (
     <PDFViewer className="w-full h-screen">
@@ -119,12 +119,12 @@ function InvoicePdf() {
                   {job ? job.inquiry.CarrierName : inquiry.CarrierName}
                 </Text>
               </View>
-              {/* <View style={styles.inquiryView}>
+              <View style={styles.inquiryView}>
                 <Text style={styles.inquiryHeading}>Weight</Text>
                 <Text style={styles.inquiryText}>
                   {job ? job.inquiry.Weight : inquiry.Weight}
                 </Text>
-              </View> */}
+              </View>
             </View>
             <View style={{ justifyContent: "flex-start" }}>
               <View style={styles.inquiryView}>
@@ -147,6 +147,13 @@ function InvoicePdf() {
                 <Text style={styles.inquiryHeading}>Port Of Origin</Text>
                 <Text style={styles.inquiryText}>
                   {job ? job.inquiry.PortOfOrigin : inquiry.PortOfOrigin}
+                </Text>
+              </View>
+              <View style={styles.inquiryView}>
+                <Text style={styles.inquiryHeading}>Container Type</Text>
+                <Text style={styles.inquiryText}>
+                  {job?.inquiry?.ContainerType ?? ""}
+                  {job?.inquiry?.CustomContainerType?.split(",").join("") ?? ""}
                 </Text>
               </View>
 
@@ -182,7 +189,7 @@ function InvoicePdf() {
               <Text style={styles.inquiryHeading}>Amount/Unit</Text>
             </View>
             {items &&
-              items.map((i: Item) => (
+              items.map((i: QuotationItem) => (
                 <View
                   style={{
                     display: "flex",
