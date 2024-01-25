@@ -35,9 +35,14 @@ function AddContact() {
     async onSubmit(values, formikHelpers) {
       try {
         setisloading(true);
+        const contactId = uuidv4();
         const contact = await addDoc(collection(db, "contacts"), {
-          ...values,
-          id: uuidv4(),
+          name: values.Name,
+          email: values.Email,
+          address: values.Address,
+          phone: values.Phone,
+          company: values.Company,
+          contactId,
           createdAt: serverTimestamp(),
         });
         toast.success("Contact Added Successfully");
@@ -77,7 +82,7 @@ function AddContact() {
               <CustomLoader
                 customColor="white"
                 height={80}
-                customStyle="h-12 border-white"
+                customStyle="!h-12 border-white"
               />
             ) : (
               "Add Contact"

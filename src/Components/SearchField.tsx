@@ -29,6 +29,7 @@ const SearchField = () => {
               Items: doc.data()?.Items,
               jobid: doc.data()?.jobid,
               id: doc.id,
+              status: doc.data()?.status,
             },
           ]);
         });

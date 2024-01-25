@@ -65,7 +65,9 @@ type Job = {
   jobid: string;
   inquiry: Inquiry;
   Items: QuotationItem[];
+  status: JobStatus;
 };
+type JobStatus = "completed" | "pending" | "cancelled";
 type JobStore = {
   Jobs: Job[];
   setJob: (i: Job) => Promise<void>;
@@ -132,4 +134,13 @@ type User = {
   phone: string;
   username: string;
   userId?: string;
+};
+
+type DashbboardFetch = {
+  totalUsers: number;
+  jobs: number;
+  completedJobs: number;
+  pendingJobs: number;
+  contacts: number;
+  cancelledJobs: number;
 };

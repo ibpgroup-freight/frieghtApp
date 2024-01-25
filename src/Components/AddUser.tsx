@@ -40,14 +40,18 @@ function AddUser() {
       Role: "",
     },
     async onSubmit(values, formikHelpers) {
-      await AddUser(
-        values.Email,
-        values.Password,
-        values.Username,
-        values.Role,
-        values.Phone
-      );
-      formikHelpers.resetForm();
+      try {
+        await AddUser(
+          values.Email,
+          values.Password,
+          values.Username,
+          values.Role,
+          values.Phone
+        );
+        formikHelpers.resetForm();
+      } catch (e) {
+        console.log(e);
+      }
     },
     validationSchema,
   });
@@ -61,19 +65,19 @@ function AddUser() {
     ) => {
       try {
         setaddingUser(true);
-        await runTransaction(db, async (transaction) => {
-          const c = await createUserWithEmailAndPassword(auth, Email, Password);
-          setDoc(doc(db, "users", c.user.uid), {
-            email: Email,
-            username: Username,
-            role: Role,
-            createdAt: serverTimestamp(),
-            phone: Phone,
-          });
+        const c = await createUserWithEmailAndPassword(auth, Email, Password);
+        await setDoc(doc(db, "users", c.user.uid), {
+          email: Email,
+          username: Username,
+          role: Role,
+          createdAt: serverTimestamp(),
+          phone: Phone,
         });
         toast.success("Successfully created User");
       } catch (e) {
-        toast.error("Couldnt Create User.Try Again Later");
+        console.log(e);
+        toast.error("Couldnt Create User.Try Again Later ." + e);
+        throw e;
       } finally {
         setaddingUser(false);
       }
@@ -127,7 +131,7 @@ function AddUser() {
           >
             {addingUser ? (
               <CustomLoader
-                customStyle="h-12"
+                customStyle="!h-12"
                 height={40}
                 customColor="white"
               />

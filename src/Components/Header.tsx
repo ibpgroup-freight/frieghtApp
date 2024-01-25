@@ -8,7 +8,7 @@ function Header() {
   return (
     <header className="w-full flex bg-blue-700 justify-evenly text-white p-1 lg:p-4">
       <div className="text-xl lg:text-2xl ">Logo</div>
-      <SearchField />
+      {/* <SearchField /> */}
       <ul className="flex  justify-start space-x-5">
         <li>
           <Link to={"/"}>Dashboard</Link>

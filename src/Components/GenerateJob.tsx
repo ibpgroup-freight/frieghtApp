@@ -6,7 +6,7 @@ import useItemStore from "../store/Item";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Oval } from "react-loader-spinner";
 import { toast } from "react-toastify";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 type InquiryAndQuotationProps = {
   step: number;
@@ -33,9 +33,11 @@ function GenerateJob(props: InquiryAndQuotationProps) {
         await updateDoc(doc(db, "jobs", isEditing), {
           inquiry,
           Items: items,
+          updatedAt: serverTimestamp(),
         });
       } else {
         await setJob({
+          status: "pending",
           inquiry,
           Items: items,
           jobid:

@@ -10,14 +10,16 @@ import { toast } from "react-toastify";
 function Analytics() {
   const Column1 = [
     { label: "Id", name: "Id" },
-    { label: "Quote Validity", name: "QuoteValidity" },
+    // { label: "Quote Validity", name: "QuoteValidity" },
     { label: "Charges", name: "Charges" },
     { label: "Charge Description", name: "ChargeDescription" },
     { label: "Unit Per Kg", name: "UnitPerKg" },
     { label: "Currency", name: "Currency" },
     { label: "Amount Per Unit", name: "AmountPerUnit" },
-    { label: "Cost And Sell Section", name: "CostAndSellSection" },
-    { label: "Show Details", name: "Details" },
+    // { label: "Cost And Sell Section", name: "CostAndSellSection" },
+    { label: "Actions", name: "Actions" },
+    { label: "Status", name: "Status" },
+    { label: "Change Status", name: "ChangeStatus" },
   ];
   const { Jobs, populateJobs } = useJob();
   const [loading, setisloading] = useState<boolean>(false);
@@ -83,7 +85,13 @@ function Analytics() {
               {Jobs &&
                 currentItems.map((j) => (
                   <tr key={j.id}>
-                    <JobCard job={j} key={j.jobid} ondelete={handleDelete} />
+                    <JobCard
+                      job={j}
+                      key={j.jobid}
+                      ondelete={handleDelete}
+                      status={j.status}
+                      refresh={handleDelete}
+                    />
                   </tr>
                 ))}
             </tbody>

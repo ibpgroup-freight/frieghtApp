@@ -1,18 +1,65 @@
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  Timestamp,
+  getDoc,
+} from "firebase/firestore";
 import React, { useState } from "react";
-
+import { db } from "../firebase";
+import { v4 } from "uuid";
+import CustomLoader from "../Components/CustomLoader";
+type searchType = "users" | "contacts" | "jobs";
+type searchBy = "id" | "email" | "phone" | "status";
 function Search() {
-  const [searchType, setSearchType] = useState("user"); // Default search type
+  const [searchType, setSearchType] = useState<searchType>("users"); // Default search type
+  const [searchBy, setSearchBy] = useState<searchBy>("id"); // Default search type
+  const [searchValue, setsearchValue] = useState<string>(""); // Default search type
+  const [jobStatus, setjobStatus] = useState<JobStatus>(); // Default search type
 
-  const handleSearch = (searchValue: string) => {
-    // Implement your search logic based on searchType and searchValue
-    console.log(`Searching for ${searchType} with ID: ${searchValue}`);
-    // Add your actual search logic here
+  const [searchAns, setsearchAns] = useState<any>([]);
+  const [loading, setisloading] = useState<boolean>(false);
+  const submitHandler = async () => {
+    try {
+      let searchResults: any = [];
+      setisloading(true);
+      if (jobStatus && searchType == "jobs" && searchBy == "status") {
+        searchResults = await getDocs(
+          query(collection(db, searchType), where(searchBy, "==", jobStatus))
+        );
+      } else {
+        searchResults = await getDocs(
+          query(
+            collection(db, searchType),
+            where(
+              searchBy,
+              "==",
+              searchBy == "phone" ? parseInt(searchValue) : searchValue
+            )
+          )
+        );
+      }
+
+      const res: any = [];
+      if (searchResults.empty) {
+        setsearchAns([]);
+        return console.log("empty");
+      }
+      searchResults.forEach((s: any) => res.push(s.data()));
+      setsearchAns(res);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setisloading(false);
+    }
   };
+  console.log(searchAns);
   return (
     <div className="w-full bg-white p-6 rounded-md shadow-md">
-      <div className=" w-3/6 items-center px-5 flex justify-between">
+      <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-8 items-center px-5  justify-between">
         <h2 className="text-2xl font-semibold mb-4">Search</h2>
-        <div className="mb-4">
+        <div className="mb-4 w-full ">
           <label
             htmlFor="searchType"
             className="block text-sm font-medium text-gray-600 mb-1"
@@ -23,51 +70,141 @@ function Search() {
             id="searchType"
             className="border p-2 w-full rounded-md"
             value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
+            onChange={(e) => setSearchType(e.target.value as searchType)}
           >
-            <option value="user">User</option>
-            <option value="contact">Contact</option>
-            <option value="job">Job</option>
+            <option value="users">User</option>
+            <option value="contacts">Contact</option>
+            <option value="jobs">Job</option>
           </select>
         </div>
-        <div className="mb-4">
+        <div className="mb-4 w-full">
           <label
-            htmlFor="searchType"
+            htmlFor="searchBy"
             className="block text-sm font-medium text-gray-600 mb-1"
           >
             Search by
           </label>
           <select
-            id="searchType"
+            id="searchBy"
             className="border p-2 w-full rounded-md"
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value)}
+            value={searchBy}
+            onChange={(e) => setSearchBy(e.target.value as searchBy)}
           >
-            <option value="id">Id</option>
-            <option value="email">Email</option>
-            <option value="phone">Number</option>
+            <option value={""}>Select</option>
+            <option
+              value={
+                searchType == "users"
+                  ? "userId"
+                  : searchType == "contacts"
+                  ? "contactId"
+                  : "jobid"
+              }
+            >
+              Id
+            </option>
+            {searchType !== "jobs" && (
+              <>
+                <option value="email">Email</option>
+                <option value="phone">Number</option>
+              </>
+            )}
+            {(searchType == "users" || searchType == "contacts") && (
+              <option value="name">Name</option>
+            )}
+            {searchType == "jobs" && (
+              <>
+                <option value="status">Status</option>
+              </>
+            )}
           </select>
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="searchInput"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Search ID
-          </label>
-          <input
-            type="text"
-            id="searchInput"
-            className="border p-2 w-full rounded-md"
-            placeholder={`Enter ${searchType} ID`}
-            onChange={(e) => handleSearch(e.target.value)}
-          />
-        </div>
-        <button className="bg-blue-500 rounded-md text-white px-3 py-2">
-          Search
+
+        {searchType == "jobs" && searchBy == "status" ? (
+          <div className="mb-4 w-full ">
+            <label
+              htmlFor="searchType"
+              className="block text-sm font-medium text-gray-600 mb-1"
+            >
+              Search Type
+            </label>
+            <select
+              id="searchType"
+              className="border p-2 w-full rounded-md"
+              value={jobStatus}
+              onChange={(e) => setjobStatus(e.target.value as JobStatus)}
+            >
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+        ) : (
+          <div className="mb-4 w-full">
+            <label
+              htmlFor="searchInput"
+              className="block text-sm font-medium text-gray-600 mb-1"
+            >
+              Search {searchBy}
+            </label>
+            <input
+              type="text"
+              id="searchInput"
+              className="border p-2 w-full rounded-md"
+              placeholder={`Enter ${searchType} information`}
+              onChange={(e) => setsearchValue(e.target.value)}
+            />
+          </div>
+        )}
+        <button
+          className="bg-blue-500 rounded-md text-white px-3 py-2 my-4 lg:my-0"
+          onClick={submitHandler}
+          disabled={loading}
+        >
+          {loading ? (
+            <CustomLoader customStyle="!h-12" height={50} />
+          ) : (
+            "Search"
+          )}
         </button>
       </div>
-      <h1>Results</h1>
+      <div className="w-full  lg:mx-auto overflow-auto ">
+        {loading ? (
+          <CustomLoader customStyle="!h-32 sm:h-auto" />
+        ) : (
+          <table className="w-full mx-auto border border-collapse border-slate-400">
+            <thead className="bg-slate-200">
+              <tr className="border border-slate-300 p-4">
+                {searchAns.length > 0 &&
+                  Object.keys(searchAns[0]).map((e) => (
+                    <th
+                      key={v4()}
+                      className="border border-slate-300 p-4 text-left"
+                    >
+                      {e.toLocaleUpperCase()}
+                    </th>
+                  ))}
+              </tr>
+            </thead>
+            <tbody>
+              {searchAns.length > 0 &&
+                searchAns.map((ans: any, index: number) => (
+                  <tr key={index} className="bg-white">
+                    {Object.values(ans).map((e: any, innerIndex: number) => (
+                      <td
+                        key={innerIndex}
+                        className="border border-slate-300 p-4 text-left"
+                      >
+                        {typeof e === "number" || typeof e === "string"
+                          ? e
+                          : e instanceof Timestamp && e.toDate().toDateString()}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }

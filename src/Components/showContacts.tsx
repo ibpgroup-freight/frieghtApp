@@ -26,7 +26,17 @@ function ShowContacts() {
       if (ctcts.empty) return toast.info("You dont Have Any Contacts Yet");
       const c: FetchContact[] = [];
       ctcts.forEach((doc) =>
-        c.push({ contacts: doc.data() as Contact, id: doc.id })
+        c.push({
+          contacts: {
+            Address: doc.data().address,
+            Company: doc.data().company,
+            Email: doc.data().email,
+            Name: doc.data().name,
+            Phone: doc.data().phone,
+            contactId: doc.data().contactId,
+          } as Contact,
+          id: doc.id,
+        })
       );
       setcontacts(c);
     } catch (e) {

@@ -1,6 +1,11 @@
 import { create } from "zustand";
 import { db } from "../firebase";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
 const useJob = create<JobStore>((set, get) => ({
   Jobs: [],
   populateJobs: (j) => {
@@ -12,6 +17,8 @@ const useJob = create<JobStore>((set, get) => ({
         inquiry: j.inquiry,
         Items: j.Items,
         jobid: j.jobid,
+        createdAt: serverTimestamp(),
+        status: j.status,
       });
       set((state) => {
         state.Jobs.push(j);
