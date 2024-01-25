@@ -16,13 +16,15 @@ import { ToastContainer } from "react-toastify";
 import CustomLoader from "./Components/CustomLoader";
 import { FormikProvider } from "formik";
 import TestingInvoice from "./Components/TestingInvoice";
+import ManageUsers from "./Pages/ManageUsers";
+import Analytics from "./Pages/Analytics";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
 const NotFound = React.lazy(() => import("./Pages/NotFound"));
 const Authenticate = React.lazy(() => import("./Pages/Authenticate"));
 const GenerateInvoice = React.lazy(() => import("./Pages/GenerateInvoice"));
-
+const SearchPage = React.lazy(() => import("./Pages/Search"));
 function App() {
   const { isloggedIn, AuthStateLogIn } = useUser();
   const [isloading, setisloading] = useState(true);
@@ -66,6 +68,9 @@ function App() {
                 <Route path="/manageContacts" Component={Contacts} />
                 <Route path="/invoicePdf" Component={InvoicePdf} />
                 <Route path="/testPdf" Component={TestingInvoice} />
+                <Route path="/manageUsers" Component={ManageUsers} />
+                <Route path="/search" Component={SearchPage} />
+                <Route path="/analytics" Component={Analytics} />
 
                 <Route path="*" Component={NotFound} />
               </Routes>

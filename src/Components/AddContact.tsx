@@ -1,27 +1,91 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { Field, ErrorMessage, useFormik, FormikProvider } from "formik";
+import * as Yup from "yup";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
+import CustomLoader from "./CustomLoader";
+import { v4 as uuidv4 } from "uuid";
+import { serverTimestamp } from "firebase/firestore";
+const validationSchema = Yup.object().shape({
+  Name: Yup.string().required("Name is Required"),
+  Email: Yup.string().required("Email is Required"),
+  Phone: Yup.string().required("Phone is Required"),
+  Company: Yup.string().required("Company is Required"),
+  Address: Yup.string().required("Address is Required"),
+});
 function AddContact() {
+  const [loading, setisloading] = useState<boolean>(false);
   const inputOptions = [
     { label: "Name", type: "text" },
     { label: "Email", type: "email" },
     { label: "Phone", type: "number" },
+    { label: "Company", type: "text" },
+    { label: "Address", type: "text" },
   ];
+  const formikObj = useFormik<Contact>({
+    initialValues: {
+      Name: "",
+      Email: "",
+      Address: "",
+      Phone: "",
+      Company: "",
+    },
+    validationSchema,
+    async onSubmit(values, formikHelpers) {
+      try {
+        setisloading(true);
+        const contact = await addDoc(collection(db, "contacts"), {
+          ...values,
+          id: uuidv4(),
+          createdAt: serverTimestamp(),
+        });
+        toast.success("Contact Added Successfully");
+        formikHelpers.resetForm();
+      } catch (e) {
+        toast.error("Couldnt Add Contact .Please Try Again Later");
+      } finally {
+        setisloading(false);
+      }
+    },
+  });
   return (
-    <div className="flex flex-col mx-auto w-3/5 space-y-2">
-      {inputOptions.map((i) => (
-        <>
-          <label>{i.label}</label>
-          <input
-            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-            name={i.label}
-            type={i.type}
-          />
-        </>
-      ))}
-      <button className="w-32 text-center bg-blue-900 mx-auto text-white p-2 py-3 rounded-md cursor-pointer">
-        Add Contact
-      </button>
-    </div>
+    <FormikProvider value={formikObj}>
+      <div className="flex flex-col mx-auto w-3/5 space-y-2">
+        <form onSubmit={formikObj.handleSubmit}>
+          {inputOptions.map((i) => (
+            <React.Fragment key={i.label}>
+              <label htmlFor={i.label}>{i.label}</label>
+              <Field
+                className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                name={i.label}
+                type={i.type}
+              />
+              <ErrorMessage
+                name={i.label}
+                component="div"
+                className="text-red-500"
+              />
+            </React.Fragment>
+          ))}
+
+          <button
+            className="w-32 text-center bg-blue-700 mx-auto text-white my-5 mx-auto p-2 py-3 rounded-md cursor-pointer"
+            type="submit"
+          >
+            {loading ? (
+              <CustomLoader
+                customColor="white"
+                height={80}
+                customStyle="h-12 border-white"
+              />
+            ) : (
+              "Add Contact"
+            )}
+          </button>
+        </form>
+      </div>
+    </FormikProvider>
   );
 }
 

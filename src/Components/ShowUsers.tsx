@@ -4,41 +4,42 @@ import { db } from "../firebase";
 import { toast } from "react-toastify";
 import ButtonBlue from "./ButtonBlue";
 import CustomLoader from "./CustomLoader";
-function ShowContacts() {
+function Showusers() {
   const Column1 = [
-    { name: "ContactId" },
+    { name: "UserId" },
     { name: "Name" },
     { name: "Email" },
+    { name: "Role" },
     { name: "Phone" },
-    { name: "Address" },
+    // { name: "Address" },
     { name: "Actions" },
   ];
-  const [contacts, setcontacts] = useState<FetchContact[]>();
+  const [users, setusers] = useState<User[]>();
   const [reload, setreload] = useState<boolean>(false);
-  const [loadingContacts, setloadingContacts] = useState<boolean>(false);
+  const [loadingusers, setloadingusers] = useState<boolean>(false);
   useEffect(() => {
-    getContacts();
+    getUsers();
   }, [reload]);
-  const getContacts = useCallback(async () => {
+  const getUsers = useCallback(async () => {
     try {
-      setloadingContacts(true);
-      const ctcts = await getDocs(collection(db, "contacts"));
-      if (ctcts.empty) return toast.info("You dont Have Any Contacts Yet");
-      const c: FetchContact[] = [];
+      setloadingusers(true);
+      const ctcts = await getDocs(collection(db, "users"));
+      if (ctcts.empty) return toast.info("You dont Have Any users Yet");
+      const c: User[] = [];
       ctcts.forEach((doc) =>
-        c.push({ contacts: doc.data() as Contact, id: doc.id })
+        c.push({ ...(doc.data() as User), userId: doc.id })
       );
-      setcontacts(c);
+      setusers(c);
     } catch (e) {
-      toast.error("Couldnt Fetch Contacts , Try Again");
+      toast.error("Couldnt Fetch users , Try Again");
     } finally {
-      setloadingContacts(false);
+      setloadingusers(false);
       setreload(false);
     }
   }, []);
   const deleteDocument = useCallback(async (id: string) => {
     try {
-      const res = await deleteDoc(doc(db, "contacts", id));
+      const res = await deleteDoc(doc(db, "users", id));
       toast.success("deleted");
       setreload(true);
     } catch (e) {
@@ -46,11 +47,11 @@ function ShowContacts() {
       toast.error("Couldnt Delete Contact");
     }
   }, []);
-  console.log("contacts,", contacts);
+  console.log("users,", users);
   return (
     <div className="w-4/6 mx-auto">
       <div className="w-full  lg:mx-auto  overflow-auto">
-        {loadingContacts ? (
+        {loadingusers ? (
           <CustomLoader />
         ) : (
           <table className="mx-auto border border-slate-400 border-spacing-x-10 border-spacing-y-2">
@@ -64,28 +65,20 @@ function ShowContacts() {
               </tr>
             </thead>
             <tbody>
-              {contacts?.map((c) => (
-                <tr>
+              {users?.map((c) => (
+                <tr key={c.userId}>
                   <td className="border border-slate-300 p-4 text-orange-500 font-bold">
-                    {c.id}
+                    {c.userId}
                   </td>
-                  <td className="border border-slate-300 p-4">
-                    {c.contacts.Name}
-                  </td>
-                  <td className="border border-slate-300 p-4">
-                    {c.contacts.Email}
-                  </td>
+                  <td className="border border-slate-300 p-4">{c.username}</td>
+                  <td className="border border-slate-300 p-4">{c.email}</td>
+                  <td className="border border-slate-300 p-4">{c.role}</td>
+                  <td className="border border-slate-300 p-4">{c.phone}</td>
 
-                  <td className="border border-slate-300 p-4">
-                    {c.contacts.Phone}
-                  </td>
-                  <td className="border border-slate-300 p-4">
-                    {c.contacts.Address}
-                  </td>
                   <td className="border border-slate-300 p-4 space-y-2">
                     <ButtonBlue onclick={() => {}} text="View" />
                     <ButtonBlue
-                      onclick={deleteDocument.bind(null, c.id)}
+                      onclick={deleteDocument.bind(null, c.userId!)}
                       text="Delete"
                     />
                   </td>
@@ -99,4 +92,4 @@ function ShowContacts() {
   );
 }
 
-export default ShowContacts;
+export default Showusers;

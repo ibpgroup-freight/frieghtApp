@@ -114,3 +114,22 @@ type cargoInfo = {
   OutstandingDues: number;
   VATAmount: number;
 };
+
+type Contact = {
+  contactId?: string;
+  Name: string;
+  Email: string;
+  Address: string;
+  Phone: string;
+  Company: string;
+};
+
+type FetchContact = { id: string; contacts: Contact };
+
+type User = {
+  email: string;
+  role: string;
+  phone: string;
+  username: string;
+  userId?: string;
+};
