@@ -1,25 +1,6 @@
 import { create } from "zustand";
 import Inquiry from "../Components/Inquiry";
 
-type Inquiry = {
-  CustomerName: string;
-  CustomerAddress: string;
-  SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
-  Weight: string;
-  Dimensions: string;
-  TransitTime: string;
-  ShipmentTerms: string;
-  CarrierName: string;
-  CustomContainerType: string;
-  ContainerType: string;
-};
-type InquiryStore = {
-  inquiry: Inquiry;
-  setItemInquiry: (i: Inquiry) => void;
-  resetInquiry: () => void;
-};
 const useInquiryItem = create<InquiryStore>((set) => ({
   inquiry: {
     CustomerName: "",
@@ -34,6 +15,10 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     ContainerType: "",
     CarrierName: "",
     CustomContainerType: "",
+    AirportOfDestination: "",
+    AirportOfOrigin: "",
+    TypeOfCargo: "",
+    isAirinquiry: false,
   },
   setItemInquiry: (i) => {
     set((state) => {
@@ -56,6 +41,10 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           CarrierName: "",
           ContainerType: "",
           CustomContainerType: "",
+          AirportOfDestination: "",
+          AirportOfOrigin: "",
+          TypeOfCargo: "",
+          isAirinquiry: false,
         },
       };
     });

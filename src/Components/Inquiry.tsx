@@ -2,44 +2,29 @@ import React, { useReducer } from "react";
 import useInquiryItem from "../store/Inquiry";
 import * as Yup from "yup";
 import { ErrorMessage, Field, useFormik, FormikProvider } from "formik";
+import { redirect, useNavigate, useSearchParams } from "react-router-dom";
 const validationSchema = Yup.object().shape(
   {
-    CustomerName: Yup.string()
-      .required("Customer Name is required")
-      .min(5, "Atleast 5 Characters Long"),
-    CustomerAddress: Yup.string()
-      .required("Customer Address is required")
-      .min(5, "Atleast 5 Characters Long"),
-    SalesPerson: Yup.string()
-      .required("Sales Person is required")
-      .min(5, "Atleast 5 Characters Long"),
-    PortOfOrigin: Yup.string()
-      .required("Port of Origin is required")
-      .min(5, "Atleast 3 Characters Long"),
-    PortOfDestination: Yup.string()
-      .required("Port of Destination is required")
-      .min(5, "Atleast 3 Characters Long"),
+    CustomerName: Yup.string().required("Customer Name is required"),
+    CustomerAddress: Yup.string().required("Customer Address is required"),
+    SalesPerson: Yup.string().required("Sales Person is required"),
+    PortOfOrigin: Yup.string().required("Port of Origin is required"),
+    PortOfDestination: Yup.string().required("Port of Destination is required"),
     Weight: Yup.string().required("Weight is required"),
-    Dimensions: Yup.string()
-      .required("Dimensions are required")
-      .min(5, "Atleast 5 Characters Long"),
-    TransitTime: Yup.string().required("Transit Time is required"),
+    Dimensions: Yup.string().required("Dimensions are required"),
+    TransitTime: Yup.number().required("Transit Time is required"),
     ShipmentTerms: Yup.string().required("Shipment Terms are required"),
     ContainerType: Yup.string().when(
       "CustomContainerType",
       ([CustomContainerType], schema) => {
         return CustomContainerType
           ? schema.notRequired()
-          : schema
-              .min(5, "At least 5 Characters Long")
-              .required(
-                "Either Container Type Or Custom Container Type is required"
-              );
+          : schema.required(
+              "Either Container Type Or Custom Container Type is required"
+            );
       }
     ),
-    CarrierName: Yup.string()
-      .required("Carrier Name is required")
-      .min(5, "Atleast 5 Characters Long"),
+    CarrierName: Yup.string().required("Carrier Name is required"),
     CustomContainerType: Yup.string().when(
       "ContainerType",
       ([ContainerType], schema) => {
@@ -55,87 +40,113 @@ const validationSchema = Yup.object().shape(
   },
   [["CustomContainerType", "ContainerType"]]
 );
-// const InquiryReducer = (state: Inquiry, action: action) => {
-//   switch (action.type) {
-//     case "CustomerName":
-//     case "CustomerAddress":
-//     case "SalesPerson":
-//     case "PortOfOrigin":
-//     case "PortOfDestination":
-//     case "Weight":
-//     case "Dimensions":
-//     case "TransitTime":
-//     case "ShipmentTerms":
-//     case "ContainerType":
-//     case "CustomContainerType":
-//     case "CarrierName":
-//       return {
-//         ...state,
-//         [action.type.toString()]: action.payload.value,
-//       };
-//     default:
-//       return { ...state };
-//   }
-// };
+const AirvalidationSchema = Yup.object().shape({
+  CustomerName: Yup.string().required("Customer Name is required"),
+  CustomerAddress: Yup.string().required("Customer Address is required"),
+  SalesPerson: Yup.string().required("Sales Person is required"),
+  AirportOfOrigin: Yup.string().required("Airport of Origin is required"),
+  AirportOfDestination: Yup.string().required(
+    "Airport of Destination is required"
+  ),
+  Weight: Yup.string().required("Weight is required"),
+  Dimensions: Yup.string().required("Dimensions are required"),
+  TransitTime: Yup.number().required("Transit Time is required"),
+  ShipmentTerms: Yup.string().required("Shipment Terms are required"),
+  TypeOfCargo: Yup.string().required("Type of Cargo is required"),
+  CarrierName: Yup.string().required("Carrier Name is required"),
+});
+
 function Inquiry(props: InquiryAndQuotationProps) {
   const { inquiry, setItemInquiry } = useInquiryItem();
-
-  // const [state, dispatch] = useReducer(InquiryReducer, inquiry);
+  const params = useSearchParams();
+  const rawtype = params[0].get("method");
+  const Airtype = rawtype?.includes("air");
   const formik = useFormik({
     initialValues: inquiry,
-    validationSchema: validationSchema,
+    validationSchema: Airtype ? AirvalidationSchema : validationSchema,
     onSubmit: (values) => {
       console.log("Form submitted with values:", values);
-      setItemInquiry(values);
+      setItemInquiry({ ...values, isAirinquiry: !!Airtype });
       props.setstepNumber((prevStep) => prevStep + 1);
     },
   });
 
+  console.log(formik.errors);
   console.log(inquiry);
+
   const Column1Items = [
     { label: "Enter Customer Name", name: "CustomerName", type: "text" },
     { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
     { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
-    { label: "Enter Port Of Origin", name: "PortOfOrigin", type: "text" },
-    {
-      label: "Enter Port Of Destination",
-      name: "PortOfDestination",
-      type: "text",
-    },
+    ...(Airtype
+      ? [
+          {
+            label: "Enter Airport of Origin",
+            name: "AirportOfOrigin",
+            type: "text",
+          },
+          {
+            label: "Enter Airport of Destination",
+            name: "AirportOfDestination",
+            type: "text",
+          },
+        ]
+      : [
+          {
+            label: "Enter Port Of Origin",
+            name: "PortOfOrigin",
+            type: "text",
+          },
+          {
+            label: "Enter Port Of Destination",
+            name: "PortOfDestination",
+            type: "text",
+          },
+        ]),
   ];
   const Column2 = [
-    { label: "Enter Weight", name: "Weight", type: "number" },
+    { label: "Enter Weight (kg)", name: "Weight", type: "number" },
     { label: "Enter Dimensions", name: "Dimensions", type: "text" },
     {
       label: "Enter Transit Time",
       name: "TransitTime",
-      type: "datetime-local",
+      type: "number",
       options: [],
     },
-    {
-      label: "Container Type",
-      name: "ContainerType",
-      type: "select",
-      options: [
-        "20ft",
-        "40ft",
-        "40 HC",
-        "45 HC",
-        "20 OT",
-        "40 OT",
-        "20 FR",
-        "40 FR",
-        "20 RF",
-        "40 RF",
-        "RORO",
-        "Break Bulk",
-      ],
-    },
-    {
-      label: "Custom Container Type",
-      name: "CustomContainerType",
-      type: "text",
-    },
+    ...(Airtype
+      ? [
+          {
+            label: "Type of Cargo",
+            name: "TypeOfCargo",
+            type: "text",
+          },
+        ]
+      : [
+          {
+            label: "Container Type",
+            name: "ContainerType",
+            type: "select",
+            options: [
+              "20ft",
+              "40ft",
+              "40 HC",
+              "45 HC",
+              "20 OT",
+              "40 OT",
+              "20 FR",
+              "40 FR",
+              "20 RF",
+              "40 RF",
+              "RORO",
+              "Break Bulk",
+            ],
+          },
+          {
+            label: "Custom Container Type",
+            name: "CustomContainerType",
+            type: "text",
+          },
+        ]),
   ];
   const Column3 = [
     {
@@ -145,11 +156,9 @@ function Inquiry(props: InquiryAndQuotationProps) {
       options: [
         "Exworks",
         "FOB",
-        "FCA",
         "EXW",
         "FCA",
         "FAS",
-        "FOB",
         "CFR",
         "CIF",
         "CPT",
@@ -187,7 +196,9 @@ function Inquiry(props: InquiryAndQuotationProps) {
               ))}
             </div>
             <div className="flex flex-col space-y-1">
-              {Column2.map((i) => (
+              {Column2.filter(
+                (i) => typeof i === "object" && i !== null && i.name
+              ).map((i) => (
                 <div key={i.name} className="px-4">
                   <label className="text-xl" key={i.name}>
                     {i.label}

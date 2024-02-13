@@ -26,15 +26,24 @@ type Inquiry = {
   CustomerName: string;
   CustomerAddress: string;
   SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
+  PortOfOrigin?: string;
+  PortOfDestination?: string;
+  AirportOfOrigin?: string;
+  AirportOfDestination?: string;
+  TypeOfCargo?: string;
+  isAirinquiry: boolean;
   Weight: string;
   Dimensions: string;
   TransitTime: string;
   ShipmentTerms: string;
   CarrierName: string;
-  ContainerType: string;
   CustomContainerType: string;
+  ContainerType: string;
+};
+type InquiryStore = {
+  inquiry: Inquiry;
+  setItemInquiry: (i: Inquiry) => void;
+  resetInquiry: () => void;
 };
 type actionType = keyof Inquiry;
 type action = {

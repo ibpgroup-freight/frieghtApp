@@ -92,7 +92,7 @@ function Quotation(props: InquiryAndQuotationProps) {
           </table>
         </div>
 
-        <div className="absolute right-40">
+        <div className="">
           <button
             className="text-2xl rounded-full text-green-600"
             onClick={(e) => {
