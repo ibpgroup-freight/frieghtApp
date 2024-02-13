@@ -200,9 +200,9 @@ function InvoicePdf() {
                 >
                   <Text style={styles.inquiryText}>{i.id}</Text>
                   <Text style={styles.inquiryText}>{i.QuoteValidity}</Text>
-                  <Text style={styles.inquiryText}>{i.UnitPerKg}</Text>
+                  {/* <Text style={styles.inquiryText}>{i.UnitPerKg}</Text> */}
                   <Text style={styles.inquiryText}>{i.Currency}</Text>
-                  <Text style={styles.inquiryText}>{i.AmountPerUnit}</Text>
+                  {/* <Text style={styles.inquiryText}>{i.AmountPerUnit}</Text> */}
                 </View>
               ))}
           </View>

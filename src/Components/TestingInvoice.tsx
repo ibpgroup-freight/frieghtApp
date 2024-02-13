@@ -5,6 +5,8 @@ import {
   Image,
   StyleSheet,
   PDFViewer,
+  View,
+  Text,
 } from "@react-pdf/renderer";
 import InvoiceTitle from "./InvoiceTitle";
 import BillTo from "./BillTo";
@@ -65,12 +67,12 @@ const styles = StyleSheet.create({
     paddingRight: 60,
     lineHeight: 1.5,
     flexDirection: "column",
+    paddingVertical: 10,
+    position: "relative",
   },
   logo: {
     width: 74,
     height: 66,
-    marginLeft: "auto",
-    marginRight: "auto",
   },
 });
 
@@ -84,13 +86,100 @@ const TestingInvoice = () => {
   return (
     <PDFViewer className="w-full h-screen">
       <Document>
-        <Page size="A4" style={styles.page}>
+        <Page size="A4" style={styles.page} wrap>
           <Image style={styles.logo} src={logo} />
           <InvoiceTitle title="Invoice" />
           <InvoiceNo jobInfo={jobInfo} />
           <BillTo jobInfo={jobInfo} />
           <InvoiceItemsTable Items={Items} jobInfo={jobInfo} />
           <InvoiceThankYouMsg />
+          <View style={{ width: "100%" }} wrap={false}>
+            <View
+              style={{
+                flexDirection: "row",
+                marginVertical: 5,
+                alignItems: "flex-start",
+                borderTopWidth: 1,
+                borderTopColor: "navy",
+              }}
+            >
+              <Text
+                style={{
+                  width: "20%",
+                  textDecoration: "underline",
+                  color: "mediumblue",
+                }}
+              >
+                Sales Conditions:
+              </Text>
+              <Text
+                style={{
+                  width: "80%",
+                  flexWrap: "wrap",
+                  color: "dimgrey",
+                }}
+              >
+                All our operations are made on the general terms of sale TLF
+                Overseas.{"\n"} Rates exclude VAT, and the customs duties and
+                taxes.{"\n"} Rates subject to modification with or without
+                advance notice, in particular concerning the freight, the
+                exchange rates, the fuel surcharge.{"\n"} Except specific
+                written instructions received from you before the starting up of
+                the operations, no ad-valorem insurance will be subscribed.
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  width: "20%",
+                  textDecoration: "underline",
+                  color: "mediumblue",
+                }}
+              >
+                Payment Terms
+              </Text>
+              <Text
+                style={{
+                  width: "80%",
+                  color: "gray",
+                }}
+              >
+                X Days After Invoice
+              </Text>
+            </View>
+            <View
+              style={{
+                borderWidth: 2,
+                borderColor: "royalblue",
+                height: 50,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 3,
+                marginVertical: 5,
+              }}
+            >
+              <Text>Check For Agreement</Text>
+              <Text>Date</Text>
+              <Text>Company Stamp</Text>
+            </View>
+          </View>
+          <View
+            fixed
+            style={{
+              position: "absolute",
+              bottom: 0,
+              height: 20,
+              width: "100%",
+              backgroundColor: "dodgerblue",
+              marginTop: 20,
+            }}
+          ></View>
         </Page>
       </Document>
     </PDFViewer>

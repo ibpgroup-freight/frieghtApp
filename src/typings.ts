@@ -17,10 +17,14 @@ type QuotationItem = {
   QuoteValidity: string;
   Charges: string;
   ChargeDescription: string;
-  UnitPerKg: string;
+  // UnitPerKg: string;
   Currency: string;
-  AmountPerUnit: string;
-  CostAndSellSection: string;
+  RateAmountPerUnit: string;
+  MinRateAmountPerUnit: string;
+  MinCostAmountPerUnit: string;
+  CostAmountPerUnit: string;
+  minUnits: string;
+  maxUnits: string;
 };
 type Inquiry = {
   CustomerName: string;

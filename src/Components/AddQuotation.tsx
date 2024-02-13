@@ -12,7 +12,7 @@ const validationSchema = Yup.object().shape({
   QuoteValidity: Yup.string().required("Quote Validity is required"),
   Charges: Yup.number().required("Charges is required"),
   ChargeDescription: Yup.string().required("Charge Description is required"),
-  UnitPerKg: Yup.number().required("Unit Per Kg is required"),
+  // UnitPerKg: Yup.number().required("Unit Per Kg is required"),
   Currency: Yup.string().required("Currency is required"),
   RateAmountPerUnit: Yup.string().required("Rate Amount Per Unit is required"),
   MinRateAmountPerUnit: Yup.string().required(
@@ -24,6 +24,8 @@ const validationSchema = Yup.object().shape({
   CostAmountPerUnit: Yup.string().required(
     "Min Cost Amount Per Unit is required"
   ),
+  minUnits: Yup.string().required("min Units are required"),
+  maxUnits: Yup.string().required("max Units are required"),
 });
 
 const InitialState = {
@@ -31,14 +33,14 @@ const InitialState = {
   QuoteValidity: "",
   Charges: "",
   ChargeDescription: "",
-  UnitPerKg: "",
+  // UnitPerKg: "",
   Currency: "",
-  AmountPerUnit: "",
-  CostAndSellSection: "",
   RateAmountPerUnit: "",
   MinRateAmountPerUnit: "",
   MinCostAmountPerUnit: "",
   CostAmountPerUnit: "",
+  minUnits: "",
+  maxUnits: "",
 };
 // const AddQuotationReducer = (state: QuotationItem, action: QuotationAction) => {
 //   switch (action.type) {
@@ -62,6 +64,7 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
     initialValues: InitialState,
     validationSchema,
     onSubmit: (values) => {
+      console.log(values, "add qu");
       !AddItemToInvoice ? AddItem(values) : AddItemToInvoice(values);
       closeQuotation((p) => !p);
       ctx.setToggle();
@@ -72,9 +75,8 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
     { label: "Charge", name: "Charges", type: "text" },
     { label: "Charge Description", name: "ChargeDescription" },
     { label: "Quote Validity", name: "QuoteValidity", type: "text" },
-    { label: "No of Units", name: "NoOfUnits", type: "number" },
-    { label: "Max Units", name: "MaxUnits", type: "number" },
-    { label: "Min Units", name: "MinUnits", type: "number" },
+    { label: "Max Units", name: "maxUnits", type: "number" },
+    { label: "Min Units", name: "minUnits", type: "number" },
   ];
   const Column2 = [
     {
@@ -96,6 +98,7 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
     { label: "Amount Per Unit", name: "CostAmountPerUnit" },
     { label: "Min Amount Per Unit", name: "MinCostAmountPerUnit" },
   ];
+  console.log(formikobj.errors);
   return (
     <FormikProvider value={formikobj}>
       <div className="absolute mx-auto -mt-36 md:w-3/5 px-10 bg-white border z-1000 py-10 rounded-md">

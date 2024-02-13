@@ -73,9 +73,9 @@ function JobCard({ job, ondelete, status, refresh }: pageProps) {
             <td className="border border-slate-300 p-4">
               {i.ChargeDescription}
             </td>
-            <td className="border border-slate-300 p-4">{i.UnitPerKg}</td>
+            {/* <td className="border border-slate-300 p-4">{i.UnitPerKg}</td> */}
             <td className="border border-slate-300 p-4">{i.Currency}</td>
-            <td className="border border-slate-300 p-4">{i.AmountPerUnit}</td>
+            {/* <td className="border border-slate-300 p-4">{i.AmountPerUnit}</td> */}
 
             {/* <td className="border border-slate-300 p-4">
               {i.CostAndSellSection}

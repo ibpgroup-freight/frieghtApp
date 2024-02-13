@@ -215,18 +215,18 @@ function GenerateInvoice() {
                           <td className="border border-slate-300 p-4">
                             {i.ChargeDescription}
                           </td>
-                          <td className="border border-slate-300 p-4">
+                          {/* <td className="border border-slate-300 p-4">
                             {i.UnitPerKg}
-                          </td>
+                          </td> */}
                           <td className="border border-slate-300 p-4">
                             {i.Currency}
                           </td>
-                          <td className="border border-slate-300 p-4">
+                          {/* <td className="border border-slate-300 p-4">
                             {i.AmountPerUnit}
                           </td>
                           <td className="border border-slate-300 p-4">
                             {i.CostAndSellSection}
-                          </td>
+                          </td> */}
                         </tr>
                       ))}
                     </tbody>

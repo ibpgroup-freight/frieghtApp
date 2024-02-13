@@ -4,12 +4,11 @@ import useinvoiceStore from "../store/Invoice";
 
 const styles = StyleSheet.create({
   headerContainer: {
-    marginTop: 10,
     flexDirection: "row",
     justifyContent: "space-between",
     border: 1,
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "blue",
   },
   billTo: {
     marginTop: 10,
@@ -21,8 +20,6 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   singleText: {
-    borderWidth: 1,
-    borderColor: "black",
     paddingVertical: 3,
     paddingHorizontal: 4,
     fontSize: 8,
@@ -35,8 +32,6 @@ const BillTo = ({ jobInfo }: any) => {
       <View
         style={{
           ...styles.singleContainer,
-          borderRight: 1,
-          borderRightWidth: 1,
         }}
       >
         <Text style={styles.singleText}>Billed To {jobInfo.CustomerName}</Text>
@@ -48,6 +43,7 @@ const BillTo = ({ jobInfo }: any) => {
         <Text style={styles.singleText}>TRN No: {jobInfo.CustomerTRN}</Text>
         {/* <Text style={styles.singleText}>Status {jobInfo.company}</Text> */}
         <Text style={styles.singleText}>Job Id : {jobInfo.Jobid} </Text>
+        <Text style={styles.singleText}>Validity : {jobInfo.Jobid} </Text>
       </View>
     </View>
   );

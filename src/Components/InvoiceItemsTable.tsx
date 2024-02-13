@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     marginTop: 24,
     borderWidth: 1,
-    borderColor: "#bff0fd",
+    borderColor: "navy",
   },
 });
 
@@ -38,7 +38,8 @@ const styles2 = StyleSheet.create({
   container: {
     flexDirection: "row",
     borderBottomColor: "#bff0fd",
-    backgroundColor: "#bff0fd",
+    backgroundColor: "navy",
+    color: "oldlace",
     borderBottomWidth: 1,
     alignItems: "center",
     textAlign: "center",
@@ -48,21 +49,21 @@ const styles2 = StyleSheet.create({
   },
   description: {
     width: "30%",
-    borderRightColor: borderColor1,
+    borderRightColor: "white",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "heavy",
   },
   qty: {
     width: "10%",
-    borderRightColor: borderColor1,
+    borderRightColor: "white",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "heavy",
   },
   rate: {
     width: "10%",
-    borderRightColor: borderColor1,
+    borderRightColor: "white",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "heavy",
@@ -90,7 +91,7 @@ const borderColor2 = "#90e5fc";
 const styles3 = StyleSheet.create({
   container: {
     flexDirection: "row",
-    borderBottomColor: "#bff0fd",
+    borderBottomColor: "navy",
     backgroundColor: "#ffffff",
     borderBottomWidth: 1,
     alignItems: "center",
@@ -102,21 +103,21 @@ const styles3 = StyleSheet.create({
   },
   description: {
     width: "30%",
-    borderRightColor: borderColor2,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 8,
     fontWeight: "ultrabold",
   },
   qty: {
     width: "10%",
-    borderRightColor: borderColor1,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 9,
     fontWeight: "ultrabold",
   },
   rate: {
     width: "10%",
-    borderRightColor: borderColor1,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 9,
     fontWeight: "light",
@@ -129,16 +130,16 @@ const styles3 = StyleSheet.create({
 });
 
 const InvoiceTableRow = ({ items }: { items: QuotationItem[] }) => {
-  const rows = items.map((item: QuotationItem) => (
-    <View style={styles3.container} key={item.id}>
+  const rows = items.map((item: QuotationItem, index) => (
+    <View style={styles3.container} key={item.id} break={index === 20}>
       <Text style={styles3.description}>{item.ChargeDescription}</Text>
-      <Text style={styles3.qty}>{item.AmountPerUnit}</Text>
+      {/* <Text style={styles3.qty}>{item.AmountPerUnit}</Text> */}
       <Text style={styles3.rate}>{item.Charges}</Text>
       <Text style={styles2.rate}>Discount</Text>
       <Text style={styles2.rate}>VAT Rate</Text>
       <Text style={styles2.rate}>VAT Amount</Text>
       <Text style={styles3.amount}>
-        {(parseInt(item.AmountPerUnit) * parseInt(item.Charges)).toFixed(2)}
+        {/* {(parseInt(item.AmountPerUnit) * parseInt(item.Charges)).toFixed(2)} */}
       </Text>
     </View>
   ));
@@ -149,7 +150,7 @@ const borderColor3 = "#90e5fc";
 const styles4 = StyleSheet.create({
   row: {
     flexDirection: "row",
-    borderBottomColor: "#bff0fd",
+    borderBottomColor: "navy",
     backgroundColor: "#ffffff",
     borderBottomWidth: 1,
     alignItems: "center",
@@ -160,21 +161,21 @@ const styles4 = StyleSheet.create({
   },
   description: {
     width: "30%",
-    borderRightColor: borderColor2,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "ultrabold",
   },
   qty: {
     width: "10%",
-    borderRightColor: borderColor1,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "ultrabold",
   },
   rate: {
     width: "10%",
-    borderRightColor: borderColor1,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "light",
@@ -187,9 +188,11 @@ const styles4 = StyleSheet.create({
 });
 
 const InvoiceTableBlankSpace = ({ rowsCount }: any) => {
-  const blankRows = Array(rowsCount).fill(0);
+  // const blankRows = Array(rowsCount).fill(0);
+  const blankRows = Array(3).fill(0);
+
   const rows = blankRows.map((x, i) => (
-    <View style={styles4.row} key={`BR${i}`}>
+    <View style={styles4.row} key={`BR${i}`} break={i === 30} wrap={false} >
       <Text style={styles4.description}>-</Text>
       <Text style={styles4.qty}>-</Text>
       <Text style={styles4.rate}>-</Text>
@@ -205,7 +208,7 @@ const borderColor4 = "#90e5fc";
 const styles5 = StyleSheet.create({
   row: {
     flexDirection: "row",
-    borderBottomColor: "#bff0fd",
+    borderBottomColor: "navy",
     borderBottomWidth: 1,
     alignItems: "center",
     height: 15,
@@ -215,7 +218,7 @@ const styles5 = StyleSheet.create({
   description: {
     width: "85%",
     textAlign: "right",
-    borderRightColor: borderColor4,
+    borderRightColor: "navy",
     borderRightWidth: 1,
     paddingRight: 8,
   },
@@ -236,7 +239,7 @@ const InvoiceTableFooter = ({
   const total = items
     .map(
       (item: QuotationItem) =>
-        parseFloat(item.Charges) * parseFloat(item.AmountPerUnit)
+        parseFloat(item.Charges) * parseFloat(item.MinCostAmountPerUnit)
     )
     .reduce(
       (accumulator: number, currentValue: number) => accumulator + currentValue,

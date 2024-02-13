@@ -25,9 +25,8 @@ const styles = StyleSheet.create({
     width: "50%",
   },
   singleText: {
-    borderWidth: 1,
-    borderColor: "black",
-    paddingVertical: 3,
+    // borderWidth: 1,
+    // borderColor: "black",
     paddingHorizontal: 4,
     fontSize: 8,
   },
@@ -35,7 +34,13 @@ const styles = StyleSheet.create({
 
 const InvoiceNo = ({ jobInfo }: { jobInfo: cargoInfo }) => {
   return (
-    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        paddingVertical: 4,
+      }}
+    >
       <View style={styles.singleItemContainer}>
         <Text style={styles.singleText}>ABC Cargo Servies</Text>
         <Text style={{ ...styles.singleText }}>ABC CITY , ABC Country</Text>
