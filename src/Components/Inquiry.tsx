@@ -3,10 +3,62 @@ import useInquiryItem from "../store/Inquiry";
 import * as Yup from "yup";
 import { ErrorMessage, Field, useFormik, FormikProvider } from "formik";
 import { redirect, useNavigate, useSearchParams } from "react-router-dom";
-const validationSchema = Yup.object().shape(
+const RoadvalidationSchema = Yup.object().shape(
   {
     CustomerName: Yup.string().required("Customer Name is required"),
     CustomerAddress: Yup.string().required("Customer Address is required"),
+    CustomerEmail: Yup.string().required("Customer Email is required"),
+    CustomerPhoneNo: Yup.string().required("Customer Phone Number is required"),
+    SalesPerson: Yup.string().required("Sales Person is required"),
+    VehicleDetails: Yup.string().required("Vehicle Details required"),
+    DriverDetails: Yup.string().required("Driver Details required"),
+    RouteDetails: Yup.string().required("Route Details required"),
+    PlaceOfOrigin: Yup.string().required("Place of Origin is required"),
+    PlaceOfDestination: Yup.string().required(
+      "Place of Destination is required"
+    ),
+    Weight: Yup.string().required("Weight is required"),
+    TypeOfCargo: Yup.string().required("Type Of Cargo is required"),
+    Dimensions: Yup.string().required("Dimensions are required"),
+    TransitTime: Yup.number().required("Transit Time is required"),
+    ShipmentTerms: Yup.string().required("Shipment Terms are required"),
+    ContainerType: Yup.string().when(
+      "CustomContainerType",
+      ([CustomContainerType], schema) => {
+        return CustomContainerType
+          ? schema.notRequired()
+          : schema.required(
+              "Either Container Type Or Custom Container Type is required"
+            );
+      }
+    ),
+    CustomContainerType: Yup.string().when(
+      "ContainerType",
+      ([ContainerType], schema) => {
+        return ContainerType
+          ? schema.notRequired()
+          : schema.required(
+              "Either Container Type Or Custom Container Type is required"
+            );
+      }
+    ),
+    CarrierName: Yup.string().required("Carrier Name is required"),
+ 
+    Departure: Yup.string().required("Departure Time is required"),
+    EstimatedArrival: Yup.string().required(
+      "Estimated Arrival Time is required"
+    ),
+    CustomerTRN: Yup.string().required("Customer TRN is required"),
+    // Add validation rules for other fields
+  },
+  [["CustomContainerType", "ContainerType"]]
+);
+const SeavalidationSchema = Yup.object().shape(
+  {
+    CustomerName: Yup.string().required("Customer Name is required"),
+    CustomerAddress: Yup.string().required("Customer Address is required"),
+    CustomerEmail: Yup.string().required("Customer Email is required"),
+    CustomerPhoneNo: Yup.string().required("Customer Phone Number is required"),
     SalesPerson: Yup.string().required("Sales Person is required"),
     PortOfOrigin: Yup.string().required("Port of Origin is required"),
     PortOfDestination: Yup.string().required("Port of Destination is required"),
@@ -24,7 +76,16 @@ const validationSchema = Yup.object().shape(
             );
       }
     ),
-    CarrierName: Yup.string().required("Carrier Name is required"),
+    Departure: Yup.string().required("Departure Time is required"),
+    EstimatedArrival: Yup.string().required(
+      "Estimated Arrival Time is required"
+    ),
+    CustomerTRN: Yup.string().required("Customer TRN is required"),
+    VesselName: Yup.string().required("Carrier Name is required"),
+    VesselDetails: Yup.string().required("Vessel Details are required"),
+    ShippingLaneDetails: Yup.string().required(
+      "Shipping Lane Details are required"
+    ),
     CustomContainerType: Yup.string().when(
       "ContainerType",
       ([ContainerType], schema) => {
@@ -35,7 +96,8 @@ const validationSchema = Yup.object().shape(
             );
       }
     ),
-
+    TypeOfCargo: Yup.string().required("Type of Cargo is required"),
+    CarrierName: Yup.string().required("Carrier Name is required"),
     // Add validation rules for other fields
   },
   [["CustomContainerType", "ContainerType"]]
@@ -43,6 +105,8 @@ const validationSchema = Yup.object().shape(
 const AirvalidationSchema = Yup.object().shape({
   CustomerName: Yup.string().required("Customer Name is required"),
   CustomerAddress: Yup.string().required("Customer Address is required"),
+  CustomerEmail: Yup.string().required("Customer Email is required"),
+  CustomerPhoneNo: Yup.string().required("Customer Phone Number is required"),
   SalesPerson: Yup.string().required("Sales Person is required"),
   AirportOfOrigin: Yup.string().required("Airport of Origin is required"),
   AirportOfDestination: Yup.string().required(
@@ -54,6 +118,10 @@ const AirvalidationSchema = Yup.object().shape({
   ShipmentTerms: Yup.string().required("Shipment Terms are required"),
   TypeOfCargo: Yup.string().required("Type of Cargo is required"),
   CarrierName: Yup.string().required("Carrier Name is required"),
+  FlightInformation: Yup.string().notRequired(),
+  Departure: Yup.string().required("Departure Time is required"),
+  EstimatedArrival: Yup.string().required("Estimated Arrival Time is required"),
+  CustomerTRN: Yup.string().required("Customer TRN is required"),
 });
 
 function Inquiry(props: InquiryAndQuotationProps) {
@@ -61,67 +129,113 @@ function Inquiry(props: InquiryAndQuotationProps) {
   const params = useSearchParams();
   const rawtype = params[0].get("method");
   const Airtype = rawtype?.includes("air");
+  const Roadtype = rawtype?.includes("road");
+  const Seatype = rawtype?.includes("sea");
+
   const formik = useFormik({
     initialValues: inquiry,
-    validationSchema: Airtype ? AirvalidationSchema : validationSchema,
+    validationSchema: Airtype
+      ? AirvalidationSchema
+      : Roadtype
+      ? RoadvalidationSchema
+      : SeavalidationSchema,
     onSubmit: (values) => {
       console.log("Form submitted with values:", values);
-      setItemInquiry({ ...values, isAirinquiry: !!Airtype });
-      props.setstepNumber((prevStep) => prevStep + 1);
+      // setItemInquiry({ ...values, isAirinquiry: !!Airtype });
+      // props.setstepNumber((prevStep) => prevStep + 1);
     },
   });
 
   console.log(formik.errors);
-  console.log(inquiry);
 
   const Column1Items = [
     { label: "Enter Customer Name", name: "CustomerName", type: "text" },
     { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
-    { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
     ...(Airtype
       ? [
           {
-            label: "Enter Airport of Origin",
+            label: "Enter Airport Of Origin",
             name: "AirportOfOrigin",
             type: "text",
           },
           {
-            label: "Enter Airport of Destination",
+            label: "Enter Airport Of Destination",
             name: "AirportOfDestination",
             type: "text",
           },
-        ]
-      : [
           {
-            label: "Enter Port Of Origin",
-            name: "PortOfOrigin",
+            label: "Flight Information",
+            name: "FlightInformation",
+            type: "textarea",
+          },
+        ]
+      : []),
+
+    ...(Roadtype
+      ? [
+          {
+            label: "Enter Place Of Origin",
+            name: "PlaceOfOrigin",
             type: "text",
           },
+          {
+            label: "Enter Place Of Destination",
+            name: "PlaceOfDestination",
+            type: "text",
+          },
+
+          {
+            label: "Enter Vehicle Details",
+            name: "VehicleDetails",
+            type: "textarea",
+          },
+          {
+            label: "Enter Driver Details",
+            name: "DriverDetails",
+            type: "textarea",
+          },
+          {
+            label: "Enter Route Details",
+            name: "RouteDetails",
+            type: "textarea",
+          },
+        ]
+      : []),
+    ...(Seatype
+      ? [
+          { label: "Enter Port Of Origin", name: "PortOfOrigin", type: "text" },
           {
             label: "Enter Port Of Destination",
             name: "PortOfDestination",
             type: "text",
           },
-        ]),
-  ];
-  const Column2 = [
-    { label: "Enter Weight (kg)", name: "Weight", type: "number" },
-    { label: "Enter Dimensions", name: "Dimensions", type: "text" },
-    {
-      label: "Enter Transit Time",
-      name: "TransitTime",
-      type: "number",
-      options: [],
-    },
-    ...(Airtype
-      ? [
           {
-            label: "Type of Cargo",
-            name: "TypeOfCargo",
-            type: "text",
+            label: "Enter Vessel Name",
+            name: "VesselName",
+            type: "textarea",
+          },
+          {
+            label: "Enter Vessel Details",
+            name: "VesselDetails",
+            type: "textarea",
+          },
+          {
+            label: "Enter Shipping Lane Details",
+            name: "ShippingLaneDetails",
+            type: "textarea",
           },
         ]
-      : [
+      : []),
+  ];
+  const Column2Items = [
+    { label: "Enter Customer Email", name: "CustomerEmail", type: "text" },
+    {
+      label: "Enter Customer Phone Number",
+      name: "CustomerPhoneNo",
+      type: "text",
+    },
+    ...(!Airtype
+      ? [
           {
             label: "Container Type",
             name: "ContainerType",
@@ -141,14 +255,30 @@ function Inquiry(props: InquiryAndQuotationProps) {
               "Break Bulk",
             ],
           },
-          {
-            label: "Custom Container Type",
-            name: "CustomContainerType",
-            type: "text",
-          },
-        ]),
+        ]
+      : []),
+    {
+      label: "Weight(kg)",
+      name: "Weight",
+      type: "number",
+    },
+    { label: "Enter Dimensions", name: "Dimensions", type: "text" },
+    {
+      label: "Custom Container Type",
+      name: "CustomContainerType",
+      type: "text",
+    },
+    { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
+    {
+      label: "Enter Transit Time",
+      name: "TransitTime",
+      type: "number",
+    },
+    // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
   ];
   const Column3 = [
+    { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
+
     {
       label: "Enter Shipment Terms",
       name: "ShipmentTerms",
@@ -168,8 +298,18 @@ function Inquiry(props: InquiryAndQuotationProps) {
         "DDP",
       ],
     },
-
     { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
+    { label: "Enter Type of Cargo", name: "TypeOfCargo", type: "text" },
+    {
+      label: "Departure",
+      name: "Departure",
+      type: "datetime-local",
+    },
+    {
+      label: "Estimated Arrival",
+      name: "EstimatedArrival",
+      type: "datetime-local",
+    },
   ];
   return (
     <FormikProvider value={formik}>
@@ -183,6 +323,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
                     {i.label}
                   </label>
                   <Field
+                    as={i.type === "textarea" ? "textarea" : "input"}
                     type={i.type}
                     name={i.name}
                     className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
@@ -196,9 +337,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
               ))}
             </div>
             <div className="flex flex-col space-y-1">
-              {Column2.filter(
-                (i) => typeof i === "object" && i !== null && i.name
-              ).map((i) => (
+              {Column2Items.map((i) => (
                 <div key={i.name} className="px-4">
                   <label className="text-xl" key={i.name}>
                     {i.label}
@@ -226,6 +365,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
                   ) : (
                     <>
                       <Field
+                        as={i.type === "textarea" ? "textarea" : "input"}
                         type={i.type}
                         name={i.name}
                         className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"

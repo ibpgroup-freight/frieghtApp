@@ -139,12 +139,12 @@ function DropDown({ dropdown }: { dropdown: keyof DropdownType }) {
     ],
     RoadFreightDropDown: [
       {
-        path: "/home?method=roadfreightimportSI",
-        name: "Road freight import (SI)",
+        path: "/home?method=roadfreightimportRI",
+        name: "Road freight import (RI)",
       },
       {
-        name: "Road freight Ex port (SE)",
-        path: "/home?method=roadfreightexportSE",
+        name: "Road freight Ex port (RE)",
+        path: "/home?method=roadfreightexportRE",
       },
     ],
   };

@@ -32,8 +32,14 @@ type Inquiry = {
   SalesPerson: string;
   PortOfOrigin?: string;
   PortOfDestination?: string;
+  PlaceOfOrigin?: string;
+  PlaceOfDestination?: string;
+  VehicleDetails?: string;
+  DriverDetails?: string;
+  RouteDetails?: string;
   AirportOfOrigin?: string;
   AirportOfDestination?: string;
+  FlightInformation?: string;
   TypeOfCargo?: string;
   isAirinquiry: boolean;
   Weight: string;
@@ -42,7 +48,16 @@ type Inquiry = {
   ShipmentTerms: string;
   CarrierName: string;
   CustomContainerType: string;
-  ContainerType: string;
+  ContainerType?: string;
+  type?: string;
+  Departure: string;
+  EstimatedArrival: string;
+  CustomerTRN: string;
+  CustomerEmail: string;
+  CustomerPhoneNo: string;
+  VesselName?: string;
+  VesselDetails?: string;
+  ShippingLaneDetails?: string;
 };
 type InquiryStore = {
   inquiry: Inquiry;

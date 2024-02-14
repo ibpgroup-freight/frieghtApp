@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useRef } from "react";
 import { useState } from "react";
 import AddQuotation from "../Components/AddQuotation";
 import { ModalCtx } from "../store/Modal";
@@ -8,6 +8,10 @@ import * as yup from "yup";
 import { useFormik, Field, ErrorMessage, FormikProvider } from "formik";
 import { toast } from "react-toastify";
 import useinvoiceStore from "../store/Invoice";
+import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
+import useInquiryItem from "../store/Inquiry";
+import useItemStore from "../store/Item";
 // const init = {
 //   CustomerName: "",
 //   CustomerAddress: "",
@@ -23,77 +27,321 @@ import useinvoiceStore from "../store/Invoice";
 //   CustomerTRN: "",
 //   Jobid: "",
 // };
-const validationSchema = yup.object().shape({
-  Jobid: yup.string().required("Job Id is required"),
-  CustomerName: yup.string().required("Customer Name is required"),
-  CustomerAddress: yup.string().required("Customer Address is required"),
-  SalesPerson: yup.string().required("Sales Person is required"),
-  PortOfOrigin: yup.string().required("Port of Origin is required"),
-  PortOfDestination: yup.string().required("Port of Destination is required"),
-  CarrierName: yup.string().required("Carrier Name is required"),
-  TodaysDate: yup.string().required("Carrier Name is required"),
-  TransitTime: yup.string().required("Transit Time is required"),
-  CustomerEmail: yup
-    .string()
-    .email("Invalid email")
-    .required("Customer Email is required"),
-  CustomerPhone: yup
-    .string()
-    .matches(/^\d+$/, "Invalid phone number")
-    .required("Customer Phone is required"),
-  CustomerTRN: yup
-    .string()
-    .matches(/^\d+$/, "Invalid TRN")
-    .required("Customer TRN is required"),
-});
+const validationSchema = yup.object().shape(
+  {
+    Jobid: yup.string().required("Job Id is required"),
+    CustomerName: yup.string().required("Customer Name is required"),
+    CustomerAddress: yup.string().required("Customer Address is required"),
+    CustomerEmail: yup.string().required("Customer Email is required"),
+    CustomerPhoneNo: yup.string().required("Customer Phone Number is required"),
+    SalesPerson: yup.string().required("Sales Person is required"),
+    VehicleDetails: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Road"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Vehicle Details required"),
+    DriverDetails: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Road"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Driver Details required"),
+    RouteDetails: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Road"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Route Details required"),
+    PlaceOfOrigin: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Road"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Place of Origin is required"),
+    PlaceOfDestination: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Road"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Place of Destination is required"),
+    PortOfOrigin: yup
+      .string()
+      .when("type", {
+        is: (type: string) => !type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Port of Origin is required"),
+    PortOfDestination: yup
+      .string()
+      .when("type", {
+        is: (type: string) => !type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Port of Destination is required"),
+    AirportOfOrigin: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Airport of Origin is required"),
+    AirportOfDestination: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Airport of Destination is required"),
+    CarrierName: yup.string().required("Carrier Name is required"),
+    TodaysDate: yup.string().required("Carrier Name is required"),
+    TransitTime: yup.string().required("Transit Time is required"),
+    type: yup.string().required("Type of bill is Required"),
+    CustomerTRN: yup
+      .string()
+      .matches(/^\d+$/, "Invalid TRN")
+      .required("Customer TRN is required"),
+    Weight: yup.string().required("Weight is required"),
+    Dimensions: yup.string().required("Dimensions are required"),
+    ShipmentTerms: yup.string().required("Shipment Terms are required"),
+    TypeOfCargo: yup.string().required("Type of Cargo is required"),
+    FlightInformation: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .notRequired(),
+    VesselName: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Sea"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Carrier Name is required"),
+    VesselDetails: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Sea"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Vessel Details are required"),
+    ShippingLaneDetails: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Sea"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Shipping Lane Details are required"),
+    Departure: yup.string().required("Departure Time is required"),
+    EstimatedArrival: yup
+      .string()
+      .required("Estimated Arrival Time is required"),
+    ContainerType: yup
+      .string()
+      .when("CustomContainerType", ([CustomContainerType], schema) => {
+        return CustomContainerType
+          ? schema.notRequired()
+          : schema.required(
+              "Either Container Type Or Custom Container Type is required"
+            );
+      }),
+    CustomContainerType: yup
+      .string()
+      .when("ContainerType", ([ContainerType], schema) => {
+        return ContainerType
+          ? schema.notRequired()
+          : schema.required(
+              "Either Container Type Or Custom Container Type is required"
+            );
+      }),
+  },
+  [["ContainerType", "CustomContainerType"]]
+);
 
 function GenerateInvoice() {
   const [showQuotation, setshowQuotation] = useState(false);
   const ctx = useContext(ModalCtx);
-  const { Items: temp_Items, jobInfo, setInfo, setItems } = useinvoiceStore();
+  const {
+    Items: temp_Items,
+    jobInfo,
+    setInfo,
+    setItems: setInvoiceItems,
+  } = useinvoiceStore();
+  const { setItemInquiry, inquiry } = useInquiryItem();
+  const { setitemsArray, items: quotationItemsStore } = useItemStore();
   const navigate = useNavigate();
-
-  const [items, setitems] = useState<QuotationItem[]>(temp_Items);
+  const jobidRef = useRef<HTMLInputElement | null>(null);
+  // const [items, setitems] = useState<QuotationItem[]>(
+  //   quotationItemsStore || []
+  // );
   // const [state, dispatch] = React.useReducer(InquiryReducer, inq);
+  const filljobDetailsbyId = useCallback(async () => {
+    try {
+      console.log("job", jobidRef.current?.value);
+      const docs = await getDocs(
+        query(
+          collection(db, "jobs"),
+          where("jobid", "==", jobidRef.current?.value!)
+        )
+      );
+      if (docs.empty) return toast.error("No Such Job Exists");
+      console.log("Data", docs.docs[0]?.data());
+      setItemInquiry(docs.docs[0]?.data()?.inquiry as Inquiry);
+      setitemsArray(docs.docs[0]?.data()?.Items as QuotationItem[]);
+      // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
+      // setItems(docs.docs[0]?.data()?.Items as QuotationItem[]);
+    } catch (e) {
+      toast.error("No Such Job");
+    }
+  }, [jobidRef]);
+  // console.log("q", items);
+
   const formikObj = useFormik({
-    initialValues: jobInfo,
+    enableReinitialize: true,
+    initialValues: { ...inquiry },
     onSubmit(values) {
       console.log("Here");
-      if (items.length === 0) {
-        toast.error("Add Some Items First");
-        return;
-      }
-      setInfo(values);
-      setItems(items);
-      navigate("/testPdf", {
-        state: {
-          items,
-          jobInfo: values,
-        },
-      });
+      // if (quotationItemsStore.length === 0) {
+      //   toast.error("Add Some Items First");
+      //   return;
+      // }
+      console.log(values, "all cvalues");
+      // setInfo(values);
+      // setInvoiceItems(items);
+      // navigate("/testPdf", {
+      //   state: {
+      //     items,
+      //     jobInfo: values,
+      //   },
+      // });
     },
     validationSchema,
   });
+  console.log("qi", formikObj.errors);
+
   const Column1 = [
-    { label: "Quote Validity", name: "QuoteValidity", type: "text" },
-    { label: "Charges", name: "Charges", type: "text" },
-    { label: "Charge Description", name: "ChargeDescription", type: "text" },
-    { label: "Unit Per Kg", name: "UnitPerKg", type: "number" },
-    { label: "Currency", name: "Currency", type: "number" },
-    { label: "Amount Per Unit", name: "AmountPerUnit", type: "number" },
-    { label: "Cost And Sell Section", name: "CostAndSellSection" },
+    { label: "Index", name: "Sr no" },
+    { label: "Quote Validity", name: "QuoteValidity" },
+    { label: "Charges", name: "Charges" },
+    { label: "Charge Description", name: "ChargeDescription" },
+    {
+      label: "Units",
+      name: "Units",
+      subheadings: ["Min", "Max"],
+    },
+    {
+      label: "Rate",
+      name: "Rate",
+      subheadings: ["Cost Per Unit", "Min", "Max"],
+    },
+
+    {
+      label: "Cost",
+      name: "Cost",
+      subheadings: ["Cost Per Unit", "Min", "Max"],
+    },
+    { label: "Currency", name: "Currency" },
+    // { label: "Amount Per Unit", name: "AmountPerUnit" },
+    // { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
   const Column1Items = [
-    { label: "Enter Job Id", name: "Jobid", type: "text" },
     { label: "Enter Customer Name", name: "CustomerName", type: "text" },
     { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
     { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
-    { label: "Enter Port Of Origin", name: "PortOfOrigin", type: "text" },
-    {
-      label: "Enter Port Of Destination",
-      name: "PortOfDestination",
-      type: "text",
-    },
+    ...(formikObj.values.type?.includes("Air")
+      ? [
+          {
+            label: "Enter Airport Of Origin",
+            name: "AirportOfOrigin",
+            type: "text",
+          },
+          {
+            label: "Enter Airport Of Destination",
+            name: "AirportOfDestination",
+            type: "text",
+          },
+          {
+            label: "Flight Information",
+            name: "FlightInformation",
+            type: "textarea",
+          },
+        ]
+      : []),
+
+    ...(formikObj.values.type?.includes("Road")
+      ? [
+          {
+            label: "Enter Place Of Origin",
+            name: "PlaceOfOrigin",
+            type: "text",
+          },
+          {
+            label: "Enter Place Of Destination",
+            name: "PlaceOfDestination",
+            type: "text",
+          },
+
+          {
+            label: "Enter Vehicle Details",
+            name: "VehicleDetails",
+            type: "textarea",
+          },
+          {
+            label: "Enter Driver Details",
+            name: "DriverDetails",
+            type: "textarea",
+          },
+          {
+            label: "Enter Route Details",
+            name: "RouteDetails",
+            type: "textarea",
+          },
+        ]
+      : []),
+    ...(formikObj.values.type?.includes("Sea")
+      ? [
+          { label: "Enter Port Of Origin", name: "PortOfOrigin", type: "text" },
+          {
+            label: "Enter Port Of Destination",
+            name: "PortOfDestination",
+            type: "text",
+          },
+          {
+            label: "Enter Vessel Name",
+            name: "VesselName",
+            type: "textarea",
+          },
+          {
+            label: "Enter Vessel Details",
+            name: "VesselDetails",
+            type: "textarea",
+          },
+          {
+            label: "Enter Shipping Lane Details",
+            name: "ShippingLaneDetails",
+            type: "textarea",
+          },
+        ]
+      : []),
     { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
     {
       label: "Enter Any Outstanding Dues",
@@ -105,19 +353,58 @@ function GenerateInvoice() {
     { label: "Enter Customer Email", name: "CustomerEmail", type: "text" },
     {
       label: "Enter Customer Phone Number",
-      name: "CustomerPhone",
+      name: "CustomerPhoneNo",
+      type: "text",
+    },
+    {
+      label: "Container Type",
+      name: "ContainerType",
+      type: "select",
+      options: [
+        "20ft",
+        "40ft",
+        "40 HC",
+        "45 HC",
+        "20 OT",
+        "40 OT",
+        "20 FR",
+        "40 FR",
+        "20 RF",
+        "40 RF",
+        "RORO",
+        "Break Bulk",
+      ],
+    },
+    {
+      label: "Custom Container Type",
+      name: "CustomContainerType",
       type: "text",
     },
     { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
     {
       label: "Enter Transit Time",
       name: "TransitTime",
-      type: "datetime-local",
+      type: "number",
     },
     { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
 
     { label: "Enter Discount If Applicable", name: "Discount", type: "number" },
-    { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
+    // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
+    {
+      label: "Special Instructions",
+      name: "specialInstructions",
+      type: "textarea",
+    },
+    {
+      label: "Departure",
+      name: "Departure",
+      type: "datetime-local",
+    },
+    {
+      label: "Estimated Arrival",
+      name: "EstimatedArrival",
+      type: "datetime-local",
+    },
   ];
   console.log(temp_Items, "   ", jobInfo);
   return (
@@ -128,7 +415,8 @@ function GenerateInvoice() {
             <AddQuotation
               closeQuotation={setshowQuotation}
               AddItemToInvoice={(item: QuotationItem) =>
-                setitems((p) => [...p, item])
+                // setitems((p) => [...p, item])
+                setitemsArray([...quotationItemsStore, item])
               }
             />
           )}
@@ -137,12 +425,50 @@ function GenerateInvoice() {
         <h1 className="text-5xl text-center text-blue-600 font-serif">
           Generate Invoice
         </h1>
+        <div className="flex items-center w-3/5 justify-between">
+          <label className="text-xl" htmlFor="jobid">
+            Enter Job Id
+          </label>
+          <input
+            type={"text"}
+            name={"jobid"}
+            placeholder="jobId"
+            className="w-3/5 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+            ref={jobidRef}
+          />
+          <button
+            className="bg-blue-500 text-white p-3 rounded-md"
+            onClick={filljobDetailsbyId}
+          >
+            Fill Details
+          </button>
+        </div>
 
         <div className="w-4.5/5">
           <h1 className="text-xl text-center text-blue-900 font-serif">
             Invoice Details
           </h1>
           <form onSubmit={formikObj.handleSubmit}>
+            <div>
+              <label className="text-xl">{"Type of Bill"}</label>
+              <Field
+                as="select"
+                name="type"
+                className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+              >
+                <option value={""}>Select Bill Tyoe</option>
+                <option value={"AirFreight"}>AirFreight Bill</option>
+                <option value={"RoadFreight"}>RoadFreight Bill</option>
+                <option value={"SeaFreight"}>SeaFreight Bill</option>
+                <option value={"BillOfLadding"}>Bill Of Ladding</option>
+              </Field>
+            </div>
+
+            <ErrorMessage
+              name={"type"}
+              component="div"
+              className="text-red-500"
+            />
             <div className="flex  flex-col lg:flex-row justify-between space-y-2">
               <div className="2/5">
                 {Column1Items.map((i) => (
@@ -151,9 +477,10 @@ function GenerateInvoice() {
                       {i.label}
                     </label>
                     <Field
+                      as={i.type === "textarea" ? "textarea" : "input"}
                       type={i.type}
                       name={i.name}
-                      className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
                     />
                     <ErrorMessage
                       name={i.name}
@@ -169,10 +496,12 @@ function GenerateInvoice() {
                     <label className="text-xl" key={i.name}>
                       {i.label}
                     </label>
+
                     <Field
+                      as={i.type === "textarea" ? "textarea" : "input"}
                       type={i.type}
                       name={i.name}
-                      className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                      className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
                     />
                     <ErrorMessage
                       name={i.name}
@@ -188,24 +517,41 @@ function GenerateInvoice() {
               <h1 className="text-xl text-center text-blue-900 font-serif">
                 Add Services
               </h1>
-              <div className="w-3/5 md:w-full overflow-auto">
+              <div className=" w-full overflow-auto mt-20">
                 <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
                   <thead>
                     <tr>
-                      {Column1.map((i) => (
-                        <th
-                          className="border border-slate-300 p-4"
-                          key={i.name}
-                        >
-                          {i.label}
-                        </th>
+                      {Column1.map((column) => (
+                        <React.Fragment key={column.name}>
+                          <th
+                            className="border border-slate-300 p-4 bg-blue-50 w-auto"
+                            colSpan={
+                              column.subheadings ? column.subheadings.length : 1
+                            }
+                          >
+                            {column.label}
+                            {column.subheadings &&
+                              column.subheadings.map((subheading, subIndex) => (
+                                <th
+                                  className="px-4 border-t-2 border-black text-center"
+                                  key={`${column.name}_${subIndex}`}
+                                  colSpan={1}
+                                >
+                                  {subheading}
+                                </th>
+                              ))}
+                          </th>
+                        </React.Fragment>
                       ))}
                     </tr>
                   </thead>
-                  {items && (
+                  {quotationItemsStore && (
                     <tbody>
-                      {items.map((i) => (
-                        <tr key={i.id}>
+                      {quotationItemsStore.map((i, index) => (
+                        <tr>
+                          <td className="border border-slate-300 p-4">
+                            {index + 1}
+                          </td>
                           <td className="border border-slate-300 p-4">
                             {i.QuoteValidity}
                           </td>
@@ -215,31 +561,42 @@ function GenerateInvoice() {
                           <td className="border border-slate-300 p-4">
                             {i.ChargeDescription}
                           </td>
-                          {/* <td className="border border-slate-300 p-4">
-                            {i.UnitPerKg}
-                          </td> */}
+                          <td className="border border-slate-300 p-4">
+                            {i.minUnits}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {i.maxUnits}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {/* {i.UnitPerKg} */}
+                            {i.RateAmountPerUnit}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {i.MinRateAmountPerUnit}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {i.MinRateAmountPerUnit}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {/* {i.UnitPerKg} */}
+                            {i.CostAmountPerUnit}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {i.MinCostAmountPerUnit}
+                          </td>
+                          <td className="border border-slate-300 p-4">
+                            {i.MinCostAmountPerUnit}
+                          </td>
                           <td className="border border-slate-300 p-4">
                             {i.Currency}
                           </td>
-                          {/* <td className="border border-slate-300 p-4">
-                            {i.AmountPerUnit}
-                          </td>
-                          <td className="border border-slate-300 p-4">
-                            {i.CostAndSellSection}
-                          </td> */}
                         </tr>
                       ))}
                     </tbody>
                   )}
-                  <ErrorMessage
-                    name="items"
-                    component="div"
-                    className="text-red-500"
-                  />
                 </table>
-                <div className="absolute right-40">
+                <div className="absolute right-20">
                   <button
-                    type="button"
                     className="text-2xl rounded-full text-green-600"
                     onClick={(e) => {
                       console.log("Here");
@@ -247,7 +604,31 @@ function GenerateInvoice() {
                       ctx.setToggle();
                     }}
                   >
-                    + Add
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height={70}
+                      width={70}
+                    >
+                      <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                      <g
+                        id="SVGRepo_tracerCarrier"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      ></g>
+                      <g id="SVGRepo_iconCarrier">
+                        <path
+                          opacity="0.5"
+                          d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22Z"
+                          fill="#054d00"
+                        ></path>{" "}
+                        <path
+                          d="M12 8.25C12.4142 8.25 12.75 8.58579 12.75 9V11.25H15C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H12.75L12.75 15C12.75 15.4142 12.4142 15.75 12 15.75C11.5858 15.75 11.25 15.4142 11.25 15V12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H11.25L11.25 9C11.25 8.58579 11.5858 8.25 12 8.25Z"
+                          fill="#054d00"
+                        ></path>{" "}
+                      </g>
+                    </svg>
                   </button>
                 </div>
               </div>
