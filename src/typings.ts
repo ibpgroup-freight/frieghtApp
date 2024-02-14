@@ -57,6 +57,7 @@ type Inquiry = {
   CustomerPhoneNo: string;
   VesselName?: string;
   VesselDetails?: string;
+  othershippingDetails?: string;
   ShippingLaneDetails?: string;
 };
 type InquiryStore = {
@@ -120,25 +121,13 @@ interface registrationTypes {
 }
 
 type InvoiceStore = {
-  jobInfo: cargoInfo;
+  jobInfo: cargoInfo & Inquiry;
   Items: QuotationItem[];
-  setInfo: (j: cargoInfo) => void;
+  setInfo: (j: cargoInfo & Inquiry) => void;
   setItems: (j: QuotationItem[]) => void;
 };
 
 type cargoInfo = {
-  CustomerName: string;
-  CustomerAddress: string;
-  SalesPerson: string;
-  PortOfOrigin: string;
-  PortOfDestination: string;
-  TransitTime: string;
-  CarrierName: string;
-  ContainerType: string;
-  TodaysDate: string;
-  CustomerPhone: string;
-  CustomerEmail: string;
-  CustomerTRN: string;
   Jobid: string;
   Discount: number;
   OutstandingDues: number;

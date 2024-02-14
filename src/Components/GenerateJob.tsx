@@ -8,6 +8,7 @@ import { Oval } from "react-loader-spinner";
 import { toast } from "react-toastify";
 import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { v4 as uuidv4 } from "uuid";
 type InquiryAndQuotationProps = {
   step: number;
   setstepNumber: React.Dispatch<React.SetStateAction<number>>;

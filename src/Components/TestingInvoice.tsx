@@ -16,6 +16,8 @@ import InvoiceThankYouMsg from "./InvoiceThankYouMsg";
 import logo from "../../src/logo.jpg";
 import { useLocation } from "react-router-dom";
 import useinvoiceStore from "../store/Invoice";
+import TableShipmentDetails from "./TableShipmentDetails";
+import OtherShipmentDetails from "./OtherShipmentDetails";
 // const invoiceData = {
 //   id: "5df3180a09ea16dc4b95f910",
 //   invoice_no: "201906-28",
@@ -79,7 +81,6 @@ const styles = StyleSheet.create({
 const TestingInvoice = () => {
   const { Items, jobInfo } = useinvoiceStore();
   const location = useLocation();
-  console.log("location", location.state);
   console.log(Items, "Item");
   console.log(jobInfo, "jobInfo");
 
@@ -91,6 +92,8 @@ const TestingInvoice = () => {
           <InvoiceTitle title="Invoice" />
           <InvoiceNo jobInfo={jobInfo} />
           <BillTo jobInfo={jobInfo} />
+          <TableShipmentDetails jobInfo={jobInfo} />
+          <OtherShipmentDetails jobInfo={jobInfo} />
           <InvoiceItemsTable Items={Items} jobInfo={jobInfo} />
           <InvoiceThankYouMsg />
           <View style={{ width: "100%" }} wrap={false}>
@@ -107,7 +110,7 @@ const TestingInvoice = () => {
                 style={{
                   width: "20%",
                   textDecoration: "underline",
-                  color: "mediumblue",
+                  color: "dodgerblue",
                 }}
               >
                 Sales Conditions:
@@ -116,7 +119,6 @@ const TestingInvoice = () => {
                 style={{
                   width: "80%",
                   flexWrap: "wrap",
-                  color: "dimgrey",
                 }}
               >
                 All our operations are made on the general terms of sale TLF
@@ -126,6 +128,41 @@ const TestingInvoice = () => {
                 exchange rates, the fuel surcharge.{"\n"} Except specific
                 written instructions received from you before the starting up of
                 the operations, no ad-valorem insurance will be subscribed.
+                {"\n"}Sea freight and additional charges of sea freight are
+                included and valid on the date of the offer, actual charges and
+                additional costs are valid on the date of shipping (V.A.T.O.S.)
+                and can be changed without prior announcement of ocean carrier
+                or any other relavant party.{"\n"}
+                The insurance of goods during transport must be ordered
+                additionally, as shipment is not insured under transport
+                insurance during the transport.{"\n"}f the goods need to be
+                stuffed into a container or into/onto another transport
+                packaging (hereafter: the container) at the place of loading,
+                this needs to be carried out within the so called free time. The
+                same rule applies at the place of unloading where the container
+                must be unstuffed and returned to the shipping company or to
+                another owner withing the free time. Free time is the time
+                within which an additional payment for: a) the use of the
+                container by the shipping company or by another owner of the
+                container (demurrage, detention) or b) the storage of the
+                container (storage) by the port or by another manager of
+                warehousing premises is not yet being charged. If the free time
+                is exceeded Intereuropa is (pursuant to the contract entered
+                into between Intereuropa and them) bound to pay the shipping
+                companies, the ports and/or other performers of
+                transport/logistics services a damage or other compensation as
+                defined within their general terms and tariffs. By ordering the
+                service or entering into the freight forwarding contract with
+                Intereuropa the client confirms to be aware of the facts
+                specified above. In case Intereuropa is for whatever reason
+                bound to pay such damage or other compensations, the client
+                shall refund Intereuropa (upon receiving Intereuropa’s first
+                demand) the paid amounts as well as any other expenses related
+                thereto. This rule shall apply also in cases were the delay is
+                caused by the shipper/consignee from which or to which the
+                container is taken/delivered on client’s order. The rule does
+                not apply only in case the exceeding of the free time was caused
+                by Intereuropa.
               </Text>
             </View>
             <View
@@ -139,7 +176,7 @@ const TestingInvoice = () => {
                 style={{
                   width: "20%",
                   textDecoration: "underline",
-                  color: "mediumblue",
+                  color: "dodgerblue",
                 }}
               >
                 Payment Terms
@@ -164,9 +201,9 @@ const TestingInvoice = () => {
                 marginVertical: 5,
               }}
             >
-              <Text>Check For Agreement</Text>
-              <Text>Date</Text>
-              <Text>Company Stamp</Text>
+              <Text style={{ color: "dodgerblue" }}>Check For Agreement</Text>
+              <Text style={{ color: "dodgerblue" }}>Date</Text>
+              <Text style={{ color: "dodgerblue" }}>Company Stamp</Text>
             </View>
           </View>
           <View

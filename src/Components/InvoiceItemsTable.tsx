@@ -37,10 +37,10 @@ const borderColor1 = "#90e5fc";
 const styles2 = StyleSheet.create({
   container: {
     flexDirection: "row",
-    borderBottomColor: "#bff0fd",
-    backgroundColor: "navy",
-    color: "oldlace",
-    borderBottomWidth: 1,
+    borderColor: "navy",
+    backgroundColor: "gainsboro",
+    color: "black",
+    borderWidth: 1,
     alignItems: "center",
     textAlign: "center",
     flexGrow: 1,
@@ -49,27 +49,27 @@ const styles2 = StyleSheet.create({
   },
   description: {
     width: "30%",
-    borderRightColor: "white",
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "heavy",
   },
   qty: {
-    width: "10%",
-    borderRightColor: "white",
+    width: "20%",
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "heavy",
   },
   rate: {
-    width: "10%",
-    borderRightColor: "white",
+    width: "30%",
+    borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "heavy",
   },
   amount: {
-    width: "15%",
+    width: "20%",
     fontSize: 10,
     fontWeight: "heavy",
   },
@@ -80,9 +80,6 @@ const InvoiceTableHeader = () => (
     <Text style={styles2.description}>Item Description</Text>
     <Text style={styles2.qty}>Qty</Text>
     <Text style={styles2.rate}>Unit Price</Text>
-    <Text style={styles2.rate}>Discount</Text>
-    <Text style={styles2.rate}>VAT Rate</Text>
-    <Text style={styles2.rate}>VAT Amount</Text>
     <Text style={styles2.amount}>Toal Amount</Text>
   </View>
 );
@@ -109,21 +106,21 @@ const styles3 = StyleSheet.create({
     fontWeight: "ultrabold",
   },
   qty: {
-    width: "10%",
+    width: "20%",
     borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 9,
     fontWeight: "ultrabold",
   },
   rate: {
-    width: "10%",
+    width: "30%",
     borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 9,
     fontWeight: "light",
   },
   amount: {
-    width: "15%",
+    width: "20%",
     fontSize: 9,
     fontWeight: "bold",
   },
@@ -133,13 +130,13 @@ const InvoiceTableRow = ({ items }: { items: QuotationItem[] }) => {
   const rows = items.map((item: QuotationItem, index) => (
     <View style={styles3.container} key={item.id} break={index === 20}>
       <Text style={styles3.description}>{item.ChargeDescription}</Text>
-      {/* <Text style={styles3.qty}>{item.AmountPerUnit}</Text> */}
-      <Text style={styles3.rate}>{item.Charges}</Text>
-      <Text style={styles2.rate}>Discount</Text>
-      <Text style={styles2.rate}>VAT Rate</Text>
-      <Text style={styles2.rate}>VAT Amount</Text>
+      <Text style={styles3.qty}>{item.maxUnits}</Text>
+      <Text style={styles3.rate}>
+        {item.Charges} {item.Currency}
+      </Text>
       <Text style={styles3.amount}>
-        {/* {(parseInt(item.AmountPerUnit) * parseInt(item.Charges)).toFixed(2)} */}
+        {(parseInt(item.maxUnits) * parseInt(item.Charges)).toFixed(2)}{" "}
+        {item.Currency}
       </Text>
     </View>
   ));
@@ -167,21 +164,21 @@ const styles4 = StyleSheet.create({
     fontWeight: "ultrabold",
   },
   qty: {
-    width: "10%",
+    width: "20%",
     borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "ultrabold",
   },
   rate: {
-    width: "10%",
+    width: "30%",
     borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 10,
     fontWeight: "light",
   },
   amount: {
-    width: "15%",
+    width: "20%",
     fontSize: 10,
     fontWeight: "bold",
   },
@@ -192,12 +189,9 @@ const InvoiceTableBlankSpace = ({ rowsCount }: any) => {
   const blankRows = Array(3).fill(0);
 
   const rows = blankRows.map((x, i) => (
-    <View style={styles4.row} key={`BR${i}`} break={i === 30} wrap={false} >
+    <View style={styles4.row} key={`BR${i}`} break={i === 30} wrap={false}>
       <Text style={styles4.description}>-</Text>
       <Text style={styles4.qty}>-</Text>
-      <Text style={styles4.rate}>-</Text>
-      <Text style={styles4.rate}>-</Text>
-      <Text style={styles4.rate}>-</Text>
       <Text style={styles4.rate}>-</Text>
     </View>
   ));
@@ -239,7 +233,7 @@ const InvoiceTableFooter = ({
   const total = items
     .map(
       (item: QuotationItem) =>
-        parseFloat(item.Charges) * parseFloat(item.MinCostAmountPerUnit)
+        parseFloat(item.Charges) * parseFloat(item.maxUnits)
     )
     .reduce(
       (accumulator: number, currentValue: number) => accumulator + currentValue,
@@ -255,14 +249,6 @@ const InvoiceTableFooter = ({
   return (
     <>
       <View style={styles5.row}>
-        <Text style={styles5.description}>TOTAL Before VAT</Text>
-        <Text style={styles5.total}>{total}</Text>
-      </View>
-      <View style={styles5.row}>
-        <Text style={styles5.description}>VAT Amount</Text>
-        <Text style={styles5.total}></Text>
-      </View>
-      <View style={styles5.row}>
         <Text style={styles5.description}>Discount</Text>
         <Text style={styles5.total}>
           {(total - jobInfo?.Discount || 0).toFixed(2)}
@@ -274,12 +260,12 @@ const InvoiceTableFooter = ({
           {(discounttotal + jobInfo?.OutstandingDues || 0).toFixed(2)}
         </Text>
       </View>
-      <View style={styles5.row}>
+      {/* <View style={styles5.row}>
         <Text style={styles5.description}>Grand Amount</Text>
         <Text style={styles5.total}>
           {(discounttotal + jobInfo?.OutstandingDues || 0).toFixed(2)}
         </Text>
-      </View>
+      </View> */}
       <View style={styles5.row}>
         <Text style={styles5.description}>TOTAL</Text>
         <Text style={styles5.total}>

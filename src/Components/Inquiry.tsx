@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import useInquiryItem from "../store/Inquiry";
 import * as Yup from "yup";
 import { ErrorMessage, Field, useFormik, FormikProvider } from "formik";
@@ -43,7 +43,7 @@ const RoadvalidationSchema = Yup.object().shape(
       }
     ),
     CarrierName: Yup.string().required("Carrier Name is required"),
- 
+
     Departure: Yup.string().required("Departure Time is required"),
     EstimatedArrival: Yup.string().required(
       "Estimated Arrival Time is required"
@@ -127,11 +127,16 @@ const AirvalidationSchema = Yup.object().shape({
 function Inquiry(props: InquiryAndQuotationProps) {
   const { inquiry, setItemInquiry } = useInquiryItem();
   const params = useSearchParams();
+  const navigate = useNavigate();
   const rawtype = params[0].get("method");
   const Airtype = rawtype?.includes("air");
   const Roadtype = rawtype?.includes("road");
   const Seatype = rawtype?.includes("sea");
-
+  useEffect(() => {
+    if (!rawtype) {
+      navigate("/");
+    }
+  }, []);
   const formik = useFormik({
     initialValues: inquiry,
     validationSchema: Airtype
@@ -141,8 +146,11 @@ function Inquiry(props: InquiryAndQuotationProps) {
       : SeavalidationSchema,
     onSubmit: (values) => {
       console.log("Form submitted with values:", values);
-      // setItemInquiry({ ...values, isAirinquiry: !!Airtype });
-      // props.setstepNumber((prevStep) => prevStep + 1);
+      setItemInquiry({
+        ...values,
+        type: Airtype ? "air" : Seatype ? "sea" : "road",
+      });
+      props.setstepNumber((prevStep) => prevStep + 1);
     },
   });
 

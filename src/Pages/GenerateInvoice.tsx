@@ -108,7 +108,7 @@ const validationSchema = yup.object().shape(
       })
       .required("Airport of Destination is required"),
     CarrierName: yup.string().required("Carrier Name is required"),
-    TodaysDate: yup.string().required("Carrier Name is required"),
+    // TodaysDate: yup.string().required("Carrier Name is required"),
     TransitTime: yup.string().required("Transit Time is required"),
     type: yup.string().required("Type of bill is Required"),
     CustomerTRN: yup
@@ -217,7 +217,13 @@ function GenerateInvoice() {
 
   const formikObj = useFormik({
     enableReinitialize: true,
-    initialValues: { ...inquiry },
+    initialValues: {
+      ...inquiry,
+      Jobid: jobidRef.current?.value || "",
+      Discount: 0,
+      OutstandingDues: 0,
+      VATAmount: 0,
+    },
     onSubmit(values) {
       console.log("Here");
       // if (quotationItemsStore.length === 0) {
@@ -225,14 +231,14 @@ function GenerateInvoice() {
       //   return;
       // }
       console.log(values, "all cvalues");
-      // setInfo(values);
-      // setInvoiceItems(items);
-      // navigate("/testPdf", {
-      //   state: {
-      //     items,
-      //     jobInfo: values,
-      //   },
-      // });
+      setInfo(values);
+      setInvoiceItems(quotationItemsStore);
+      navigate("/testPdf", {
+        state: {
+          quotationItemsStore,
+          jobInfo: values,
+        },
+      });
     },
     validationSchema,
   });
@@ -448,8 +454,11 @@ function GenerateInvoice() {
           <h1 className="text-xl text-center text-blue-900 font-serif">
             Invoice Details
           </h1>
-          <form onSubmit={formikObj.handleSubmit}>
-            <div>
+          <form
+            onSubmit={formikObj.handleSubmit}
+            className="w-full space-y-5 flex flex-col justify-center"
+          >
+            <div className="mx-auto w-3/5 items-center space-x-4 flex  justify-center space-y-2">
               <label className="text-xl">{"Type of Bill"}</label>
               <Field
                 as="select"
@@ -462,17 +471,20 @@ function GenerateInvoice() {
                 <option value={"SeaFreight"}>SeaFreight Bill</option>
                 <option value={"BillOfLadding"}>Bill Of Ladding</option>
               </Field>
+              <ErrorMessage
+                name={"type"}
+                component="div"
+                className="text-red-500"
+              />
             </div>
 
-            <ErrorMessage
-              name={"type"}
-              component="div"
-              className="text-red-500"
-            />
-            <div className="flex  flex-col lg:flex-row justify-between space-y-2">
-              <div className="2/5">
+            <div className="flex  flex-col space-y-2">
+              <h1 className="text-xl text-center text-blue-900 font-serif">
+                Fill Details
+              </h1>
+              <div className="w-4/5 flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3">
                 {Column1Items.map((i) => (
-                  <div key={i.name} className="px-4">
+                  <div key={i.name} className="px-4 w-2/5">
                     <label className="text-xl" key={i.name}>
                       {i.label}
                     </label>
@@ -490,9 +502,9 @@ function GenerateInvoice() {
                   </div>
                 ))}
               </div>
-              <div className="2/5">
+              <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
                 {Column2Items.map((i) => (
-                  <div key={i.name} className="px-4">
+                  <div key={i.name} className="px-4 w-2/5">
                     <label className="text-xl" key={i.name}>
                       {i.label}
                     </label>
@@ -513,11 +525,11 @@ function GenerateInvoice() {
               </div>
             </div>
 
-            <div className="space-y-2 w-5/5">
+            <div className="w-full space-y-2 w-5/5">
               <h1 className="text-xl text-center text-blue-900 font-serif">
                 Add Services
               </h1>
-              <div className=" w-full overflow-auto mt-20">
+              <div className="mx-auto w-[90%] overflow-auto mt-20">
                 <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
                   <thead>
                     <tr>
@@ -635,7 +647,7 @@ function GenerateInvoice() {
             </div>
             <button
               type="submit"
-              className="bg-blue-700 w-3/6 mx-2 my-5 text-white rounded-lg px-5 py-3 text-2xl text-center"
+              className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-center"
             >
               Save
             </button>

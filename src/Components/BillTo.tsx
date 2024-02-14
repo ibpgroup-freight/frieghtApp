@@ -20,13 +20,14 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   singleText: {
-    paddingVertical: 3,
+    paddingVertical: 1,
     paddingHorizontal: 4,
     fontSize: 8,
+    flexWrap: "wrap",
   },
 });
 
-const BillTo = ({ jobInfo }: any) => {
+const BillTo = ({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) => {
   return (
     <View style={styles.headerContainer}>
       <View
@@ -34,16 +35,56 @@ const BillTo = ({ jobInfo }: any) => {
           ...styles.singleContainer,
         }}
       >
-        <Text style={styles.singleText}>Billed To {jobInfo.CustomerName}</Text>
+        <Text style={styles.singleText}>
+          <Text
+            style={{
+              fontStyle: "italic",
+              color: "dodgerblue",
+            }}
+          >
+            Billed To ,
+          </Text>{" "}
+          {jobInfo.CustomerName}
+        </Text>
         <Text style={styles.singleText}>{jobInfo.CustomerAddress}</Text>
-        <Text style={styles.singleText}>{jobInfo.CustomerPhone}</Text>
+        <Text style={styles.singleText}>{jobInfo.CustomerPhoneNo}</Text>
         <Text style={styles.singleText}>{jobInfo.CustomerEmail}</Text>
       </View>
       <View style={styles.singleContainer}>
-        <Text style={styles.singleText}>TRN No: {jobInfo.CustomerTRN}</Text>
+        <Text style={styles.singleText}>
+          <Text
+            style={{
+              fontStyle: "italic",
+              color: "dodgerblue",
+            }}
+          >
+            TRN No:
+          </Text>
+          {jobInfo.CustomerTRN}
+        </Text>
         {/* <Text style={styles.singleText}>Status {jobInfo.company}</Text> */}
-        <Text style={styles.singleText}>Job Id : {jobInfo.Jobid} </Text>
-        <Text style={styles.singleText}>Validity : {jobInfo.Jobid} </Text>
+        <Text style={styles.singleText}>
+          <Text
+            style={{
+              fontStyle: "italic",
+              color: "dodgerblue",
+            }}
+          >
+            Job Id :{" "}
+          </Text>{" "}
+          {jobInfo.Jobid}{" "}
+        </Text>
+        <Text style={styles.singleText}>
+          <Text
+            style={{
+              fontStyle: "italic",
+              color: "dodgerblue",
+            }}
+          >
+            Transit Time :{" "}
+          </Text>{" "}
+          {jobInfo.TransitTime}{" "}
+        </Text>
       </View>
     </View>
   );

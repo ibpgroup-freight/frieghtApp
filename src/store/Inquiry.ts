@@ -53,8 +53,8 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           Dimensions: "",
           TransitTime: "",
           ShipmentTerms: "",
-          CarrierName: "",
           ContainerType: "",
+          CarrierName: "",
           CustomContainerType: "",
           AirportOfDestination: "",
           AirportOfOrigin: "",
@@ -75,6 +75,7 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           ShippingLaneDetails: "",
           VesselDetails: "",
           VesselName: "",
+          
         },
       };
     });
