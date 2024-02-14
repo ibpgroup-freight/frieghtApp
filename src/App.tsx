@@ -18,6 +18,7 @@ import { FormikProvider } from "formik";
 import TestingInvoice from "./Components/TestingInvoice";
 import ManageUsers from "./Pages/ManageUsers";
 import Analytics from "./Pages/Analytics";
+import BillOfLaddle from "./Pages/BillOfLaddle";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -71,6 +72,7 @@ function App() {
                 <Route path="/manageUsers" Component={ManageUsers} />
                 <Route path="/search" Component={SearchPage} />
                 <Route path="/analytics" Component={Analytics} />
+                <Route path="/billofladdle" Component={BillOfLaddle} />
 
                 <Route path="*" Component={NotFound} />
               </Routes>

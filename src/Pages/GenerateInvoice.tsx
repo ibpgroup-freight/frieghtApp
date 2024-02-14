@@ -78,7 +78,7 @@ const validationSchema = yup.object().shape(
     PortOfOrigin: yup
       .string()
       .when("type", {
-        is: (type: string) => !type?.includes("Air"),
+        is: (type: string) => type?.includes("Sea"),
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -86,7 +86,7 @@ const validationSchema = yup.object().shape(
     PortOfDestination: yup
       .string()
       .when("type", {
-        is: (type: string) => !type?.includes("Air"),
+        is: (type: string) => type?.includes("Sea"),
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -231,14 +231,22 @@ function GenerateInvoice() {
       //   return;
       // }
       console.log(values, "all cvalues");
+      if (!values.type) {
+        toast.error("Select Bill Type First");
+        return;
+      }
       setInfo(values);
       setInvoiceItems(quotationItemsStore);
-      navigate("/testPdf", {
-        state: {
-          quotationItemsStore,
-          jobInfo: values,
-        },
-      });
+      if (values.type?.includes("Ladding")) {
+        navigate("/billofladdle");
+      } else {
+        navigate("/testPdf", {
+          state: {
+            quotationItemsStore,
+            jobInfo: values,
+          },
+        });
+      }
     },
     validationSchema,
   });
@@ -292,7 +300,25 @@ function GenerateInvoice() {
           },
         ]
       : []),
-
+    ...(formikObj.values.type?.includes("Ladding")
+      ? [
+          {
+            label: "Movement",
+            name: "Movement",
+            type: "text",
+          },
+          {
+            label: "Enter Place Of Delivery",
+            name: "PlaceOfDelivery",
+            type: "text",
+          },
+          {
+            label: "Enter Place Of Receipt",
+            name: "Enter Place Of Receipt",
+            type: "text",
+          },
+        ]
+      : []),
     ...(formikObj.values.type?.includes("Road")
       ? [
           {
