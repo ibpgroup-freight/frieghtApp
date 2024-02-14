@@ -62,8 +62,9 @@ function BillOfLaddle() {
           <View
             style={{
               width: "100%",
-              flexDirection: "row",
+              flexDirection: "column",
               justifyContent: "space-between",
+              marginVertical: 5,
             }}
           >
             <InvoiceTableHeader />
@@ -323,7 +324,7 @@ const styles2 = StyleSheet.create({
     flexWrap: "nowrap",
     fontWeight: "heavy",
     minHeight: 20,
-    width: "80%",
+    width: "100%",
   },
   description: {
     width: "30%",
@@ -503,6 +504,7 @@ const styles3 = StyleSheet.create({
     flexGrow: 1,
     flexWrap: "nowrap",
     height: 18,
+    width: "100%",
   },
   description: {
     width: "30%",
@@ -519,14 +521,14 @@ const styles3 = StyleSheet.create({
     fontWeight: "ultrabold",
   },
   rate: {
-    width: "30%",
+    width: "20%",
     borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 9,
     fontWeight: "light",
   },
   amount: {
-    width: "20%",
+    width: "10%",
     fontSize: 9,
     fontWeight: "bold",
   },
