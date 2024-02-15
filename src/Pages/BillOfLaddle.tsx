@@ -5,10 +5,29 @@ import {
   StyleSheet,
   View,
   Text,
+  Image,
 } from "@react-pdf/renderer";
 import React from "react";
 import useinvoiceStore from "../store/Invoice";
+import useCompanyInfo from "../store/CompanyInfo";
+import logo from "../assets/images/Logo.png";
 
+const styles = StyleSheet.create({
+  page: {
+    fontFamily: "Helvetica",
+    fontSize: 11,
+    paddingLeft: 60,
+    paddingRight: 60,
+    lineHeight: 1.5,
+    flexDirection: "column",
+    paddingVertical: 10,
+    position: "relative",
+  },
+  logo: {
+    width: 74,
+    height: 90,
+  },
+});
 function BillOfLaddle() {
   const styles = StyleSheet.create({
     page: {
@@ -29,6 +48,8 @@ function BillOfLaddle() {
     },
   });
   const { Items, jobInfo } = useinvoiceStore();
+  const { Location } = useCompanyInfo();
+  const companyLocation = Location.find((l) => l.key === jobInfo.address);
   return (
     <PDFViewer className="w-full h-screen">
       <Document>
@@ -56,7 +77,7 @@ function BillOfLaddle() {
               width: "100%",
             }}
           >
-            <Column1 jobInfo={jobInfo} />
+            <Column1 jobInfo={jobInfo} companyInfo={companyLocation!} />
             <Column2 jobInfo={jobInfo} />
           </View>
           <View
@@ -88,7 +109,13 @@ function BillOfLaddle() {
 
 export default BillOfLaddle;
 
-function Column1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
+function Column1({
+  jobInfo,
+  companyInfo,
+}: {
+  jobInfo: cargoInfo & Inquiry;
+  companyInfo: CompanyLocationInfo;
+}) {
   return (
     <View
       style={{
@@ -112,9 +139,19 @@ function Column1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
       >
         <Text>Shipper Details</Text>
         <Text>
-          XYZ {"\n"}
-          XYZ Location {"\n"}
-          XXXXXXXXXXXX Number
+          {companyInfo?.name} {"\n"}
+          {companyInfo?.office} {"\n"}
+          {companyInfo?.location} {"\n"}
+          {companyInfo?.country}
+          {"\n"}
+          {companyInfo?.office}
+          {"\n"}
+          TRN {companyInfo?.TRN}
+          {"\n"}
+          {companyInfo?.telephone}
+          {"\n"}
+          PO Box{companyInfo?.pobox}
+          {"\n"}
         </Text>
       </View>
       <View
@@ -232,7 +269,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
           borderTopColor: "black",
         }}
       >
-        <Text>Logo</Text>
+        <Image style={styles.logo} src={logo} />
       </View>
       <View
         style={{
@@ -292,7 +329,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
         }}
       >
         <Text>Place Of Receipt</Text>
-        {/* <Text>{jobInfo.SalesPerson}</Text> */}
+        <Text>{jobInfo.PlaceOfReceipt}</Text>
       </View>
       <View
         style={{
@@ -307,6 +344,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
         }}
       >
         <Text>Place Of Delivery</Text>
+        <Text>{jobInfo.PlaceOfDelivery}</Text>
       </View>
     </View>
   );
@@ -383,7 +421,10 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
           justifyContent: "space-between",
         }}
       >
-        <Text>Movement</Text>
+        <Text>
+          Movement
+          <Text style={{ marginHorizontal: 4 }}>{jobInfo.Movement}</Text>
+        </Text>
         <Text>Currency</Text>
       </View>
       <View
@@ -431,6 +472,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
         }}
       >
         <Text>Payable At</Text>
+        <Text>{jobInfo.PayableAt}</Text>
       </View>
     </View>
   );
@@ -487,6 +529,7 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
         }}
       >
         <Text>Place Of Issue</Text>
+        <Text>{jobInfo.PlaceOfIssue}</Text>
       </View>
     </View>
   );

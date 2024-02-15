@@ -72,18 +72,23 @@ function Analytics() {
     }
   }, [populateQuotations]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentqPage, setCurrentqPage] = useState<number>(1);
+
   const itemsPerPage = 2; // Number of items to display per page
 
   // Calculate the range of items to display for the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = Jobs.slice(indexOfFirstItem, indexOfLastItem);
-  const indexOfLastqItem = currentPage * itemsPerPage;
+  const indexOfLastqItem = currentqPage * itemsPerPage;
   const indexOfFirstqItem = indexOfLastqItem - itemsPerPage;
   const currentqItems = Quotations.slice(indexOfFirstqItem, indexOfLastqItem);
   // Function to handle page change
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
+  };
+  const handleqPageChange = (pageNumber: number) => {
+    setCurrentqPage(pageNumber);
   };
   return (
     <section className="w-full flex flex-col items-center space-y-10">
@@ -224,8 +229,8 @@ function Analytics() {
 
         <div className="flex space-x-2 items-center">
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => handleqPageChange(currentqPage - 1)}
+            disabled={currentqPage === 1}
             className="flex items-center disabled:bg-gray-400 space-x-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300"
           >
             <svg
@@ -251,12 +256,12 @@ function Analytics() {
         >
           Previous
         </button> */}
-          <span> Page {currentPage} </span>
+          <span> Page {currentqPage} </span>
 
           {/* <button>Next</button> */}
           <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={indexOfLastItem >= Jobs.length}
+            onClick={() => handleqPageChange(currentqPage + 1)}
+            disabled={indexOfLastqItem >= Quotations.length}
             className="flex items-center disabled:bg-gray-400 space-x-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:hover:bg-blue-500
            focus:outline-none focus:ring focus:border-blue-300"
           >

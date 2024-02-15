@@ -21,8 +21,8 @@ type QuotationItem = {
   Currency: string;
   RateAmountPerUnit: string;
   MinRateAmountPerUnit: string;
-  MinCostAmountPerUnit: string;
-  CostAmountPerUnit: string;
+  MinCostAmountPerUnit?: string;
+  CostAmountPerUnit?: string;
   // minUnits: string;
   // maxUnits: string;
   Units: string;
@@ -64,6 +64,11 @@ type Inquiry = {
   jobInitials: string;
   method: string;
   quotationId?: string;
+  PlaceOfIssue?: string;
+  PlaceOfReceipt?: string;
+  PayableAt?: string;
+  PlaceOfDelivery?: string;
+  Movement?: string;
 };
 type InquiryStore = {
   inquiry: Inquiry;

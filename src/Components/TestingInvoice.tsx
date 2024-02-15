@@ -81,7 +81,6 @@ const styles = StyleSheet.create({
 
 const TestingInvoice = () => {
   const { Items, jobInfo } = useinvoiceStore();
-  const location = useLocation();
   const { Location } = useCompanyInfo();
   const companyLocation = Location.find((l) => l.key === jobInfo.address);
   console.log(Items, "Item");
@@ -133,7 +132,7 @@ const TestingInvoice = () => {
                   width: "80%",
                   flexWrap: "wrap",
                   justifyContent: "flex-start",
-                  lineHeight: 55,
+                  lineHeight: 1,
                 }}
               >
                 {jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
@@ -141,7 +140,7 @@ const TestingInvoice = () => {
                   : jobInfo.type.includes("air") || jobInfo.type.includes("Air")
                   ? AirFreightTerms
                   : RoadFreightTerms}
-                {jobInfo.specialInstructions
+                {jobInfo.termsAndConditions
                   ?.split(".")
                   .map((s) => s + `${"\n"}`)
                   .join("\n")

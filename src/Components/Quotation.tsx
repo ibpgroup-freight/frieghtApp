@@ -14,6 +14,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import { LoaderIcon } from "react-hot-toast";
 
 function Quotation(props: InquiryAndQuotationProps) {
   const ctx = useContext(ModalCtx);
@@ -90,11 +91,11 @@ function Quotation(props: InquiryAndQuotationProps) {
       subheadings: ["Cost Per Unit", "Min", "Max"],
     },
 
-    {
-      label: "Cost",
-      name: "Cost",
-      subheadings: ["Cost Per Unit", "Min", "Max"],
-    },
+    // {
+    //   label: "Cost",
+    //   name: "Cost",
+    //   subheadings: ["Cost Per Unit", "Min", "Max"],
+    // },
     { label: "Currency", name: "Currency" },
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
@@ -156,16 +157,15 @@ function Quotation(props: InquiryAndQuotationProps) {
                     <td className="border border-slate-300 p-4">
                       {i.MinRateAmountPerUnit}
                     </td>
-                    <td className="border border-slate-300 p-4">
-                      {/* {i.UnitPerKg} */}
-                      {i.CostAmountPerUnit}
+                    {/* <td className="border border-slate-300 p-4"> */}
+                    {/* {i.CostAmountPerUnit}
                     </td>
                     <td className="border border-slate-300 p-4">
                       {i.MinCostAmountPerUnit}
                     </td>
                     <td className="border border-slate-300 p-4">
                       {i.MinCostAmountPerUnit}
-                    </td>
+                    </td> */}
                     <td className="border border-slate-300 p-4">
                       {i.Currency}
                     </td>
@@ -218,7 +218,11 @@ function Quotation(props: InquiryAndQuotationProps) {
           className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
           onClick={createQuotation}
         >
-          Create Quotation
+          {isloading ? (
+            <LoaderIcon className="mx-auto p-4" />
+          ) : (
+            "Create Quotation"
+          )}
         </button>
       </div>
     </div>

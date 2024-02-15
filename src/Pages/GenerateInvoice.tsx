@@ -156,6 +156,48 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Shipping Lane Details are required"),
+    Movement: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Lading"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Movement Details are required"),
+    PlaceOfDelivery: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Lading"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Place Of Delivery required"),
+
+    PlaceOfReceipt: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Lading"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Place Of Receipt required"),
+
+    PlaceOfIssue: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Lading"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Place Of Issue required"),
+    PayableAt: yup
+      .string()
+      .when("type", {
+        is: (type: string) => type?.includes("Lading"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Payable at required"),
     Departure: yup.string().required("Departure Time is required"),
     EstimatedArrival: yup
       .string()
@@ -220,6 +262,13 @@ function GenerateInvoice() {
       OutstandingDues: 0,
       VATAmount: 0,
       address: "",
+      termsAndConditions: "",
+      specialInstructions: "",
+      PlaceOfIssue: "",
+      PlaceOfDelivery: "",
+      PayableAt: "",
+      Movement: "",
+      PlaceOfReceipt: "",
     },
     onSubmit(values) {
       console.log("Here");
@@ -234,7 +283,7 @@ function GenerateInvoice() {
       }
       setInfo(values);
       setInvoiceItems(quotationItemsStore);
-      if (values.type?.includes("Ladding")) {
+      if (values.type?.includes("Lading")) {
         navigate("/billofladdle");
       } else {
         navigate("/testPdf", {
@@ -265,11 +314,11 @@ function GenerateInvoice() {
       subheadings: ["Cost Per Unit", "Min", "Max"],
     },
 
-    {
-      label: "Cost",
-      name: "Cost",
-      subheadings: ["Cost Per Unit", "Min", "Max"],
-    },
+    // {
+    //   label: "Cost",
+    //   name: "Cost",
+    //   subheadings: ["Cost Per Unit", "Min", "Max"],
+    // },
     { label: "Currency", name: "Currency" },
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
@@ -297,12 +346,12 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(formikObj.values.type?.includes("Ladding")
+    ...(formikObj.values.type?.includes("Lading")
       ? [
           {
             label: "Movement",
             name: "Movement",
-            type: "text",
+            type: "textarea",
           },
           {
             label: "Enter Place Of Delivery",
@@ -311,7 +360,7 @@ function GenerateInvoice() {
           },
           {
             label: "Enter Place Of Receipt",
-            name: "Enter Place Of Receipt",
+            name: "PlaceOfReceipt",
             type: "text",
           },
         ]
@@ -385,6 +434,25 @@ function GenerateInvoice() {
       name: "CustomerPhoneNo",
       type: "text",
     },
+    ...(formikObj.values.type?.includes("Lading")
+      ? [
+          {
+            label: "Currency",
+            name: "Currency",
+            type: "text",
+          },
+          {
+            label: "Place Of Issue",
+            name: "PlaceOfIssue",
+            type: "textarea",
+          },
+          {
+            label: "PayableAt",
+            name: "PayableAt",
+            type: "textarea",
+          },
+        ]
+      : []),
     {
       label: "Container Type",
       name: "ContainerType",
@@ -720,16 +788,15 @@ function GenerateInvoice() {
                             <td className="border border-slate-300 p-4">
                               {i.MinRateAmountPerUnit}
                             </td>
-                            <td className="border border-slate-300 p-4">
-                              {/* {i.UnitPerKg} */}
+                            {/* <td className="border border-slate-300 p-4">
                               {i.CostAmountPerUnit}
-                            </td>
-                            <td className="border border-slate-300 p-4">
+                            </td> */}
+                            {/* <td className="border border-slate-300 p-4">
                               {i.MinCostAmountPerUnit}
-                            </td>
-                            <td className="border border-slate-300 p-4">
+                            </td> */}
+                            {/* <td className="border border-slate-300 p-4">
                               {i.MinCostAmountPerUnit}
-                            </td>
+                            </td> */}
                             <td className="border border-slate-300 p-4">
                               {i.Currency}
                             </td>
@@ -746,6 +813,7 @@ function GenerateInvoice() {
                         setshowQuotation(true);
                         ctx.setToggle();
                       }}
+                      type="button"
                     >
                       <svg
                         viewBox="0 0 24 24"

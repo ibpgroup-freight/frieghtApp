@@ -7,6 +7,7 @@ import * as Yup from "yup";
 type qprops = {
   closeQuotation: React.Dispatch<React.SetStateAction<boolean>>;
   AddItemToInvoice?: (item: QuotationItem) => void;
+  type?: string;
 };
 const validationSchema = Yup.object().shape({
   QuoteValidity: Yup.string().required("Quote Validity is required"),
@@ -18,12 +19,12 @@ const validationSchema = Yup.object().shape({
   MinRateAmountPerUnit: Yup.string().required(
     "Min Rate Amount Per Unit is required"
   ),
-  MinCostAmountPerUnit: Yup.string().required(
-    "Cost Amount Per Unit is required"
-  ),
-  CostAmountPerUnit: Yup.string().required(
-    "Min Cost Amount Per Unit is required"
-  ),
+  // MinCostAmountPerUnit: Yup.string().required(
+  //   "Cost Amount Per Unit is required"
+  // ),
+  // CostAmountPerUnit: Yup.string().required(
+  //   "Min Cost Amount Per Unit is required"
+  // ),
   // minUnits: Yup.string().required("min Units are required"),
   // maxUnits: Yup.string().required("max Units are required"),
   Units: Yup.string().required("Units are required"),
@@ -40,8 +41,8 @@ const InitialState = {
   Currency: "",
   RateAmountPerUnit: "",
   MinRateAmountPerUnit: "",
-  MinCostAmountPerUnit: "",
-  CostAmountPerUnit: "",
+  // MinCostAmountPerUnit: "",
+  // CostAmountPerUnit: "",
   Units: "",
   Dimensions: "",
   Weight: "",
@@ -67,8 +68,8 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
   const formikobj = useFormik({
     initialValues: InitialState,
     validationSchema,
+
     onSubmit: (values) => {
-      console.log(values, "add qu");
       !AddItemToInvoice ? AddItem(values) : AddItemToInvoice(values);
       closeQuotation((p) => !p);
       ctx.setToggle();
@@ -81,7 +82,7 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
     { label: "Quote Validity", name: "QuoteValidity", type: "text" },
     // { label: "Max Units", name: "maxUnits", type: "number" },
     // { label: "Min Units", name: "minUnits", type: "number" },
-    { label: "Units", name: "Units", type: "number" },
+    { label: "Units", name: "Units", type: "text" },
     { label: "Weight (Optional)", name: "Weight", type: "number" },
     { label: "Dimensions (Optional)", name: "Dimensions", type: "text" },
   ];
@@ -89,27 +90,34 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
     {
       label: "Currency",
       name: "Currency",
-      type: "select",
+      type: "text",
       options: ["USD", "Euro"],
     },
     { label: "Amount Per Unit", name: "RateAmountPerUnit" },
     { label: "Min Amount Per Unit", name: "MinRateAmountPerUnit" },
   ];
-  const Column3 = [
-    {
-      label: "Currency",
-      name: "Currency",
-      type: "select",
-      options: ["USD", "Euro"],
-    },
-    { label: "Amount Per Unit", name: "CostAmountPerUnit" },
-    { label: "Min Amount Per Unit", name: "MinCostAmountPerUnit" },
-  ];
+  // const Column3 = [
+  //   {
+  //     label: "Currency",
+  //     name: "Currency",
+  //     type: "text",
+  //     options: ["USD", "Euro"],
+  //   },
+  //   { label: "Amount Per Unit", name: "CostAmountPerUnit" },
+  //   { label: "Min Amount Per Unit", name: "MinCostAmountPerUnit" },
+  // ];
   console.log(formikobj.errors);
   return (
     <FormikProvider value={formikobj}>
       <div className="fixed mx-auto overflow-scroll md:w-3/5 px-10 bg-white border z-1000 py-10 rounded-md">
-        <form onSubmit={formikobj.handleSubmit}>
+        <form
+          onSubmit={(e) => {
+            e.stopPropagation();
+            e.nativeEvent.preventDefault();
+            e.nativeEvent.stopImmediatePropagation();
+            formikobj.handleSubmit(e);
+          }}
+        >
           <div
             className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl absolute right-9"
             onClick={(e) => {
@@ -194,7 +202,7 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
                 </div>
               ))}
             </div>
-            <div className="flex flex-col space-y-2 items-center">
+            {/* <div className="flex flex-col space-y-2 items-center">
               <h2 className="text-2xl text-black-800 w-full font-serif text-center">
                 Cost Section
               </h2>
@@ -240,14 +248,11 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
                   )}
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
           <div className="flex justify-center mt-5">
-            <button
-              className="p-4 bg-blue-600 text-white rounded-md"
-              type="submit"
-            >
+            <button className="p-4 bg-blue-600 text-white rounded-md">
               Submit
             </button>
           </div>

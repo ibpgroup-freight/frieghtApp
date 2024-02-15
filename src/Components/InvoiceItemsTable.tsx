@@ -248,15 +248,17 @@ const InvoiceTableFooter = ({
   return (
     <>
       <View style={styles5.row}>
-        <Text style={styles5.description}>Discount</Text>
-        <Text style={styles5.total}>
-          {(total - jobInfo?.Discount || 0).toFixed(2)}
-        </Text>
+        <Text style={styles5.description}>Total</Text>
+        <Text style={styles5.total}>{total}</Text>
+      </View>
+      <View style={styles5.row}>
+        <Text style={styles5.description}>After Discount</Text>
+        <Text style={styles5.total}>{discounttotal.toFixed(2)}</Text>
       </View>
       <View style={styles5.row}>
         <Text style={styles5.description}>Outstanding Dues</Text>
         <Text style={styles5.total}>
-          {(discounttotal + jobInfo?.OutstandingDues || 0).toFixed(2)}
+          {(jobInfo?.OutstandingDues || 0).toFixed(2)}
         </Text>
       </View>
       {/* <View style={styles5.row}>
@@ -266,7 +268,7 @@ const InvoiceTableFooter = ({
         </Text>
       </View> */}
       <View style={styles5.row}>
-        <Text style={styles5.description}>TOTAL</Text>
+        <Text style={styles5.description}>Grand TOTAL</Text>
         <Text style={styles5.total}>
           {(discounttotal + jobInfo?.OutstandingDues || 0).toFixed(2)}
         </Text>

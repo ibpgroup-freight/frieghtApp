@@ -263,6 +263,11 @@ function Inquiry(props: InquiryAndQuotationProps) {
               "Break Bulk",
             ],
           },
+          {
+            label: "Custom Container Type",
+            name: "CustomContainerType",
+            type: "text",
+          },
         ]
       : []),
     {
@@ -271,11 +276,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
       type: "number",
     },
     { label: "Enter Dimensions", name: "Dimensions", type: "text" },
-    {
-      label: "Custom Container Type",
-      name: "CustomContainerType",
-      type: "text",
-    },
+
     { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
     {
       label: "Enter Transit Time",
