@@ -24,8 +24,11 @@ const validationSchema = Yup.object().shape({
   CostAmountPerUnit: Yup.string().required(
     "Min Cost Amount Per Unit is required"
   ),
-  minUnits: Yup.string().required("min Units are required"),
-  maxUnits: Yup.string().required("max Units are required"),
+  // minUnits: Yup.string().required("min Units are required"),
+  // maxUnits: Yup.string().required("max Units are required"),
+  Units: Yup.string().required("Units are required"),
+  Weight: Yup.string(),
+  Dimensions: Yup.string(),
 });
 
 const InitialState = {
@@ -39,8 +42,9 @@ const InitialState = {
   MinRateAmountPerUnit: "",
   MinCostAmountPerUnit: "",
   CostAmountPerUnit: "",
-  minUnits: "",
-  maxUnits: "",
+  Units: "",
+  Dimensions: "",
+  Weight: "",
 };
 // const AddQuotationReducer = (state: QuotationItem, action: QuotationAction) => {
 //   switch (action.type) {
@@ -75,8 +79,11 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
     { label: "Charge", name: "Charges", type: "text" },
     { label: "Charge Description", name: "ChargeDescription" },
     { label: "Quote Validity", name: "QuoteValidity", type: "text" },
-    { label: "Max Units", name: "maxUnits", type: "number" },
-    { label: "Min Units", name: "minUnits", type: "number" },
+    // { label: "Max Units", name: "maxUnits", type: "number" },
+    // { label: "Min Units", name: "minUnits", type: "number" },
+    { label: "Units", name: "Units", type: "number" },
+    { label: "Weight (Optional)", name: "Weight", type: "number" },
+    { label: "Dimensions (Optional)", name: "Dimensions", type: "text" },
   ];
   const Column2 = [
     {
@@ -101,7 +108,7 @@ function AddQuotation({ closeQuotation, AddItemToInvoice }: qprops) {
   console.log(formikobj.errors);
   return (
     <FormikProvider value={formikobj}>
-      <div className="absolute mx-auto -mt-36 md:w-3/5 px-10 bg-white border z-1000 py-10 rounded-md">
+      <div className="fixed mx-auto overflow-scroll md:w-3/5 px-10 bg-white border z-1000 py-10 rounded-md">
         <form onSubmit={formikobj.handleSubmit}>
           <div
             className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl absolute right-9"

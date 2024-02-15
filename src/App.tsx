@@ -19,6 +19,8 @@ import TestingInvoice from "./Components/TestingInvoice";
 import ManageUsers from "./Pages/ManageUsers";
 import Analytics from "./Pages/Analytics";
 import BillOfLaddle from "./Pages/BillOfLaddle";
+import Ejspagestest from "./Pages/ejspagestest.js";
+import GenerateJob from "./Pages/GenerateJob";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -73,6 +75,7 @@ function App() {
                 <Route path="/search" Component={SearchPage} />
                 <Route path="/analytics" Component={Analytics} />
                 <Route path="/billofladdle" Component={BillOfLaddle} />
+                <Route path="/generateJob" Component={GenerateJob} />
 
                 <Route path="*" Component={NotFound} />
               </Routes>

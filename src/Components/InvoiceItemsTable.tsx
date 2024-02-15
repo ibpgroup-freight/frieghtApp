@@ -130,12 +130,12 @@ const InvoiceTableRow = ({ items }: { items: QuotationItem[] }) => {
   const rows = items.map((item: QuotationItem, index) => (
     <View style={styles3.container} key={item.id} break={index === 20}>
       <Text style={styles3.description}>{item.ChargeDescription}</Text>
-      <Text style={styles3.qty}>{item.maxUnits}</Text>
+      <Text style={styles3.qty}>{item.Units}</Text>
       <Text style={styles3.rate}>
         {item.Charges} {item.Currency}
       </Text>
       <Text style={styles3.amount}>
-        {(parseInt(item.maxUnits) * parseInt(item.Charges)).toFixed(2)}{" "}
+        {(parseInt(item.Units) * parseInt(item.Charges)).toFixed(2)}{" "}
         {item.Currency}
       </Text>
     </View>
@@ -232,8 +232,7 @@ const InvoiceTableFooter = ({
 }) => {
   const total = items
     .map(
-      (item: QuotationItem) =>
-        parseFloat(item.Charges) * parseFloat(item.maxUnits)
+      (item: QuotationItem) => parseFloat(item.Charges) * parseFloat(item.Units)
     )
     .reduce(
       (accumulator: number, currentValue: number) => accumulator + currentValue,

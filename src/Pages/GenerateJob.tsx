@@ -12,6 +12,8 @@ import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
+import useJob from "../store/Jobs";
+import { LoaderIcon } from "react-hot-toast";
 // const init = {
 //   CustomerName: "",
 //   CustomerAddress: "",
@@ -177,7 +179,7 @@ const validationSchema = yup.object().shape(
   [["ContainerType", "CustomContainerType"]]
 );
 
-function GenerateInvoice() {
+function GenerateJob() {
   const [showQuotation, setshowQuotation] = useState(false);
   const ctx = useContext(ModalCtx);
   const {
@@ -188,65 +190,68 @@ function GenerateInvoice() {
   } = useinvoiceStore();
   const { setItemInquiry, inquiry } = useInquiryItem();
   const { setitemsArray, items: quotationItemsStore } = useItemStore();
+  const { setJob } = useJob();
   const navigate = useNavigate();
-  const jobidRef = useRef<HTMLInputElement | null>(null);
+  const quotationidRef = useRef<HTMLInputElement | null>(null);
+  const [isloading, setisloading] = useState<boolean>(true);
   // const [items, setitems] = useState<QuotationItem[]>(
   //   quotationItemsStore || []
   // );
   // const [state, dispatch] = React.useReducer(InquiryReducer, inq);
   const filljobDetailsbyId = useCallback(async () => {
     try {
-      console.log("job", jobidRef.current?.value);
+      setisloading(true);
+      console.log("job", quotationidRef.current?.value);
       const docs = await getDocs(
         query(
-          collection(db, "jobs"),
-          where("jobid", "==", jobidRef.current?.value!)
+          collection(db, "quotations"),
+          where("quotationId", "==", quotationidRef.current?.value!)
         )
       );
       if (docs.empty) return toast.error("No Such Job Exists");
       console.log("Data", docs.docs[0]?.data());
-      setItemInquiry(docs.docs[0]?.data()?.inquiry as Inquiry);
+      setItemInquiry({
+        ...(docs.docs[0]?.data()?.inquiry as Inquiry),
+        quotationId: docs.docs[0]?.data()?.quotationId,
+      });
       setitemsArray(docs.docs[0]?.data()?.Items as QuotationItem[]);
       // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
       // setItems(docs.docs[0]?.data()?.Items as QuotationItem[]);
     } catch (e) {
       toast.error("No Such Job");
+    } finally {
+      setisloading(false);
     }
-  }, [jobidRef]);
+  }, [quotationidRef, isloading]);
   // console.log("q", items);
 
   const formikObj = useFormik({
     enableReinitialize: true,
     initialValues: {
       ...inquiry,
-      Jobid: jobidRef.current?.value || "",
+      Jobid: quotationidRef.current?.value || "",
       Discount: 0,
       OutstandingDues: 0,
       VATAmount: 0,
     },
-    onSubmit(values) {
-      console.log("Here");
-      // if (quotationItemsStore.length === 0) {
-      //   toast.error("Add Some Items First");
-      //   return;
-      // }
-      console.log(values, "all cvalues");
-      if (!values.type) {
-        toast.error("Select Bill Type First");
-        return;
-      }
-      setInfo(values);
-      setInvoiceItems(quotationItemsStore);
-      if (values.type?.includes("Ladding")) {
-        navigate("/billofladdle");
-      } else {
-        navigate("/testPdf", {
-          state: {
-            quotationItemsStore,
-            jobInfo: values,
-          },
+    async onSubmit(values) {
+      try {
+        setisloading(true);
+        await setJob({
+          inquiry: values,
+          Items: quotationItemsStore,
+          jobid: values.quotationId!,
+          status: "pending",
         });
+        toast.success("Job Generated Successfully");
+        navigate("/analytics");
+      } catch (e) {
+        console.log(e);
+        toast.error("Failed To Generate Job");
+      } finally {
+        setisloading(false);
       }
+      console.log("Here");
     },
     validationSchema,
   });
@@ -281,7 +286,8 @@ function GenerateInvoice() {
     { label: "Enter Customer Name", name: "CustomerName", type: "text" },
     { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
     { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
-    ...(formikObj.values.type?.includes("Air")
+    ...(formikObj.values.type?.includes("Air") ||
+    formikObj.values.type?.includes("air")
       ? [
           {
             label: "Enter Airport Of Origin",
@@ -300,7 +306,8 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(formikObj.values.type?.includes("Ladding")
+    ...(formikObj.values.type?.includes("Lading") ||
+    formikObj.values.type?.includes("lading")
       ? [
           {
             label: "Movement",
@@ -319,7 +326,8 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(formikObj.values.type?.includes("Road")
+    ...(formikObj.values.type?.includes("Road") ||
+    formikObj.values.type?.includes("road")
       ? [
           {
             label: "Enter Place Of Origin",
@@ -349,7 +357,8 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(formikObj.values.type?.includes("Sea")
+    ...(formikObj.values.type?.includes("Sea") ||
+    formikObj.values.type?.includes("sea")
       ? [
           { label: "Enter Port Of Origin", name: "PortOfOrigin", type: "text" },
           {
@@ -420,13 +429,6 @@ function GenerateInvoice() {
     },
     { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
 
-    { label: "Enter Discount If Applicable", name: "Discount", type: "number" },
-    // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
-    {
-      label: "Special Instructions",
-      name: "specialInstructions",
-      type: "textarea",
-    },
     {
       label: "Departure",
       name: "Departure",
@@ -455,18 +457,18 @@ function GenerateInvoice() {
         </div>
 
         <h1 className="text-5xl text-center text-blue-600 font-serif">
-          Generate Invoice
+          Generate Job
         </h1>
         <div className="flex items-center w-3/5 justify-between">
           <label className="text-xl" htmlFor="jobid">
-            Enter Job Id
+            Enter Quotation Id
           </label>
           <input
             type={"text"}
-            name={"jobid"}
+            name={"Quotation Id"}
             placeholder="jobId"
             className="w-3/5 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-            ref={jobidRef}
+            ref={quotationidRef}
           />
           <button
             className="bg-blue-500 text-white p-3 rounded-md"
@@ -485,11 +487,11 @@ function GenerateInvoice() {
             className="w-full space-y-5 flex flex-col justify-center"
           >
             <div className="mx-auto w-3/5 items-center space-x-4 flex  justify-center space-y-2">
-              <label className="text-xl">{"Type of Bill"}</label>
               <Field
                 as="select"
                 name="type"
                 className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                hidden
               >
                 <option value={""}>Select Bill Tyoe</option>
                 <option value={"AirFreight"}>AirFreight Bill</option>
@@ -675,7 +677,7 @@ function GenerateInvoice() {
               type="submit"
               className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-center"
             >
-              Save
+              {isloading ? <LoaderIcon /> : "Genetate Job"}
             </button>
           </form>
         </div>
@@ -684,4 +686,4 @@ function GenerateInvoice() {
   );
 }
 
-export default GenerateInvoice;
+export default GenerateJob;

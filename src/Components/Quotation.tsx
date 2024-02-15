@@ -1,43 +1,78 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useReducer, useCallback } from "react";
 import AddQuotation from "./AddQuotation";
 import { useContext } from "react";
 import { ModalCtx } from "../store/Modal";
 import useItemStore from "../store/Item";
 import useInquiryItem from "../store/Inquiry";
 import { toast } from "react-toastify";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
-// const quotation: QuotationItem = {
-//   id: "",
-//   QuoteValidity: "",
-//   Charges: "",
-//   ChargeDescription: "",
-//   UnitPerKg: "",
-//   Currency: "",
-//   RateAmountPerUnit: "",
-//   MinRateAmountPerUnit: "",
-//   MinCostAmountPerUnit: "",
-//   CostAmountPerUnit: "",
-// };
-
-// const QuotationReducer = (state: QuotationItem, action: QuotationAction) => {
-//   switch (action.type) {
-//     case "AmountPerUnit":
-//     case "ChargeDescription":
-//     case "Charges":
-//     case "CostAndSellSection":
-//     case "Currency":
-//     case "QuoteValidity":
-//     case "UnitPerKg":
-//       return { ...state, [action.type]: action.payload.value };
-//     default:
-//       return { ...state };
-//   }
-// };
 function Quotation(props: InquiryAndQuotationProps) {
   const ctx = useContext(ModalCtx);
-  const { items } = useItemStore();
-  const { inquiry } = useInquiryItem();
   // const [state, dispatch] = useReducer(QuotationReducer, quotation);
+  const { inquiry, resetInquiry } = useInquiryItem();
+  const { items, resetItems } = useItemStore();
+  const [searchparams, setsearchparams] = useSearchParams();
+  const JobMode = searchparams.get("method");
+  const isEditing = searchparams.get("editJob");
+  const JobInitials = JobMode?.slice(-2);
+  const [isloading, setisloading] = useState<boolean>(false);
+  const jobType =
+    JobMode?.includes("Air") || JobMode?.includes("air")
+      ? "air"
+      : JobMode?.includes("Sea") || JobMode?.includes("sea")
+      ? "sea"
+      : "road";
+  console.log("reset", inquiry);
+  console.log("reset item", items);
+  const navigate = useNavigate();
+  const createQuotation = useCallback(async () => {
+    try {
+      if (items.length <= 0) return toast.info("Add Some Items First");
+      setisloading((p) => true);
+      if (isEditing) {
+        await updateDoc(doc(db, "quotations", isEditing), {
+          inquiry,
+          Items: items,
+          updatedAt: serverTimestamp(),
+        });
+      } else {
+        await addDoc(collection(db, "quotations"), {
+          status: "pending",
+          inquiry,
+          Items: items,
+          quotationId:
+            JobInitials + `-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+          type: jobType,
+          jobInitials: JobInitials,
+          method: JobMode,
+        });
+        // setJob({
+        //   status: "pending",
+        //   inquiry,
+        //   Items: items,
+        //   jobid:
+        //     JobInitials + `-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+        // });
+      }
+      resetInquiry();
+      resetItems();
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+      toast.error("An Error Occured");
+    } finally {
+      setisloading((p) => false);
+    }
+  }, [items, JobInitials, inquiry, isEditing]);
   const [showQuotation, setshowQuotation] = useState(false);
   const Column1 = [
     { label: "Index", name: "Sr no" },
@@ -47,7 +82,7 @@ function Quotation(props: InquiryAndQuotationProps) {
     {
       label: "Units",
       name: "Units",
-      subheadings: ["Min", "Max"],
+      // subheadings: ["Min", "Max"],
     },
     {
       label: "Rate",
@@ -109,12 +144,8 @@ function Quotation(props: InquiryAndQuotationProps) {
                     <td className="border border-slate-300 p-4">
                       {i.ChargeDescription}
                     </td>
-                    <td className="border border-slate-300 p-4">
-                      {i.minUnits}
-                    </td>
-                    <td className="border border-slate-300 p-4">
-                      {i.maxUnits}
-                    </td>
+                    <td className="border border-slate-300 p-4">{i.Units}</td>
+
                     <td className="border border-slate-300 p-4">
                       {/* {i.UnitPerKg} */}
                       {i.RateAmountPerUnit}
@@ -185,12 +216,9 @@ function Quotation(props: InquiryAndQuotationProps) {
       <div className="flex w-full justify-center my-10">
         <button
           className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
-          onClick={() => {
-            if (items.length <= 0) return toast.info("Add Some Items First");
-            props.setstepNumber((p) => p + 1);
-          }}
+          onClick={createQuotation}
         >
-          Proceed To {props.actionName}
+          Create Quotation
         </button>
       </div>
     </div>

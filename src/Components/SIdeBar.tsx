@@ -9,6 +9,7 @@ import {
   faUser,
   faMagnifyingGlass,
   faBookBookmark,
+  faBriefcase,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -48,6 +49,11 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
       path: "/search",
       name: "Search",
       icon: faMagnifyingGlass,
+    },
+    {
+      path: "/generateJob",
+      name: "Generate Job",
+      icon: faBriefcase,
     },
     {
       path: "/manageUsers",

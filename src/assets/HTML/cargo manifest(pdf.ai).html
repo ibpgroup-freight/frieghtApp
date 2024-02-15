@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>PDF to HTML by PDF.ai</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      /* Copyright 2014 Mozilla Foundation
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *     http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+
+      .textLayer {
+        position: absolute;
+        text-align: initial;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        opacity: 1;
+        line-height: 1;
+        -webkit-text-size-adjust: none;
+        -moz-text-size-adjust: none;
+        text-size-adjust: none;
+        forced-color-adjust: none;
+        transform-origin: 0 0;
+        z-index: 2;
+      }
+
+      .textLayer span,
+      .textLayer br {
+        color: black;
+        position: absolute;
+        white-space: pre;
+        cursor: text;
+        transform-origin: 0% 0%;
+      }
+
+      /* Only necessary in Google Chrome, see issue 14205, and most unfortunately
+   * the problem doesn't show up in "text" reference tests. */
+      .textLayer span.markedContent {
+        top: 0;
+        height: 0;
+      }
+
+      .textLayer .highlight {
+        margin: -1px;
+        padding: 1px;
+        background-color: rgba(180, 0, 170, 1);
+        border-radius: 4px;
+      }
+
+      .textLayer .highlight.appended {
+        position: initial;
+      }
+
+      .textLayer .highlight.begin {
+        border-radius: 4px 0 0 4px;
+      }
+
+      .textLayer .highlight.end {
+        border-radius: 0 4px 4px 0;
+      }
+
+      .textLayer .highlight.middle {
+        border-radius: 0;
+      }
+
+      .textLayer .highlight.selected {
+        background-color: rgba(0, 100, 0, 1);
+      }
+
+      .textLayer ::-moz-selection {
+        background: #0000ff26;
+      }
+
+      .textLayer ::selection {
+        background: #0000ff26;
+      }
+
+      /* Avoids https://github.com/mozilla/pdf.js/issues/13840 in Chrome */
+      .textLayer br::-moz-selection {
+        background: transparent;
+      }
+      .textLayer br::selection {
+        background: transparent;
+      }
+
+      .textLayer .endOfContent {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 100%;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        cursor: default;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      .textLayer .endOfContent.active {
+        top: 0;
+      }
+
+      :root {
+        --annotation-unfocused-field-background: url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
+        --input-focus-border-color: Highlight;
+        --input-focus-outline: 1px solid Canvas;
+        --input-unfocused-border-color: transparent;
+        --input-disabled-border-color: transparent;
+        --input-hover-border-color: black;
+      }
+
+      @media (forced-colors: active) {
+        :root {
+          --input-focus-border-color: CanvasText;
+          --input-unfocused-border-color: ActiveText;
+          --input-disabled-border-color: GrayText;
+          --input-hover-border-color: Highlight;
+        }
+        .annotationLayer .textWidgetAnnotation input:required,
+        .annotationLayer .textWidgetAnnotation textarea:required,
+        .annotationLayer .choiceWidgetAnnotation select:required,
+        .annotationLayer .buttonWidgetAnnotation.checkBox input:required,
+        .annotationLayer .buttonWidgetAnnotation.radioButton input:required {
+          outline: 1.5px solid selectedItem;
+        }
+      }
+
+      .annotationLayer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        transform-origin: 0 0;
+        z-index: 3;
+      }
+
+      .annotationLayer section {
+        position: absolute;
+        text-align: initial;
+        pointer-events: auto;
+        box-sizing: border-box;
+        transform-origin: 0 0;
+      }
+
+      .annotationLayer .linkAnnotation > a,
+      .annotationLayer .buttonWidgetAnnotation.pushButton > a {
+        position: absolute;
+        font-size: 1em;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.pushButton > canvas {
+        width: 100%;
+        height: 100%;
+      }
+
+      .annotationLayer .linkAnnotation > a:hover,
+      .annotationLayer .buttonWidgetAnnotation.pushButton > a:hover {
+        opacity: 0.2;
+        background: rgba(255, 255, 0, 1);
+        box-shadow: 0 2px 10px rgba(255, 255, 0, 1);
+      }
+
+      .annotationLayer .textAnnotation img {
+        position: absolute;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+
+      .annotationLayer .textWidgetAnnotation input,
+      .annotationLayer .textWidgetAnnotation textarea,
+      .annotationLayer .choiceWidgetAnnotation select,
+      .annotationLayer .buttonWidgetAnnotation.checkBox input,
+      .annotationLayer .buttonWidgetAnnotation.radioButton input {
+        background-image: var(--annotation-unfocused-field-background);
+        border: 2px solid var(--input-unfocused-border-color);
+        box-sizing: border-box;
+        font: calc(9px * var(--scale-factor)) sans-serif;
+        height: 100%;
+        margin: 0;
+        vertical-align: top;
+        width: 100%;
+      }
+
+      .annotationLayer .textWidgetAnnotation input:required,
+      .annotationLayer .textWidgetAnnotation textarea:required,
+      .annotationLayer .choiceWidgetAnnotation select:required,
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:required,
+      .annotationLayer .buttonWidgetAnnotation.radioButton input:required {
+        outline: 1.5px solid red;
+      }
+
+      .annotationLayer .choiceWidgetAnnotation select option {
+        padding: 0;
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.radioButton input {
+        border-radius: 50%;
+      }
+
+      .annotationLayer .textWidgetAnnotation textarea {
+        resize: none;
+      }
+
+      .annotationLayer .textWidgetAnnotation input[disabled],
+      .annotationLayer .textWidgetAnnotation textarea[disabled],
+      .annotationLayer .choiceWidgetAnnotation select[disabled],
+      .annotationLayer .buttonWidgetAnnotation.checkBox input[disabled],
+      .annotationLayer .buttonWidgetAnnotation.radioButton input[disabled] {
+        background: none;
+        border: 2px solid var(--input-disabled-border-color);
+        cursor: not-allowed;
+      }
+
+      .annotationLayer .textWidgetAnnotation input:hover,
+      .annotationLayer .textWidgetAnnotation textarea:hover,
+      .annotationLayer .choiceWidgetAnnotation select:hover,
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:hover,
+      .annotationLayer .buttonWidgetAnnotation.radioButton input:hover {
+        border: 2px solid var(--input-hover-border-color);
+      }
+      .annotationLayer .textWidgetAnnotation input:hover,
+      .annotationLayer .textWidgetAnnotation textarea:hover,
+      .annotationLayer .choiceWidgetAnnotation select:hover,
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:hover {
+        border-radius: 2px;
+      }
+
+      .annotationLayer .textWidgetAnnotation input:focus,
+      .annotationLayer .textWidgetAnnotation textarea:focus,
+      .annotationLayer .choiceWidgetAnnotation select:focus {
+        background: none;
+        border: 2px solid var(--input-focus-border-color);
+        border-radius: 2px;
+        outline: var(--input-focus-outline);
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox :focus,
+      .annotationLayer .buttonWidgetAnnotation.radioButton :focus {
+        background-image: none;
+        background-color: transparent;
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox :focus {
+        border: 2px solid var(--input-focus-border-color);
+        border-radius: 2px;
+        outline: var(--input-focus-outline);
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.radioButton :focus {
+        border: 2px solid var(--input-focus-border-color);
+        outline: var(--input-focus-outline);
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before,
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after,
+      .annotationLayer
+        .buttonWidgetAnnotation.radioButton
+        input:checked:before {
+        background-color: CanvasText;
+        content: "";
+        display: block;
+        position: absolute;
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before,
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after {
+        height: 80%;
+        left: 45%;
+        width: 1px;
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:before {
+        transform: rotate(45deg);
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox input:checked:after {
+        transform: rotate(-45deg);
+      }
+
+      .annotationLayer
+        .buttonWidgetAnnotation.radioButton
+        input:checked:before {
+        border-radius: 50%;
+        height: 50%;
+        left: 30%;
+        top: 20%;
+        width: 50%;
+      }
+
+      .annotationLayer .textWidgetAnnotation input.comb {
+        font-family: monospace;
+        padding-left: 2px;
+        padding-right: 0;
+      }
+
+      .annotationLayer .textWidgetAnnotation input.comb:focus {
+        /*
+     * Letter spacing is placed on the right side of each character. Hence, the
+     * letter spacing of the last character may be placed outside the visible
+     * area, causing horizontal scrolling. We avoid this by extending the width
+     * when the element has focus and revert this when it loses focus.
+     */
+        width: 103%;
+      }
+
+      .annotationLayer .buttonWidgetAnnotation.checkBox input,
+      .annotationLayer .buttonWidgetAnnotation.radioButton input {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+
+      .annotationLayer .popupTriggerArea {
+        height: 100%;
+        width: 100%;
+      }
+
+      .annotationLayer .popupWrapper {
+        position: absolute;
+        font-size: calc(9px * var(--scale-factor));
+        width: 100%;
+        min-width: calc(180px * var(--scale-factor));
+        pointer-events: none;
+      }
+
+      .annotationLayer .popup {
+        position: absolute;
+        max-width: calc(180px * var(--scale-factor));
+        background-color: rgba(255, 255, 153, 1);
+        box-shadow: 0 calc(2px * var(--scale-factor))
+          calc(5px * var(--scale-factor)) rgba(136, 136, 136, 1);
+        border-radius: calc(2px * var(--scale-factor));
+        padding: calc(6px * var(--scale-factor));
+        margin-left: calc(5px * var(--scale-factor));
+        cursor: pointer;
+        font: message-box;
+        white-space: normal;
+        word-wrap: break-word;
+        pointer-events: auto;
+      }
+
+      .annotationLayer .popup > * {
+        font-size: calc(9px * var(--scale-factor));
+      }
+
+      .annotationLayer .popup h1 {
+        display: inline-block;
+      }
+
+      .annotationLayer .popupDate {
+        display: inline-block;
+        margin-left: calc(5px * var(--scale-factor));
+      }
+
+      .annotationLayer .popupContent {
+        border-top: 1px solid rgba(51, 51, 51, 1);
+        margin-top: calc(2px * var(--scale-factor));
+        padding-top: calc(2px * var(--scale-factor));
+      }
+
+      .annotationLayer .richText > * {
+        white-space: pre-wrap;
+        font-size: calc(9px * var(--scale-factor));
+      }
+
+      .annotationLayer .highlightAnnotation,
+      .annotationLayer .underlineAnnotation,
+      .annotationLayer .squigglyAnnotation,
+      .annotationLayer .strikeoutAnnotation,
+      .annotationLayer .freeTextAnnotation,
+      .annotationLayer .lineAnnotation svg line,
+      .annotationLayer .squareAnnotation svg rect,
+      .annotationLayer .circleAnnotation svg ellipse,
+      .annotationLayer .polylineAnnotation svg polyline,
+      .annotationLayer .polygonAnnotation svg polygon,
+      .annotationLayer .caretAnnotation,
+      .annotationLayer .inkAnnotation svg polyline,
+      .annotationLayer .stampAnnotation,
+      .annotationLayer .fileAttachmentAnnotation {
+        cursor: pointer;
+      }
+
+      .annotationLayer section svg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .annotationLayer .annotationTextContent {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        color: transparent;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .annotationLayer .annotationTextContent span {
+        width: 100%;
+        display: inline-block;
+      }
+
+      :root {
+        --xfa-unfocused-field-background: url("data:image/svg+xml;charset=UTF-8,<svg width='1px' height='1px' xmlns='http://www.w3.org/2000/svg'><rect width='100%' height='100%' style='fill:rgba(0, 54, 255, 0.13);'/></svg>");
+        --xfa-focus-outline: auto;
+      }
+
+      @media (forced-colors: active) {
+        :root {
+          --xfa-focus-outline: 2px solid CanvasText;
+        }
+        .xfaLayer *:required {
+          outline: 1.5px solid selectedItem;
+        }
+      }
+
+      .xfaLayer {
+        background-color: transparent;
+      }
+
+      .xfaLayer .highlight {
+        margin: -1px;
+        padding: 1px;
+        background-color: rgba(239, 203, 237, 1);
+        border-radius: 4px;
+      }
+
+      .xfaLayer .highlight.appended {
+        position: initial;
+      }
+
+      .xfaLayer .highlight.begin {
+        border-radius: 4px 0 0 4px;
+      }
+
+      .xfaLayer .highlight.end {
+        border-radius: 0 4px 4px 0;
+      }
+
+      .xfaLayer .highlight.middle {
+        border-radius: 0;
+      }
+
+      .xfaLayer .highlight.selected {
+        background-color: rgba(203, 223, 203, 1);
+      }
+
+      .xfaPage {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .xfaContentarea {
+        position: absolute;
+      }
+
+      .xfaPrintOnly {
+        display: none;
+      }
+
+      .xfaLayer {
+        position: absolute;
+        text-align: initial;
+        top: 0;
+        left: 0;
+        transform-origin: 0 0;
+        line-height: 1.2;
+      }
+
+      .xfaLayer * {
+        color: inherit;
+        font: inherit;
+        font-style: inherit;
+        font-weight: inherit;
+        font-kerning: inherit;
+        letter-spacing: -0.01px;
+        text-align: inherit;
+        text-decoration: inherit;
+        box-sizing: border-box;
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
+        pointer-events: auto;
+        line-height: inherit;
+      }
+
+      .xfaLayer *:required {
+        outline: 1.5px solid red;
+      }
+
+      .xfaLayer div {
+        pointer-events: none;
+      }
+
+      .xfaLayer svg {
+        pointer-events: none;
+      }
+
+      .xfaLayer svg * {
+        pointer-events: none;
+      }
+
+      .xfaLayer a {
+        color: blue;
+      }
+
+      .xfaRich li {
+        margin-left: 3em;
+      }
+
+      .xfaFont {
+        color: black;
+        font-weight: normal;
+        font-kerning: none;
+        font-size: 10px;
+        font-style: normal;
+        letter-spacing: 0;
+        text-decoration: none;
+        vertical-align: 0;
+      }
+
+      .xfaCaption {
+        overflow: hidden;
+        flex: 0 0 auto;
+      }
+
+      .xfaCaptionForCheckButton {
+        overflow: hidden;
+        flex: 1 1 auto;
+      }
+
+      .xfaLabel {
+        height: 100%;
+        width: 100%;
+      }
+
+      .xfaLeft {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .xfaRight {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+      }
+
+      .xfaLeft > .xfaCaption,
+      .xfaLeft > .xfaCaptionForCheckButton,
+      .xfaRight > .xfaCaption,
+      .xfaRight > .xfaCaptionForCheckButton {
+        max-height: 100%;
+      }
+
+      .xfaTop {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .xfaBottom {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+      }
+
+      .xfaTop > .xfaCaption,
+      .xfaTop > .xfaCaptionForCheckButton,
+      .xfaBottom > .xfaCaption,
+      .xfaBottom > .xfaCaptionForCheckButton {
+        width: 100%;
+      }
+
+      .xfaBorder {
+        background-color: transparent;
+        position: absolute;
+        pointer-events: none;
+      }
+
+      .xfaWrapped {
+        width: 100%;
+        height: 100%;
+      }
+
+      .xfaTextfield:focus,
+      .xfaSelect:focus {
+        background-image: none;
+        background-color: transparent;
+        outline: var(--xfa-focus-outline);
+        outline-offset: -1px;
+      }
+
+      .xfaCheckbox:focus,
+      .xfaRadio:focus {
+        outline: var(--xfa-focus-outline);
+      }
+
+      .xfaTextfield,
+      .xfaSelect {
+        height: 100%;
+        width: 100%;
+        flex: 1 1 auto;
+        border: none;
+        resize: none;
+        background-image: var(--xfa-unfocused-field-background);
+      }
+
+      .xfaSelect {
+        padding-left: 2px;
+        padding-right: 2px;
+        padding-inline: 2px;
+      }
+
+      .xfaTop > .xfaTextfield,
+      .xfaTop > .xfaSelect,
+      .xfaBottom > .xfaTextfield,
+      .xfaBottom > .xfaSelect {
+        flex: 0 1 auto;
+      }
+
+      .xfaButton {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        border: none;
+        text-align: center;
+      }
+
+      .xfaLink {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .xfaCheckbox,
+      .xfaRadio {
+        width: 100%;
+        height: 100%;
+        flex: 0 0 auto;
+        border: none;
+      }
+
+      .xfaRich {
+        white-space: pre-wrap;
+        width: 100%;
+        height: 100%;
+      }
+
+      .xfaImage {
+        -o-object-position: left top;
+        object-position: left top;
+        -o-object-fit: contain;
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+      }
+
+      .xfaLrTb,
+      .xfaRlTb,
+      .xfaTb {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .xfaLr {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+      }
+
+      .xfaRl {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: stretch;
+      }
+
+      .xfaTb > div {
+        justify-content: left;
+      }
+
+      .xfaPosition {
+        position: relative;
+      }
+
+      .xfaArea {
+        position: relative;
+      }
+
+      .xfaValignMiddle {
+        display: flex;
+        align-items: center;
+      }
+
+      .xfaTable {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .xfaTable .xfaRow {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+      }
+
+      .xfaTable .xfaRlRow {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: stretch;
+        flex: 1;
+      }
+
+      .xfaTable .xfaRlRow > div {
+        flex: 1;
+      }
+
+      .xfaNonInteractive input,
+      .xfaNonInteractive textarea,
+      .xfaDisabled input,
+      .xfaDisabled textarea,
+      .xfaReadOnly input,
+      .xfaReadOnly textarea {
+        background: initial;
+      }
+
+      @media print {
+        .xfaTextfield,
+        .xfaSelect {
+          background: transparent;
+        }
+
+        .xfaSelect {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          text-indent: 1px;
+          text-overflow: "";
+        }
+      }
+
+      :root {
+        --focus-outline: solid 2px blue;
+        --hover-outline: dashed 2px blue;
+        --freetext-line-height: 1.35;
+        --freetext-padding: 2px;
+        --editorFreeText-editing-cursor: text;
+        --editorInk-editing-cursor: pointer;
+      }
+
+      @media (-webkit-min-device-pixel-ratio: 1.1), (min-resolution: 1.1dppx) {
+        :root {
+        }
+      }
+
+      @media (forced-colors: active) {
+        :root {
+          --focus-outline: solid 3px ButtonText;
+          --hover-outline: dashed 3px ButtonText;
+        }
+      }
+
+      [data-editor-rotation="90"] {
+        transform: rotate(90deg);
+      }
+      [data-editor-rotation="180"] {
+        transform: rotate(180deg);
+      }
+      [data-editor-rotation="270"] {
+        transform: rotate(270deg);
+      }
+
+      .annotationEditorLayer {
+        background: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: calc(100px * var(--scale-factor));
+        transform-origin: 0 0;
+        cursor: auto;
+        z-index: 4;
+      }
+
+      .annotationEditorLayer.freeTextEditing {
+        cursor: var(--editorFreeText-editing-cursor);
+      }
+
+      .annotationEditorLayer.inkEditing {
+        cursor: var(--editorInk-editing-cursor);
+      }
+
+      .annotationEditorLayer .selectedEditor {
+        outline: var(--focus-outline);
+        resize: none;
+      }
+
+      .annotationEditorLayer .freeTextEditor {
+        position: absolute;
+        background: transparent;
+        border-radius: 3px;
+        padding: calc(var(--freetext-padding) * var(--scale-factor));
+        resize: none;
+        width: auto;
+        height: auto;
+        z-index: 1;
+        transform-origin: 0 0;
+        touch-action: none;
+        cursor: auto;
+      }
+
+      .annotationEditorLayer .freeTextEditor .internal {
+        background: transparent;
+        border: none;
+        top: 0;
+        left: 0;
+        overflow: visible;
+        white-space: nowrap;
+        resize: none;
+        font: 10px sans-serif;
+        line-height: var(--freetext-line-height);
+      }
+
+      .annotationEditorLayer .freeTextEditor .overlay {
+        position: absolute;
+        display: none;
+        background: transparent;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .annotationEditorLayer .freeTextEditor .overlay.enabled {
+        display: block;
+      }
+
+      .annotationEditorLayer .freeTextEditor .internal:empty::before {
+        content: attr(default-content);
+        color: gray;
+      }
+
+      .annotationEditorLayer .freeTextEditor .internal:focus {
+        outline: none;
+      }
+
+      .annotationEditorLayer .inkEditor.disabled {
+        resize: none;
+      }
+
+      .annotationEditorLayer .inkEditor.disabled.selectedEditor {
+        resize: horizontal;
+      }
+
+      .annotationEditorLayer .freeTextEditor:hover:not(.selectedEditor),
+      .annotationEditorLayer .inkEditor:hover:not(.selectedEditor) {
+        outline: var(--hover-outline);
+      }
+
+      .annotationEditorLayer .inkEditor {
+        position: absolute;
+        background: transparent;
+        border-radius: 3px;
+        overflow: auto;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        transform-origin: 0 0;
+        cursor: auto;
+      }
+
+      .annotationEditorLayer .inkEditor.editing {
+        resize: none;
+        cursor: inherit;
+      }
+
+      .annotationEditorLayer .inkEditor .inkEditorCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+
+      :root {
+        --viewer-container-height: 0;
+        --pdfViewer-padding-bottom: 0;
+        --page-margin: 1px auto -8px;
+        --page-border: 9px solid transparent;
+        --spreadHorizontalWrapped-margin-LR: -3.5px;
+      }
+
+      @media screen and (forced-colors: active) {
+        :root {
+          --pdfViewer-padding-bottom: 9px;
+          --page-margin: 8px auto -1px;
+          --page-border: 1px solid CanvasText;
+          --page-border-image: none;
+          --spreadHorizontalWrapped-margin-LR: 3.5px;
+        }
+      }
+
+      [data-main-rotation="90"] {
+        transform: rotate(90deg) translateY(-100%);
+      }
+      [data-main-rotation="180"] {
+        transform: rotate(180deg) translate(-100%, -100%);
+      }
+      [data-main-rotation="270"] {
+        transform: rotate(270deg) translateX(-100%);
+      }
+
+      .pdfViewer {
+        background-color: #d7d7d7;
+        padding-bottom: var(--pdfViewer-padding-bottom);
+      }
+
+      .pdfViewer .canvasWrapper {
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .pdfViewer .page {
+        direction: ltr;
+        width: 816px;
+        height: 1056px;
+        margin: var(--page-margin);
+        position: relative;
+        overflow: visible;
+        border: var(--page-border);
+        -o-border-image: var(--page-border-image);
+        border-image: var(--page-border-image);
+        background-clip: content-box;
+        background-color: rgba(255, 255, 255, 1);
+      }
+
+      .pdfViewer .dummyPage {
+        position: relative;
+        width: 0;
+        height: var(--viewer-container-height);
+      }
+
+      .pdfViewer.removePageBorders .page {
+        margin: 0 auto 10px;
+        border: none;
+      }
+
+      .pdfViewer.singlePageView {
+        display: inline-block;
+      }
+
+      .pdfViewer.singlePageView .page {
+        margin: 0;
+        border: none;
+      }
+
+      .pdfViewer.scrollHorizontal,
+      .pdfViewer.scrollWrapped,
+      .spread {
+        margin-left: 3.5px;
+        margin-right: 3.5px;
+        text-align: center;
+      }
+
+      .pdfViewer.scrollHorizontal,
+      .spread {
+        white-space: nowrap;
+      }
+
+      .pdfViewer.removePageBorders,
+      .pdfViewer.scrollHorizontal .spread,
+      .pdfViewer.scrollWrapped .spread {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .spread .page,
+      .spread .dummyPage,
+      .pdfViewer.scrollHorizontal .page,
+      .pdfViewer.scrollWrapped .page,
+      .pdfViewer.scrollHorizontal .spread,
+      .pdfViewer.scrollWrapped .spread {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .spread .page,
+      .pdfViewer.scrollHorizontal .page,
+      .pdfViewer.scrollWrapped .page {
+        margin-left: var(--spreadHorizontalWrapped-margin-LR);
+        margin-right: var(--spreadHorizontalWrapped-margin-LR);
+      }
+
+      .pdfViewer.removePageBorders .spread .page,
+      .pdfViewer.removePageBorders.scrollHorizontal .page,
+      .pdfViewer.removePageBorders.scrollWrapped .page {
+        margin-left: 5px;
+        margin-right: 5px;
+      }
+
+      .pdfViewer .page canvas {
+        margin: 0;
+        display: block;
+      }
+
+      .pdfViewer .page canvas[hidden] {
+        display: none;
+      }
+
+      .pdfViewer .page canvas[zooming] {
+        width: 100%;
+        height: 100%;
+      }
+
+      .pdfViewer .page .loadingIcon {
+        position: absolute;
+        display: block;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 5;
+      }
+      .pdfViewer .page .loadingIcon.notVisible {
+        background: none;
+      }
+
+      .pdfViewer.enablePermissions .textLayer span {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        user-select: none !important;
+        cursor: not-allowed;
+      }
+
+      .pdfPresentationMode .pdfViewer {
+        padding-bottom: 0;
+      }
+
+      .pdfPresentationMode .spread {
+        margin: 0;
+      }
+
+      .pdfPresentationMode .pdfViewer .page {
+        margin: 0 auto;
+        border: 2px solid transparent;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="pdfViewer" style="--scale-factor: 1">
+      <div class="page" style="height: 864px; width: 612px">
+        <div class="canvasLayer">
+          <img
+            src="data:image/png;base64,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"
+          />
+        </div>
+        <div
+          data-main-rotation="0"
+          class="textLayer"
+          style="
+            width: calc(var(--scale-factor) * 612px);
+            height: calc(var(--scale-factor) * 864px);
+          "
+        >
+          <span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 75.06%;
+              top: 27.21%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >AE</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 77.02%;
+              top: 27.21%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 81.96%;
+              top: 27.21%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >18†022</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 32.79%;
+              top: 5.18%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >ATS INTERNATIONAL</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 32.79%;
+              top: 6.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Multiparc</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 42.49%;
+              top: 6.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 43.57%;
+              top: 6.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >du</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 45.73%;
+              top: 6.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 46.81%;
+              top: 6.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Thillay</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 32.79%;
+              top: 8.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >6 avenue des</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 45.73%;
+              top: 8.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 46.81%;
+              top: 8.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Grands</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 53.28%;
+              top: 8.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 54.36%;
+              top: 8.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Champs</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 32.79%;
+              top: 10.07%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >+33(0)149198800</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 78.2%;
+              top: 21.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >08/01/2024</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 58.83%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >M.A.W.B.</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 5.1%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >H.A.W.B.</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 12.95%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 20.87%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.08201);
+            "
+            >Parcels Weight (kg)</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 39.34%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 42.36%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Description</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 53.14%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.89%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Shipper/consignee</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 74.55%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 76.95%;
+              top: 37.6%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Charges collect</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 75.06%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >157</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 78.3%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 79.38%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+            >-</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 80.46%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 81.53%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >8929</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 85.85%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 86.93%;
+              top: 28.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >5975</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 58.83%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Flights</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 66.38%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 75.06%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >QR</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 77.22%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 78.3%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >038</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 81.53%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 82.61%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+            >-</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 83.69%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 84.77%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >QR</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 86.93%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 88%;
+              top: 30.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >1014</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 58.83%;
+              top: 32.07%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Date</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 63.14%;
+              top: 32.07%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 75.06%;
+              top: 32.1%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >08/01/2024</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 58.83%;
+              top: 33.73%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >From</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 63.14%;
+              top: 33.73%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 75.06%;
+              top: 33.73%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >To</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 65.26%;
+              top: 33.77%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >CDG</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 68.2%;
+              top: 33.77%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 81.57%;
+              top: 33.77%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >DXB</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 58.75%;
+              top: 27.12%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >CONSOLIDATION</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 72.77%;
+              top: 27.12%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 80.16%;
+              top: 27.18%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+            >/</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 16.08%;
+              top: 21.96%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+            >1</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 5.1%;
+              top: 21.96%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Page</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 9.42%;
+              top: 21.96%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 10.5%;
+              top: 21.96%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Nb</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 38.12%;
+              top: 19.51%;
+              font-size: calc(var(--scale-factor) * 16px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >CARGO</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 45.97%;
+              top: 19.51%;
+              font-size: calc(var(--scale-factor) * 16px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 47.53%;
+              top: 19.51%;
+              font-size: calc(var(--scale-factor) * 16px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >MANIFEST</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 60.08%;
+              top: 19.51%;
+              font-size: calc(var(--scale-factor) * 16px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 68.24%;
+              top: 21.57%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Date</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 72.55%;
+              top: 21.57%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 73.63%;
+              top: 21.57%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+            >:</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 6.04%;
+              top: 26.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >IBP</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 9.28%;
+              top: 26.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 10.36%;
+              top: 26.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >CARGO SERVICES LLC</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 6.04%;
+              top: 28.12%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >OFFICE # 19, AL ASMAWI BUILDING,</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 6.04%;
+              top: 29.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >RAS</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 9.28%;
+              top: 29.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 10.36%;
+              top: 29.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >AL KHOR INDUSTRIAL AREA 2</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 6.04%;
+              top: 30.79%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >BDM@IBPGROUP.ME/971 43976645</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 6.04%;
+              top: 32.12%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >DUBAI</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 6.04%;
+              top: 33.46%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >UNITED ARAB EMIRATES</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 33.42%;
+              top: 39.27%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >60,00</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 25.57%;
+              top: 39.27%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+            >1</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 5.1%;
+              top: 39.27%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >000 - 0011 6081</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 66.2%;
+              top: 43.05%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >IVRY SUR</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 66.2%;
+              top: 44.27%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >SEINE</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 80.4%;
+              top: 39.27%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >CDG</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 80.4%;
+              top: 43.21%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >DXB</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 90.28%;
+              top: 39.27%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >0,00</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 66.2%;
+              top: 56.05%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >DUBAI</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 39.46%;
+              top: 39.1%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >BIKE STAND</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 49.26%;
+              top: 39.1%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 39.1%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >BOGARDE SARL</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 40.32%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >34 RUE PIERRE RIGAUD</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 41.55%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >0625178181</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 43.71%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >94200</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 45.77%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >JETEX EXECUTIVE</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 46.99%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >AVIATION DWC-LLC</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 48.21%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >PILOT FBO</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 49.44%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >3,4/AVIATION DISTRICT</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 50.66%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >- DWC</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 51.88%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >PO BOX 54698</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 53.1%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >LOLA.ZEDDA@JETEX.COM/</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 57.81%;
+              top: 54.32%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >TEL:+971564128426</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 28.71%;
+              top: 79.05%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >60,00</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 23.22%;
+              top: 79.05%;
+              font-size: calc(var(--scale-factor) * 10px);
+              font-family: monospace;
+            "
+            >1</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 8.71%;
+              top: 79.01%;
+              font-size: calc(var(--scale-factor) * 11px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >Total</span
+          ><br role="presentation" /><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 5.1%;
+              top: 84.34%;
+              font-size: calc(var(--scale-factor) * 8px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >* In the event of any</span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 21.57%;
+              top: 84.34%;
+              font-size: calc(var(--scale-factor) * 8px);
+              font-family: monospace;
+            "
+          >
+          </span
+          ><span
+            role="presentation"
+            dir="ltr"
+            style="
+              left: 22.36%;
+              top: 84.34%;
+              font-size: calc(var(--scale-factor) * 8px);
+              font-family: monospace;
+              transform: scaleX(1.0913);
+            "
+            >irregularity</span
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

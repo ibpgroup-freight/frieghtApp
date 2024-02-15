@@ -23,8 +23,10 @@ type QuotationItem = {
   MinRateAmountPerUnit: string;
   MinCostAmountPerUnit: string;
   CostAmountPerUnit: string;
-  minUnits: string;
-  maxUnits: string;
+  // minUnits: string;
+  // maxUnits: string;
+  Units: string;
+  Weight: string;
 };
 type Inquiry = {
   CustomerName: string;
@@ -59,6 +61,9 @@ type Inquiry = {
   VesselDetails?: string;
   othershippingDetails?: string;
   ShippingLaneDetails?: string;
+  jobInitials: string;
+  method: string;
+  quotationId?: string;
 };
 type InquiryStore = {
   inquiry: Inquiry;

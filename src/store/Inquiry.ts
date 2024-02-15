@@ -34,6 +34,10 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     ShippingLaneDetails: "",
     VesselDetails: "",
     VesselName: "",
+    jobInitials: "",
+    method: "",
+    othershippingDetails: "",
+    quotationId: "",
   },
   setItemInquiry: (i) => {
     set((state) => {
@@ -44,6 +48,9 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     set((state) => {
       return {
         inquiry: {
+          jobInitials: "",
+          method: "",
+          othershippingDetails: "",
           CustomerName: "",
           CustomerAddress: "",
           SalesPerson: "",
@@ -75,7 +82,7 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           ShippingLaneDetails: "",
           VesselDetails: "",
           VesselName: "",
-          
+          quotationId: "",
         },
       };
     });
