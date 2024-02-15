@@ -6,25 +6,22 @@ import {
   collection,
   serverTimestamp,
 } from "firebase/firestore";
-const useJob = create<JobStore>((set, get) => ({
-  Jobs: [],
-  populateJobs: (j) => {
-    set((state) => ({ ...state, Jobs: j }));
+const useQuotation = create<QuotationStore>((set, get) => ({
+  Quotations: [],
+  populateQuotations: (j) => {
+    set((state) => ({ ...state, Quotations: j }));
   },
-  setJob: async (j) => {
+  setQuotation: async (j) => {
     try {
       await addDoc(collection(db, "jobs"), {
         inquiry: j.inquiry,
         Items: j.Items,
-        jobid: j.jobid,
+        quotationId: j.quotationId,
         createdAt: serverTimestamp(),
         status: j.status,
-        type: j.inquiry.type,
-        jobInitials: j.inquiry.jobInitials,
-        method: j.inquiry.method,
       });
       set((state) => {
-        state.Jobs.push(j);
+        state.Quotations.push(j);
         return { ...state };
       });
     } catch (e) {
@@ -33,4 +30,4 @@ const useJob = create<JobStore>((set, get) => ({
   },
 }));
 
-export default useJob;
+export default useQuotation;

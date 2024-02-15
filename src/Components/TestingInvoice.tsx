@@ -13,7 +13,7 @@ import BillTo from "./BillTo";
 import InvoiceNo from "./InvoiceNo";
 import InvoiceItemsTable from "./InvoiceItemsTable";
 import InvoiceThankYouMsg from "./InvoiceThankYouMsg";
-import logo from "../../src/logo.jpg";
+import logo from "../assets/images/Logo.png";
 import { useLocation } from "react-router-dom";
 import useinvoiceStore from "../store/Invoice";
 import TableShipmentDetails from "./TableShipmentDetails";

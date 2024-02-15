@@ -9,28 +9,35 @@ function Dashboard() {
     cancelledJobs: 0,
     pendingJobs: 0,
     contacts: 0,
+    quotations: 0,
   });
   const fetchData = async () => {
     try {
       const usersQuery = query(collection(db, "users"));
       const jobsQuery = query(collection(db, "jobs"));
       const contactsQuery = query(collection(db, "contacts"));
+      const quotationsQuery = query(collection(db, "quotations"));
 
-      const [usersSnapshot, jobsSnapshot, contactSnapshop] = await Promise.all([
-        getDocs(usersQuery),
-        getDocs(jobsQuery),
-        getDocs(contactsQuery),
-      ]);
+      const [usersSnapshot, jobsSnapshot, contactSnapshop, quotationSnapshot] =
+        await Promise.all([
+          getDocs(usersQuery),
+          getDocs(jobsQuery),
+          getDocs(contactsQuery),
+          getDocs(quotationsQuery),
+        ]);
 
       const totalUsers = usersSnapshot.size;
       const jobs = jobsSnapshot.size;
+      const totalQuotations = quotationSnapshot.size;
       const completedJobs = jobsSnapshot.docs.filter(
         (doc) => doc.data().status === "completed"
       ).length;
       const cancelledJobs = jobsSnapshot.docs.filter(
         (doc) => doc.data().status === "cancelled"
       ).length;
-      const pendingJobs = jobs - completedJobs;
+      const pendingJobs = jobsSnapshot.docs.filter(
+        (doc) => doc.data().status === "pending"
+      ).length;
       const contacts = contactSnapshop.size;
       setCounts({
         totalUsers,
@@ -39,6 +46,7 @@ function Dashboard() {
         pendingJobs,
         contacts,
         cancelledJobs,
+        quotations: totalQuotations,
       });
     } catch (error: any) {
       console.error("Error fetching data:", error.message);
@@ -71,6 +79,12 @@ function Dashboard() {
       name: "totalUsers",
     },
     { title: "Contacts", count: 20, color: "bg-indigo-500", name: "contacts" },
+    {
+      title: "Total Quotations",
+      count: 20,
+      color: "bg-indigo-500",
+      name: "quotations",
+    },
   ];
   useEffect(() => {
     fetchData();

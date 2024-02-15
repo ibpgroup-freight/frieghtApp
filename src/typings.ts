@@ -101,11 +101,25 @@ type Job = {
   Items: QuotationItem[];
   status: JobStatus;
 };
+type Quotation = {
+  id?: string;
+  quotationId: string;
+  inquiry: Inquiry;
+  Items: QuotationItem[];
+  status: QuotationStatus;
+};
 type JobStatus = "completed" | "pending" | "cancelled";
+type QuotationStatus = "approved" | "pending" | "disapproved";
+
 type JobStore = {
   Jobs: Job[];
   setJob: (i: Job) => Promise<void>;
   populateJobs: (j: Job[]) => void;
+};
+type QuotationStore = {
+  Quotations: Quotation[];
+  setQuotation: (i: Quotation) => Promise<void>;
+  populateQuotations: (j: Quotation[]) => void;
 };
 type Model = {
   toggle: boolean;
@@ -165,4 +179,5 @@ type DashbboardFetch = {
   pendingJobs: number;
   contacts: number;
   cancelledJobs: number;
+  quotations: number;
 };

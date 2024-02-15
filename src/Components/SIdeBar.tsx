@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Logo from "../assets/images/Logo.png";
+
 import {
   faPlaneDeparture,
   faTruck,
@@ -15,6 +17,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
+import useInquiryItem from "../store/Inquiry";
+import useinvoiceStore from "../store/Invoice";
 function SideBar({ showSideBar }: { showSideBar: boolean }) {
   const Options = [
     {
@@ -44,6 +48,7 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
       path: "/generateInvoice",
       name: "Invoice",
       icon: faFileInvoiceDollar,
+      reload: true,
     },
     {
       path: "/search",
@@ -54,6 +59,7 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
       path: "/generateJob",
       name: "Generate Job",
       icon: faBriefcase,
+      reload: true,
     },
     {
       path: "/manageUsers",
@@ -68,12 +74,17 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
   ];
   const [showDropDown, setShowDropDown] = useState("");
   const navigate = useNavigate();
+  const { resetInquiry } = useInquiryItem();
+  const { setItems } = useinvoiceStore();
   return (
     <aside
-      className={`bg-blue-600 z-9999  absolute w-3/5 md:relative lg:block text-white md:flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center min-h-screen py-20 ${
+      className={`bg-blue-600 z-9999  absolute w-3/5 md:relative lg:block text-white md:flex flex-col md:min-w-64 sm:min-w-44 md:w-1/6 items-center min-h-screen py-10 ${
         showSideBar ? "block" : "hidden"
       }`}
     >
+      <div className="w-full h-44 mb-20">
+        <img src={Logo} className="w-full h-full object-contain" />
+      </div>
       <ul className="space-y-10 w-full">
         {Options.map((o) => (
           <li
@@ -81,7 +92,13 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
             key={o.path}
             onMouseEnter={() => (o.option ? setShowDropDown(o.name) : () => {})}
             onMouseLeave={() => setShowDropDown("")}
-            onClick={() => (!o.option ? navigate(`${o.path}`) : () => {})}
+            onClick={() => {
+              if (!o.option) {
+                navigate(`${o.path}`);
+                resetInquiry();
+                setItems([]);
+              }
+            }}
           >
             {o.name}
             <FontAwesomeIcon icon={o.icon as IconProp} />

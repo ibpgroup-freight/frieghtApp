@@ -192,15 +192,16 @@ function GenerateJob() {
   const { setitemsArray, items: quotationItemsStore } = useItemStore();
   const { setJob } = useJob();
   const navigate = useNavigate();
+  const [loadingdetails, setloadingdetails] = useState<boolean>(false);
   const quotationidRef = useRef<HTMLInputElement | null>(null);
-  const [isloading, setisloading] = useState<boolean>(true);
+  const [isloading, setisloading] = useState<boolean>(false);
   // const [items, setitems] = useState<QuotationItem[]>(
   //   quotationItemsStore || []
   // );
   // const [state, dispatch] = React.useReducer(InquiryReducer, inq);
   const filljobDetailsbyId = useCallback(async () => {
     try {
-      setisloading(true);
+      setloadingdetails(true);
       console.log("job", quotationidRef.current?.value);
       const docs = await getDocs(
         query(
@@ -217,12 +218,13 @@ function GenerateJob() {
       setitemsArray(docs.docs[0]?.data()?.Items as QuotationItem[]);
       // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
       // setItems(docs.docs[0]?.data()?.Items as QuotationItem[]);
+      toast.success("Filled Details");
     } catch (e) {
       toast.error("No Such Job");
     } finally {
-      setisloading(false);
+      setloadingdetails(false);
     }
-  }, [quotationidRef, isloading]);
+  }, [quotationidRef, loadingdetails]);
   // console.log("q", items);
 
   const formikObj = useFormik({
@@ -237,8 +239,13 @@ function GenerateJob() {
     async onSubmit(values) {
       try {
         setisloading(true);
+        console.log(inquiry, "inquieru");
         await setJob({
-          inquiry: values,
+          inquiry: {
+            ...values,
+            method: inquiry.method,
+            jobInitials: inquiry.jobInitials,
+          },
           Items: quotationItemsStore,
           jobid: values.quotationId!,
           status: "pending",
@@ -465,8 +472,8 @@ function GenerateJob() {
           </label>
           <input
             type={"text"}
-            name={"Quotation Id"}
-            placeholder="jobId"
+            name={"QuotationId"}
+            placeholder="QuotationId"
             className="w-3/5 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
             ref={quotationidRef}
           />
@@ -474,7 +481,11 @@ function GenerateJob() {
             className="bg-blue-500 text-white p-3 rounded-md"
             onClick={filljobDetailsbyId}
           >
-            Fill Details
+            {loadingdetails ? (
+              <LoaderIcon className="p-2 mx-auto" />
+            ) : (
+              "Fill Details"
+            )}
           </button>
         </div>
 
@@ -677,7 +688,11 @@ function GenerateJob() {
               type="submit"
               className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-center"
             >
-              {isloading ? <LoaderIcon /> : "Genetate Job"}
+              {isloading ? (
+                <LoaderIcon className="p-2 mx-auto" />
+              ) : (
+                "Generate Job"
+              )}
             </button>
           </form>
         </div>
