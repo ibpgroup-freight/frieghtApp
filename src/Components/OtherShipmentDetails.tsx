@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   singleContainer: {
     width: "50%",
     padding: 3,
+    flexDirection: "column",
   },
   singleText: {
     paddingVertical: 1,
@@ -44,6 +45,7 @@ const OtherShipmentDetails = ({
         }}
       >
         <Text style={styles.singleText}>{jobInfo.othershippingDetails}</Text>
+        <Text style={styles.singleText}>{jobInfo.specialInstructions}</Text>
       </View>
     </View>
   );

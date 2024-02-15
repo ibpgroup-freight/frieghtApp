@@ -51,7 +51,7 @@ type Inquiry = {
   CarrierName: string;
   CustomContainerType: string;
   ContainerType?: string;
-  type?: string;
+  type: string;
   Departure: string;
   EstimatedArrival: string;
   CustomerTRN: string;
@@ -152,6 +152,8 @@ type cargoInfo = {
   OutstandingDues: number;
   VATAmount: number;
   address: string;
+  specialInstructions?: string;
+  termsAndConditions?: string;
 };
 
 type Contact = {
@@ -199,6 +201,7 @@ type CompanyLocationInfo = {
   email: string;
   web?: string;
   BankInfo: CompanyBankInfo;
+  key?: string;
 };
 
 type CompanyBankInfo = {

@@ -43,7 +43,8 @@ const BillTo = ({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) => {
             }}
           >
             Billed To ,
-          </Text>{" "}
+          </Text>
+          {"         "}
           {jobInfo.CustomerName}
         </Text>
         <Text style={styles.singleText}>{jobInfo.CustomerAddress}</Text>
@@ -60,7 +61,7 @@ const BillTo = ({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) => {
           >
             TRN No:
           </Text>
-          {jobInfo.CustomerTRN}
+          {"         "} {jobInfo.CustomerTRN}
         </Text>
         {/* <Text style={styles.singleText}>Status {jobInfo.company}</Text> */}
         <Text style={styles.singleText}>
@@ -70,9 +71,10 @@ const BillTo = ({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) => {
               color: "dodgerblue",
             }}
           >
-            Job Id :{" "}
+            Job Id :
           </Text>{" "}
-          {jobInfo.Jobid}{" "}
+          {"         "}
+          {jobInfo.Jobid}
         </Text>
         <Text style={styles.singleText}>
           <Text
@@ -81,9 +83,10 @@ const BillTo = ({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) => {
               color: "dodgerblue",
             }}
           >
-            Transit Time :{" "}
+            Transit Time :
           </Text>{" "}
-          {jobInfo.TransitTime}{" "}
+          {"         "}
+          {jobInfo.TransitTime}
         </Text>
       </View>
     </View>

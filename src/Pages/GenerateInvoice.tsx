@@ -13,6 +13,7 @@ import { db } from "../firebase";
 import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
 import { LoaderIcon } from "react-hot-toast";
+import useCompanyInfo from "../store/CompanyInfo";
 // const init = {
 //   CustomerName: "",
 //   CustomerAddress: "",
@@ -37,6 +38,9 @@ const validationSchema = yup.object().shape(
     CustomerPhoneNo: yup.string().required("Customer Phone Number is required"),
     SalesPerson: yup.string().required("Sales Person is required"),
     address: yup.string().required("Your Address is required"),
+    termsAndConditions: yup.string().notRequired(),
+    specialInstructions: yup.string().notRequired(),
+    type: yup.string().required("Type of bill is Required"),
     VehicleDetails: yup
       .string()
       .when("type", {
@@ -112,7 +116,6 @@ const validationSchema = yup.object().shape(
     CarrierName: yup.string().required("Carrier Name is required"),
     // TodaysDate: yup.string().required("Carrier Name is required"),
     TransitTime: yup.string().required("Transit Time is required"),
-    type: yup.string().required("Type of bill is Required"),
     CustomerTRN: yup
       .string()
       .matches(/^\d+$/, "Invalid TRN")
@@ -188,6 +191,7 @@ function GenerateInvoice() {
     setInfo,
     setItems: setInvoiceItems,
   } = useinvoiceStore();
+  const { setInformation } = useCompanyInfo();
   const { setItemInquiry, inquiry, resetInquiry } = useInquiryItem();
   const {
     setitemsArray,
@@ -201,39 +205,7 @@ function GenerateInvoice() {
   //   quotationItemsStore || []
   // );
   // const [state, dispatch] = React.useReducer(InquiryReducer, inq);
-  const filljobDetailsbyId = useCallback(async () => {
-    try {
-      setloadingdetails(true);
-      console.log("job", jobidRef.current?.value);
-      const docs = await getDocs(
-        query(
-          collection(db, "jobs"),
-          where("jobid", "==", jobidRef.current?.value!)
-        )
-      );
-      if (docs.empty) return toast.error("No Such Job Exists");
-      console.log("Data", docs.docs[0]?.data());
-      if (docs.docs[0]?.data()?.type === "road") {
-        formikObj.setFieldValue("type", "RoadFreight");
-      } else if (docs.docs[0]?.data()?.type === "sea") {
-        formikObj.setFieldValue("type", "SeaFreight");
-      } else if (docs.docs[0]?.data()?.type === "air") {
-        formikObj.setFieldValue("type", "AirFreight");
-      }
-      setItemInquiry({
-        ...(docs.docs[0]?.data()?.inquiry as Inquiry),
-        method: docs.docs[0]?.data()?.method,
-        jobInitials: docs.docs[0]?.data()?.jobInitials,
-      });
-      setitemsArray(docs.docs[0]?.data()?.Items as QuotationItem[]);
-      // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
-      // setItems(docs.docs[0]?.data()?.Items as QuotationItem[]);
-    } catch (e) {
-      toast.error("No Such Job");
-    } finally {
-      setloadingdetails(false);
-    }
-  }, [jobidRef]);
+
   // console.log("q", items);
   const ResetFields = useCallback(() => {
     resetItems();
@@ -470,6 +442,46 @@ function GenerateInvoice() {
     },
   ];
   console.log(temp_Items, "   ", jobInfo);
+  const filljobDetailsbyId = async () => {
+    try {
+      setloadingdetails(true);
+      console.log("job", jobidRef.current?.value);
+      const docs = await getDocs(
+        query(
+          collection(db, "jobs"),
+          where("jobid", "==", jobidRef.current?.value!)
+        )
+      );
+      if (docs.empty) return toast.error("No Such Job Exists");
+      const mydoc = docs.docs[0];
+      console.log("Data", docs.docs[0]?.data());
+      const jobtype = mydoc?.data()?.type;
+
+      // console.log("Data", formikObj.values);
+
+      setItemInquiry({
+        ...(mydoc?.data()?.inquiry as Inquiry),
+        method: mydoc?.data()?.method,
+        jobInitials: mydoc?.data()?.jobInitials,
+        type:
+          jobtype === "road"
+            ? "RoadFreight"
+            : jobtype === "sea"
+            ? "SeaFreight"
+            : "AirFreight",
+      });
+      setitemsArray(mydoc?.data()?.Items as QuotationItem[]);
+
+      // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
+      // setItems(docs.docs[0]?.data()?.Items as QuotationItem[]);\
+      toast.success("Filled Data");
+    } catch (e) {
+      toast.error("No Such Job");
+    } finally {
+      setloadingdetails(false);
+    }
+  };
+  console.log("Type value", formikObj.values.type);
   return (
     <div className="w-full">
       <FormikProvider value={formikObj}>
@@ -534,6 +546,7 @@ function GenerateInvoice() {
                   as="select"
                   name="type"
                   className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                  defaultValue={formikObj.values.type}
                 >
                   <option value={""}>Select Bill Type</option>
                   <option value={"AirFreight"}>AirFreight Bill</option>
@@ -621,7 +634,24 @@ function GenerateInvoice() {
                   )}
                 </div>
               </div>
+              <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
+                <div className="px-4 w-4/5">
+                  <label className="text-xl">
+                    Other Terms And Conditions (If Any)
+                  </label>
 
+                  <Field
+                    as="textarea"
+                    name="termsAndConditions"
+                    className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                  />
+                  <ErrorMessage
+                    name={"termsaAndConditions"}
+                    component="div"
+                    className="text-red-500"
+                  />
+                </div>
+              </div>
               <div className="w-full space-y-2 w-5/5">
                 <h1 className="text-xl text-center text-blue-900 font-serif">
                   Add Services

@@ -33,7 +33,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const InvoiceNo = ({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) => {
+const InvoiceNo = ({
+  jobInfo,
+  location,
+}: {
+  jobInfo: cargoInfo & Inquiry;
+  location: CompanyLocationInfo;
+}) => {
   return (
     <View
       style={{
@@ -47,11 +53,22 @@ const InvoiceNo = ({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) => {
       }}
     >
       <View style={styles.singleItemContainer}>
-        <Text style={styles.singleText}>ABC Cargo Servies</Text>
-        <Text style={{ ...styles.singleText }}>ABC CITY , ABC Country</Text>
-        <Text style={{ ...styles.singleText }}>TEL: XXXXXXXXXX </Text>
-        <Text style={{ ...styles.singleText }}>PO- XXXX</Text>
-        <Text style={{ ...styles.singleText }}>TRN NO: XXXXXXXXXXXXXX </Text>
+        <Text style={styles.singleText}>{location?.name || " "}</Text>
+        <Text style={{ ...styles.singleText }}>{location?.office || ""}</Text>
+        <Text style={{ ...styles.singleText }}>{location?.location || ""}</Text>
+        <Text style={{ ...styles.singleText }}>{location?.country || ""}</Text>
+        <Text style={{ ...styles.singleText }}>
+          TRN NO: {location?.TRN || ""}
+        </Text>
+        <Text style={{ ...styles.singleText }}>
+          P.O Box: {location?.pobox || ""}
+        </Text>
+        <Text style={{ ...styles.singleText }}>
+          Phone: {location?.telephone}
+        </Text>
+        <Text style={{ ...styles.singleText }}>
+          Email: {location?.email || ""}
+        </Text>
       </View>
       <View style={styles.singleItemContainer}>
         <Text style={styles.singleText}>
@@ -67,7 +84,7 @@ const InvoiceNo = ({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) => {
         </Text>
         <Text style={styles.singleText}>
           Served By:
-          {jobInfo?.SalesPerson}
+          {jobInfo?.SalesPerson || ""}
         </Text>
         <Text style={styles.singleText}>
           Origin:

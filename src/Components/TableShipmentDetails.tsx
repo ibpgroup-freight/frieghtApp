@@ -49,6 +49,7 @@ const TableShipmentDetails = ({
           >
             Weight
           </Text>{" "}
+          {"         "}
           {jobInfo.Weight}
         </Text>
         <Text style={styles.singleText}>
@@ -60,6 +61,7 @@ const TableShipmentDetails = ({
           >
             Dimension
           </Text>{" "}
+          {"         "}
           {jobInfo.Dimensions}
         </Text>
         <Text style={styles.singleText}>
@@ -71,6 +73,7 @@ const TableShipmentDetails = ({
           >
             Place Of Issue
           </Text>{" "}
+          {"         "}
           {jobInfo.Dimensions}
         </Text>
         <Text style={styles.singleText}>
@@ -80,10 +83,9 @@ const TableShipmentDetails = ({
               color: "dodgerblue",
             }}
           >
-            {" "}
             Date Of Issue{" "}
           </Text>
-
+          {"         "}
           {new Date().getDate() +
             "-" +
             new Date().getMonth() +
@@ -99,9 +101,9 @@ const TableShipmentDetails = ({
               color: "dodgerblue",
             }}
           >
-            {" "}
             Cargo Type{" "}
           </Text>{" "}
+          {"         "}
           {jobInfo.TypeOfCargo}
         </Text>
         <Text style={styles.singleText}>
@@ -111,9 +113,10 @@ const TableShipmentDetails = ({
               color: "dodgerblue",
             }}
           >
-            {" "}
             Shipment Terms
           </Text>
+          {"         "}
+
           {jobInfo.ShipmentTerms}
         </Text>
         <Text style={styles.singleText}>
@@ -123,9 +126,9 @@ const TableShipmentDetails = ({
               color: "dodgerblue",
             }}
           >
-            {" "}
-            Quote Validity{" "}
+            Quote Validity
           </Text>
+          {"      "}
 
           {
             new Date(new Date().setDate(new Date().getDate() + 5))
@@ -143,6 +146,7 @@ const TableShipmentDetails = ({
             >
               Driver Details
             </Text>
+            {"      "}
 
             {jobInfo.DriverDetails}
           </Text>
@@ -171,6 +175,7 @@ const TableShipmentDetails = ({
             >
               Vehicle Details
             </Text>
+            {"      "}
 
             {jobInfo.VehicleDetails}
           </Text>
@@ -183,8 +188,9 @@ const TableShipmentDetails = ({
                 color: "dodgerblue",
               }}
             >
-              Vehicle Details
+              Vehicle Name
             </Text>
+            {"      "}
 
             {jobInfo.VesselName}
           </Text>
@@ -199,6 +205,7 @@ const TableShipmentDetails = ({
             >
               Vehicle Details
             </Text>
+            {"      "}
 
             {jobInfo.VesselDetails}
           </Text>
@@ -211,8 +218,9 @@ const TableShipmentDetails = ({
                 color: "dodgerblue",
               }}
             >
-              Vehicle Details
+              Shipping Lane Details
             </Text>
+            {"      "}
 
             {jobInfo.ShippingLaneDetails}
           </Text>

@@ -18,6 +18,7 @@ import { useLocation } from "react-router-dom";
 import useinvoiceStore from "../store/Invoice";
 import TableShipmentDetails from "./TableShipmentDetails";
 import OtherShipmentDetails from "./OtherShipmentDetails";
+import useCompanyInfo from "../store/CompanyInfo";
 // const invoiceData = {
 //   id: "5df3180a09ea16dc4b95f910",
 //   invoice_no: "201906-28",
@@ -81,6 +82,8 @@ const styles = StyleSheet.create({
 const TestingInvoice = () => {
   const { Items, jobInfo } = useinvoiceStore();
   const location = useLocation();
+  const { Location } = useCompanyInfo();
+  const companyLocation = Location.find((l) => l.key === jobInfo.address);
   console.log(Items, "Item");
   console.log(jobInfo, "jobInfo");
 
@@ -88,15 +91,25 @@ const TestingInvoice = () => {
     <PDFViewer className="w-full h-screen">
       <Document>
         <Page size="A4" style={styles.page} wrap>
-          <Image style={styles.logo} src={logo} />
-          <InvoiceTitle title="Invoice" />
-          <InvoiceNo jobInfo={jobInfo} />
+          <View
+            fixed
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Image style={styles.logo} src={logo} fixed />
+            <View
+              render={({ pageNumber }) => <Text>Page. {pageNumber}</Text>}
+              fixed
+            />
+          </View>
+
+          <InvoiceTitle title={jobInfo.type.toUpperCase() + " Invoice"} />
+          <InvoiceNo jobInfo={jobInfo} location={companyLocation!} />
           <BillTo jobInfo={jobInfo} />
           <TableShipmentDetails jobInfo={jobInfo} />
           <OtherShipmentDetails jobInfo={jobInfo} />
           <InvoiceItemsTable Items={Items} jobInfo={jobInfo} />
           <InvoiceThankYouMsg />
-          <View style={{ width: "100%" }} wrap={false}>
+          <View style={{ width: "100%" }} wrap={true}>
             <View
               style={{
                 flexDirection: "row",
@@ -119,50 +132,20 @@ const TestingInvoice = () => {
                 style={{
                   width: "80%",
                   flexWrap: "wrap",
+                  justifyContent: "flex-start",
+                  lineHeight: 55,
                 }}
               >
-                All our operations are made on the general terms of sale TLF
-                Overseas.{"\n"} Rates exclude VAT, and the customs duties and
-                taxes.{"\n"} Rates subject to modification with or without
-                advance notice, in particular concerning the freight, the
-                exchange rates, the fuel surcharge.{"\n"} Except specific
-                written instructions received from you before the starting up of
-                the operations, no ad-valorem insurance will be subscribed.
-                {"\n"}Sea freight and additional charges of sea freight are
-                included and valid on the date of the offer, actual charges and
-                additional costs are valid on the date of shipping (V.A.T.O.S.)
-                and can be changed without prior announcement of ocean carrier
-                or any other relavant party.{"\n"}
-                The insurance of goods during transport must be ordered
-                additionally, as shipment is not insured under transport
-                insurance during the transport.{"\n"}f the goods need to be
-                stuffed into a container or into/onto another transport
-                packaging (hereafter: the container) at the place of loading,
-                this needs to be carried out within the so called free time. The
-                same rule applies at the place of unloading where the container
-                must be unstuffed and returned to the shipping company or to
-                another owner withing the free time. Free time is the time
-                within which an additional payment for: a) the use of the
-                container by the shipping company or by another owner of the
-                container (demurrage, detention) or b) the storage of the
-                container (storage) by the port or by another manager of
-                warehousing premises is not yet being charged. If the free time
-                is exceeded Intereuropa is (pursuant to the contract entered
-                into between Intereuropa and them) bound to pay the shipping
-                companies, the ports and/or other performers of
-                transport/logistics services a damage or other compensation as
-                defined within their general terms and tariffs. By ordering the
-                service or entering into the freight forwarding contract with
-                Intereuropa the client confirms to be aware of the facts
-                specified above. In case Intereuropa is for whatever reason
-                bound to pay such damage or other compensations, the client
-                shall refund Intereuropa (upon receiving Intereuropa’s first
-                demand) the paid amounts as well as any other expenses related
-                thereto. This rule shall apply also in cases were the delay is
-                caused by the shipper/consignee from which or to which the
-                container is taken/delivered on client’s order. The rule does
-                not apply only in case the exceeding of the free time was caused
-                by Intereuropa.
+                {jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
+                  ? SeaFreightTerms
+                  : jobInfo.type.includes("air") || jobInfo.type.includes("Air")
+                  ? AirFreightTerms
+                  : RoadFreightTerms}
+                {jobInfo.specialInstructions
+                  ?.split(".")
+                  .map((s) => s + `${"\n"}`)
+                  .join("\n")
+                  .toString()}
               </Text>
             </View>
             <View
@@ -224,3 +207,36 @@ const TestingInvoice = () => {
 };
 
 export default TestingInvoice;
+
+const SeaFreightTerms = `Based on standard dimensions.${"\n"}
+Rates are valid for general, non-haz. cargo.${"\n"}
+Rates are excluding duties and taxes.${"\n"}
+Customs inspection, if any, charges will be applicable payable in advance or IBP pay 5% fee will be charges on the duty amount. ${"\n"}
+Any additional charges/approvals at destination/origin will be as per actual receipts.${"\n"}
+Rates & booking are subject to space availability.${"\n"}
+If any cancellation after booking has been made, charges will apply.${"\n"}
+Standard shipping line terms and conditions apply.${"\n"}
+Subject to customs/duties/inspection/loading/offloading/labor/storage/insurance, additional if required.${"\n"}
+Your cargo is not insured. We strongly suggest that you comprehensively insure your goods${"\n"}
+`;
+
+const AirFreightTerms = `
+Subject to prior booking request for space confirmation from the Airline.${"\n"}
+Packages should comply IATA Standard. ${"\n"}
+In case of any variance in gross weight, volume, or dimensions of the shipment, it will impact to the rate quoted. Rate will be revised accordingly, if required.${"\n"} 
+If any transportation / Packing / crane / Forklift /other service required: charges would be at additional.${"\n"}
+If any customs exit certification /inspection / submission: Charges would be at additional.${"\n"}
+Above rates are excluding Insurance, Legalization and any other ancillary Govt. Receipt.${"\n"}
+Standard shipping line terms and conditions apply.${"\n"}
+The price applicable for General cargo/Stackable packages only.${"\n"}
+`;
+
+const RoadFreightTerms = `Rates quoted above exclude customs duties, legalization, cargo insurance, loading, offloading (both at origin and destination), detention, etc.${"\n"}Rates qoted above are for General cargo only and are valid till further notice from LBC.${"\n"}
+Rates for DGR / Hazardous cargo, Oversized, Perishables and shipments to Exhibitions shall be quoted on case by case only.${"\n"}
+Customs Duties or Legalization charges if any are to be borne by the consignee unless otherwise notified to IBP cargo services LLC in writing to the origin office prior to shipping with agreement for accounting purposes. ${"\n"}
+Additional insurance if needed can be arranged through our customer service team. ${"\n"}
+All goods must be palletized for the safety and security of Land Transportation of yourgoods. In the event of IBP cargo services LLC to do the palletization, the same shall be done with an additional charge.${"\n"}
+All goods which are duty exempted are subject to customs inspection or approvals at the destinations. There is no official circular issued by GCC customs with regard to the same. If any duty imposed on arrival at the destination, the same shall be notified to the client.${"\n"}
+Rates are valid till further notice and if Oil / Diesel prices increase and thereby adversely affect the business operation. A rate increase shall be discussed mutually before agreement.${"\n"}
+IBP cargo services LLC signs only for received /delivered pallets and not for the contents inside the pallet.${"\n"}
+`;

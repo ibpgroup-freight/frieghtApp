@@ -110,7 +110,7 @@ const validationSchema = yup.object().shape(
       })
       .required("Airport of Destination is required"),
     CarrierName: yup.string().required("Carrier Name is required"),
-    address: yup.string().required("Which Address you want to Choose"),
+    // address: yup.string().required("Which Address you want to Choose"),
     // TodaysDate: yup.string().required("Carrier Name is required"),
     TransitTime: yup.string().required("Transit Time is required"),
     type: yup.string().required("Type of bill is Required"),
@@ -215,6 +215,8 @@ function GenerateJob() {
       setItemInquiry({
         ...(docs.docs[0]?.data()?.inquiry as Inquiry),
         quotationId: docs.docs[0]?.data()?.quotationId,
+        jobInitials: docs.docs[0]?.data()?.jobInitials,
+        method: docs.docs[0]?.data()?.method,
       });
       setitemsArray(docs.docs[0]?.data()?.Items as QuotationItem[]);
       // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
@@ -236,7 +238,6 @@ function GenerateJob() {
       Discount: 0,
       OutstandingDues: 0,
       VATAmount: 0,
-      address: "",
     },
     async onSubmit(values) {
       try {
@@ -448,12 +449,7 @@ function GenerateJob() {
       name: "EstimatedArrival",
       type: "datetime-local",
     },
-    {
-      label: "Address",
-      name: "address",
-      type: "select",
-      options: ["Dubai", "Bahrain"],
-    },
+   
   ];
   console.log(temp_Items, "   ", jobInfo);
   return (
