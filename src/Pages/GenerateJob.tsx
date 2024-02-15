@@ -110,6 +110,7 @@ const validationSchema = yup.object().shape(
       })
       .required("Airport of Destination is required"),
     CarrierName: yup.string().required("Carrier Name is required"),
+    address: yup.string().required("Which Address you want to Choose"),
     // TodaysDate: yup.string().required("Carrier Name is required"),
     TransitTime: yup.string().required("Transit Time is required"),
     type: yup.string().required("Type of bill is Required"),
@@ -235,6 +236,7 @@ function GenerateJob() {
       Discount: 0,
       OutstandingDues: 0,
       VATAmount: 0,
+      address: "",
     },
     async onSubmit(values) {
       try {
@@ -446,6 +448,12 @@ function GenerateJob() {
       name: "EstimatedArrival",
       type: "datetime-local",
     },
+    {
+      label: "Address",
+      name: "address",
+      type: "select",
+      options: ["Dubai", "Bahrain"],
+    },
   ];
   console.log(temp_Items, "   ", jobInfo);
   return (
@@ -542,25 +550,54 @@ function GenerateJob() {
                 ))}
               </div>
               <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
-                {Column2Items.map((i) => (
-                  <div key={i.name} className="px-4 w-2/5">
-                    <label className="text-xl" key={i.name}>
-                      {i.label}
-                    </label>
+                {Column2Items.map((i) =>
+                  i.type === "select" ? (
+                    <>
+                      <div key={i.name} className="px-4 w-2/5">
+                        <label className="text-xl" key={i.name}>
+                          {i.label}
+                        </label>
 
-                    <Field
-                      as={i.type === "textarea" ? "textarea" : "input"}
-                      type={i.type}
-                      name={i.name}
-                      className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                    />
-                    <ErrorMessage
-                      name={i.name}
-                      component="div"
-                      className="text-red-500"
-                    />
-                  </div>
-                ))}
+                        <Field
+                          as="select"
+                          type={i.type}
+                          name={i.name}
+                          className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        >
+                          <option>Select</option>
+                          {i.options?.map((o) => (
+                            <option key={o} value={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div key={i.name} className="px-4 w-2/5">
+                      <label className="text-xl" key={i.name}>
+                        {i.label}
+                      </label>
+
+                      <Field
+                        as={i.type === "textarea" ? "textarea" : "input"}
+                        type={i.type}
+                        name={i.name}
+                        className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                      />
+                      <ErrorMessage
+                        name={i.name}
+                        component="div"
+                        className="text-red-500"
+                      />
+                    </div>
+                  )
+                )}
               </div>
             </div>
 

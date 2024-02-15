@@ -39,6 +39,8 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     jobInitials: "",
     method: "",
     othershippingDetails: "",
+    quotationId: "",
+    address: "",
   },
   Items: [],
   setInfo(j) {

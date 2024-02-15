@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
@@ -9,7 +9,7 @@ import Contacts from "./Pages/Contacts";
 import InvoicePdf from "./Components/InvoicePdf";
 import useUser from "./store/User";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase";
 import "react-toastify/dist/ReactToastify.css";
 import HamburgerIcon from "./Components/Hamburger";
 import { ToastContainer } from "react-toastify";
@@ -21,6 +21,8 @@ import Analytics from "./Pages/Analytics";
 import BillOfLaddle from "./Pages/BillOfLaddle";
 import Ejspagestest from "./Pages/ejspagestest.js";
 import GenerateJob from "./Pages/GenerateJob";
+import { collection, getDocs } from "firebase/firestore";
+import useCompanyInfo from "./store/CompanyInfo";
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -32,6 +34,7 @@ function App() {
   const { isloggedIn, AuthStateLogIn } = useUser();
   const [isloading, setisloading] = useState(true);
   const [showSideBar, setshowSideBar] = useState<boolean>(false);
+  const { setInformation } = useCompanyInfo();
   useEffect(() => {
     setisloading((p) => true);
     const sub = onAuthStateChanged(auth, (user) => {
@@ -44,6 +47,15 @@ function App() {
       setisloading((p) => false);
     });
     return () => sub();
+  }, []);
+  const getCompanyLocation = useCallback(async () => {
+    const docs = await getDocs(collection(db, "companyInformation"));
+    const company: CompanyLocationInfo[] = [];
+    docs.forEach((doc) => company.push(doc.data() as CompanyLocationInfo));
+    setInformation(company);
+  }, []);
+  useEffect(() => {
+    getCompanyLocation();
   }, []);
   if (isloading) return <CustomLoader />;
   return (

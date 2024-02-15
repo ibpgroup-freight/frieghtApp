@@ -151,6 +151,7 @@ type cargoInfo = {
   Discount: number;
   OutstandingDues: number;
   VATAmount: number;
+  address: string;
 };
 
 type Contact = {
@@ -180,4 +181,31 @@ type DashbboardFetch = {
   contacts: number;
   cancelledJobs: number;
   quotations: number;
+};
+
+type CompanyInfoStore = {
+  Location: CompanyLocationInfo[];
+  setInformation: (a: CompanyLocationInfo[]) => void;
+  resetInformation: () => void;
+};
+type CompanyLocationInfo = {
+  name: string;
+  office: string;
+  location: string;
+  country: string;
+  telephone: string;
+  pobox: string;
+  TRN: string;
+  email: string;
+  web?: string;
+  BankInfo: CompanyBankInfo;
+};
+
+type CompanyBankInfo = {
+  accName: string;
+  bankName: string;
+  accNo: string;
+  IBAN: string;
+  branch: string;
+  swift: string;
 };
