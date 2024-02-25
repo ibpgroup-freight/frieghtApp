@@ -103,8 +103,10 @@ function Quotation(props: InquiryAndQuotationProps) {
   console.log("Inq", inquiry);
   return (
     <div className="w-full">
-      <div className={`md:px-5 flex justify-evenly  w-full `}>
-        {showQuotation && <AddQuotation closeQuotation={setshowQuotation} />}
+      <div className={`md:px-5 flex justify-evenly  w-full  `}>
+        <div className="fixed w-full">
+          {showQuotation && <AddQuotation closeQuotation={setshowQuotation} quotationType="job" />}
+        </div>
         <div className=" w-full overflow-auto mt-20">
           <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
             <thead>
