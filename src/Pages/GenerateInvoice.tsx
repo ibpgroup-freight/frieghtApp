@@ -323,6 +323,19 @@ function GenerateInvoice() {
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
+  const billofLadleTable = [
+    {
+      label: "No of Packages",
+      name: "NoOfPackages",
+      type: "number",
+      options: [],
+    },
+    { label: "Package Description", name: "Description", type: "number" },
+    { label: "Container Number", name: "ContainerNo", type: "number" },
+    { label: "Seal Number", name: "SealNo", type: "number" },
+    { label: "Measurement", name: "Measurement", type: "text" },
+    { label: "Weight (Optional)", name: "Weight", type: "number" },
+  ];
   const Column1Items = [
     { label: "Enter Customer Name", name: "CustomerName", type: "text" },
     { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
@@ -551,10 +564,10 @@ function GenerateInvoice() {
   };
   console.log("Type value", formikObj.values.type);
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <FormikProvider value={formikObj}>
         <div className="flex flex-col w-full py-4 space-y-3 items-center">
-          <div className="relative mx-auto w-5/6 ">
+          <div className="fixed mx-auto w-5/6">
             {showQuotation && (
               <AddQuotation
                 closeQuotation={setshowQuotation}
@@ -562,6 +575,7 @@ function GenerateInvoice() {
                   // setitems((p) => [...p, item])
                   setitemsArray([...quotationItemsStore, item])
                 }
+                quotationType={formikObj.values.type}
               />
             )}
           </div>
@@ -616,11 +630,12 @@ function GenerateInvoice() {
                   className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
                   defaultValue={formikObj.values.type}
                 >
-                  <option value={""}>Select Bill Type</option>
-                  <option value={"AirFreight"}>AirFreight Bill</option>
-                  <option value={"RoadFreight"}>RoadFreight Bill</option>
-                  <option value={"SeaFreight"}>SeaFreight Bill</option>
+                  <option value={""}>Select Type</option>
+                  <option value={"AirFreight"}>AirFreight Invoice</option>
+                  <option value={"RoadFreight"}>RoadFreight Invoice</option>
+                  <option value={"SeaFreight"}>SeaFreight Invoice</option>
                   <option value={"BillOfLading"}>Bill Of Lading</option>
+                  <option value={"Airway Bill"}>AirWay Bill</option>
                 </Field>
                 <ErrorMessage
                   name={"type"}
@@ -728,32 +743,40 @@ function GenerateInvoice() {
                   <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
                     <thead>
                       <tr>
-                        {Column1.map((column) => (
-                          <React.Fragment key={column.name}>
-                            <th
-                              className="border border-slate-300 p-4 bg-blue-50 w-auto"
-                              colSpan={
-                                column.subheadings
-                                  ? column.subheadings.length
-                                  : 1
-                              }
-                            >
-                              {column.label}
-                              {column.subheadings &&
-                                column.subheadings.map(
-                                  (subheading, subIndex) => (
-                                    <th
-                                      className="px-4 border-t-2 border-black text-center"
-                                      key={`${column.name}_${subIndex}`}
-                                      colSpan={1}
-                                    >
-                                      {subheading}
-                                    </th>
-                                  )
-                                )}
-                            </th>
-                          </React.Fragment>
-                        ))}
+                        {formikObj.values.type === "BillOfLading"
+                          ? billofLadleTable.map((column) => (
+                              <React.Fragment key={column.name}>
+                                <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                                  {column.label}
+                                </th>
+                              </React.Fragment>
+                            ))
+                          : Column1.map((column) => (
+                              <React.Fragment key={column.name}>
+                                <th
+                                  className="border border-slate-300 p-4 bg-blue-50 w-auto"
+                                  colSpan={
+                                    column.subheadings
+                                      ? column.subheadings.length
+                                      : 1
+                                  }
+                                >
+                                  {column.label}
+                                  {column.subheadings &&
+                                    column.subheadings.map(
+                                      (subheading, subIndex) => (
+                                        <th
+                                          className="px-4 border-t-2 border-black text-center"
+                                          key={`${column.name}_${subIndex}`}
+                                          colSpan={1}
+                                        >
+                                          {subheading}
+                                        </th>
+                                      )
+                                    )}
+                                </th>
+                              </React.Fragment>
+                            ))}
                       </tr>
                     </thead>
                     {quotationItemsStore && (
