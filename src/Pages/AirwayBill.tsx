@@ -42,6 +42,7 @@ function AirwayBill() {
       borderColor: "black",
       width: "100%",
       height: "100%",
+      paddingVertical: 10,
     },
     logo: {
       width: 74,
@@ -58,6 +59,18 @@ function AirwayBill() {
     <PDFViewer className="w-full h-screen">
       <Document>
         <Page size="A4" style={styles.page}>
+          <Text
+            render={({ pageNumber, totalPages }) => (
+              <Text>
+                Page. {pageNumber} / {totalPages}
+              </Text>
+            )}
+            fixed
+            wrap={false}
+            style={{
+              fontFamily: "Courier-BoldOblique",
+            }}
+          />
           <View
             style={{
               fontSize: 10,
@@ -200,7 +213,7 @@ function Column1({
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            height: 30,
+            minHeight: 30,
           }}
         >
           <Text
@@ -267,7 +280,14 @@ function Column1({
           }}
         >
           Mode Of Payment
-          <Text style={{}}>{jobInfo.PaymentMethod}</Text>
+        </Text>
+        <Text
+          style={{
+            textDecoration: "none",
+            marginLeft: 5,
+          }}
+        >
+          {jobInfo.PaymentMethod}
         </Text>
       </View>
       <View
@@ -675,6 +695,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
     <View
       style={{
         width: "50%",
+        fontFamily: "Courier-BoldOblique",
       }}
     >
       <View
