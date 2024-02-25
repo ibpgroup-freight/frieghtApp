@@ -70,58 +70,52 @@ function QuotationCard({
   return (
     quotation && (
       <>
-        {quotation.Items?.map((i) => (
-          <React.Fragment key={i.id}>
-            <td className="border border-slate-300 p-4  text-blue-500 font-bold">
-              {quotation.quotationId}
-            </td>
+        <td className="border border-slate-300 p-4  text-blue-500 font-bold">
+          {quotation.quotationId}
+        </td>
 
-            {/* <td className="border border-slate-300 p-4 ">{i.QuoteValidity}</td> */}
-            <td className="border border-slate-300 p-4 ">
-              {inquiry.CustomerName}
-            </td>
-            {/* <td className="border border-slate-300 p-4 ">{i.UnitPerKg}</td> */}
-            <td className="border border-slate-300 p-4 ">
-              {inquiry.CustomerEmail}
-            </td>
-            {/* <td className="border border-slate-300 p-4 ">{i.AmountPerUnit}</td> */}
+        {/* <td className="border border-slate-300 p-4 ">{i.QuoteValidity}</td> */}
+        <td className="border border-slate-300 p-4 ">{inquiry.CustomerName}</td>
+        {/* <td className="border border-slate-300 p-4 ">{i.UnitPerKg}</td> */}
+        <td className="border border-slate-300 p-4 ">
+          {inquiry.CustomerEmail}
+        </td>
+        {/* <td className="border border-slate-300 p-4 ">{i.AmountPerUnit}</td> */}
 
-            {/* <td className="border border-slate-300 p-4 ">
+        {/* <td className="border border-slate-300 p-4 ">
               {i.CostAndSellSection}
             </td> */}
-            <td className=" flex flex-col  space-y-2 px-2 justify-center self-center my-2 items-start">
-              {/* <ButtonBlue
+        <td className=" flex flex-col  space-y-2 px-2 justify-center self-center my-2 items-start">
+          {/* <ButtonBlue
                 text="View"
                 onclick={ViewJob}
                 customStyle={"bg-yellow-500"}
               />
               <ButtonBlue text="Edit" onclick={editJob} /> */}
-              <ButtonBlue
-                text="Delete"
-                onclick={deleteJob.bind(null, quotation.id!)}
-                customStyle={"bg-red-400 "}
-                isloading={isdeleting?.status}
-                disabled={isdeleting?.status}
-              />
-            </td>
-            <td className="border border-slate-300 p-4 ">{status}</td>
-            <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">
-              <ButtonBlue
-                text="Disapprove Quotation"
-                customStyle="!px-0 bg-red-400 hover:bg-red-300 hover:text-black"
-                onclick={() => changeQuotation(quotation.id!, "disapproved")}
-                isloading={quotation?.id === isdeleting?.id}
-                disabled={quotation?.id === isdeleting?.id}
-              />
-              <ButtonBlue
-                text="Approve Quotation"
-                onclick={() => changeQuotation(quotation.id!, "approved")}
-                isloading={quotation?.id === isdeleting?.id}
-                disabled={quotation?.id === isdeleting?.id}
-              />
-            </td>
-          </React.Fragment>
-        ))}
+          <ButtonBlue
+            text="Delete"
+            onclick={deleteJob.bind(null, quotation.id!)}
+            customStyle={"bg-red-400 "}
+            isloading={isdeleting?.status}
+            disabled={isdeleting?.status}
+          />
+        </td>
+        <td className="border border-slate-300 p-4 ">{status}</td>
+        <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">
+          <ButtonBlue
+            text="Disapprove Quotation"
+            customStyle="!px-0 bg-red-400 hover:bg-red-300 hover:text-black"
+            onclick={() => changeQuotation(quotation.id!, "disapproved")}
+            isloading={quotation?.id === isdeleting?.id}
+            disabled={quotation?.id === isdeleting?.id}
+          />
+          <ButtonBlue
+            text="Approve Quotation"
+            onclick={() => changeQuotation(quotation.id!, "approved")}
+            isloading={quotation?.id === isdeleting?.id}
+            disabled={quotation?.id === isdeleting?.id}
+          />
+        </td>
       </>
     )
   );

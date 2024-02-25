@@ -32,7 +32,8 @@ import useCompanyInfo from "../store/CompanyInfo";
 const validationSchema = yup.object().shape(
   {
     Jobid: yup.string().when("type", {
-      is: (type: string) => !type?.includes("Lading"),
+      is: (type: string) =>
+        !type?.includes("Lading") && !type?.includes("Airway"),
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -280,6 +281,8 @@ function GenerateInvoice() {
     setItems: setInvoiceItems,
     setladingItems,
     setladleInfo,
+    setAirwayInfo,
+    setAirwayBillItems,
   } = useinvoiceStore();
   const { setInformation } = useCompanyInfo();
   const { setItemInquiry, inquiry, resetInquiry } = useInquiryItem();
@@ -289,6 +292,8 @@ function GenerateInvoice() {
     ladingItems: quotationLadingItemsStore,
     resetItems,
     setBillOfLadingItems,
+    AirwayItems,
+    setAirwayItems,
   } = useItemStore();
   const navigate = useNavigate();
   const [loadingdetails, setloadingdetails] = useState<boolean>(false);
@@ -328,6 +333,15 @@ function GenerateInvoice() {
       ExportReference: "",
       ForwardingAgent: "",
       ConsigneeReference: "",
+      AirwayBillInquiry: "",
+      FlightDetails: "",
+      CustomerAccount: "",
+      Flight: "",
+      ReferenceNumber: "",
+      HandlingInformation: "",
+      PaymentMethod: "",
+      AccountingInformation: "",
+      RequestedFlight: "",
     },
     onSubmit(values) {
       console.log("Here");
@@ -343,12 +357,18 @@ function GenerateInvoice() {
       if (values.type === "BillOfLading") {
         setladleInfo(values);
         setladingItems(quotationLadingItemsStore);
+      } else if (values.type === "AirwayBill") {
+        setAirwayInfo(values);
+        console.log("Airwat items", AirwayItems);
+        setAirwayBillItems(AirwayItems);
       } else {
         setInfo(values);
         setInvoiceItems(quotationItemsStore);
       }
       if (values.type?.includes("Lading")) {
         navigate("/billofladdle");
+      } else if (values.type?.includes("Airway")) {
+        navigate("/airwayBill");
       } else {
         navigate("/testPdf", {
           state: {
@@ -401,6 +421,21 @@ function GenerateInvoice() {
     { label: "Seal Number", name: "SealNo", type: "number" },
     { label: "Measurement", name: "Measurement", type: "text" },
     { label: "Weight (Optional)", name: "Weight", type: "number" },
+  ];
+  const AirwayBillTable = [
+    { label: "Index", name: "Sr no" },
+    {
+      label: "No of Pieces",
+      name: "NoPieces",
+      type: "number",
+      options: [],
+    },
+    { label: "Gross Weight", name: "GrossWeight", type: "number" },
+    { label: "Unit", name: "Unit", type: "text" },
+    { label: "Rate", name: "SealNo", type: "number" },
+    { label: "ChargeableWeight", name: "ChargeableWeight", type: "number" },
+    { label: "NatureOfGoods", name: "NatureOfGoods", type: "number" },
+    { label: "Rate Per Charge", name: "RatePerCharge", type: "number" },
   ];
   const Column1Items = [
     { label: "Enter Customer Name", name: "CustomerName", type: "text" },
@@ -638,6 +673,35 @@ function GenerateInvoice() {
           },
         ]
       : []),
+    ...(formikObj.values.type?.includes("Airway")
+      ? [
+          {
+            label: "Flight Details",
+            name: "FlightDetails",
+            type: "textarea",
+          },
+          {
+            label: "Customer Account",
+            name: "CustomerAccount",
+            type: "textarea",
+          },
+          {
+            label: "Requested Flight",
+            name: "RequestedFlight",
+            type: "text",
+          },
+          {
+            label: "Payment Method",
+            name: "PaymentMethod",
+            type: "text",
+          },
+          {
+            label: "Accounting Information",
+            name: "AccountingInformation",
+            type: "textarea",
+          },
+        ]
+      : []),
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
     {
       label: "Special Instructions",
@@ -703,6 +767,9 @@ function GenerateInvoice() {
   };
   console.log("Type value", formikObj.values.type);
   console.log("QuotationLadingItems", quotationLadingItemsStore);
+  console.log("airwayItems", AirwayItems);
+  console.log("items", quotationItemsStore);
+
   return (
     <div className="w-full ">
       <FormikProvider value={formikObj}>
@@ -711,12 +778,16 @@ function GenerateInvoice() {
             {showQuotation && (
               <AddQuotation
                 closeQuotation={setshowQuotation}
-                AddItemToInvoice={(item: QuotationItem | LadingItems) =>
+                AddItemToInvoice={(
+                  item: QuotationItem | LadingItems | AirwayItem
+                ) =>
                   formikObj.values.type === "BillOfLading"
                     ? setBillOfLadingItems([
                         ...quotationLadingItemsStore,
                         item as LadingItems,
                       ])
+                    : formikObj.values.type === "AirwayBill"
+                    ? setAirwayItems([...AirwayItems, item as AirwayItem])
                     : setitemsArray([
                         ...quotationItemsStore,
                         item as QuotationItem,
@@ -782,7 +853,7 @@ function GenerateInvoice() {
                   <option value={"RoadFreight"}>RoadFreight Invoice</option>
                   <option value={"SeaFreight"}>SeaFreight Invoice</option>
                   <option value={"BillOfLading"}>Bill Of Lading</option>
-                  <option value={"Airway Bill"}>AirWay Bill</option>
+                  <option value={"AirwayBill"}>AirWay Bill</option>
                 </Field>
                 <ErrorMessage
                   name={"type"}
@@ -898,6 +969,14 @@ function GenerateInvoice() {
                                 </th>
                               </React.Fragment>
                             ))
+                          : formikObj.values.type === "AirwayBill"
+                          ? AirwayBillTable.map((column) => (
+                              <React.Fragment key={column.name}>
+                                <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                                  {column.label}
+                                </th>
+                              </React.Fragment>
+                            ))
                           : Column1.map((column) => (
                               <React.Fragment key={column.name}>
                                 <th
@@ -926,56 +1005,7 @@ function GenerateInvoice() {
                             ))}
                       </tr>
                     </thead>
-                    {formikObj.values.type !== "BillOfLading" &&
-                      quotationItemsStore && (
-                        <tbody>
-                          {quotationItemsStore.map((i, index) => (
-                            <tr>
-                              <td className="border border-slate-300 p-4">
-                                {index + 1}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.QuoteValidity}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.Charges}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.ChargeDescription}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.Units}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.Units}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {/* {i.UnitPerKg} */}
-                                {i.RateAmountPerUnit}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.MinRateAmountPerUnit}
-                              </td>
-                              <td className="border border-slate-300 p-4">
-                                {i.MinRateAmountPerUnit}
-                              </td>
-                              {/* <td className="border border-slate-300 p-4">
-                              {i.CostAmountPerUnit}
-                            </td> */}
-                              {/* <td className="border border-slate-300 p-4">
-                              {i.MinCostAmountPerUnit}
-                            </td> */}
-                              {/* <td className="border border-slate-300 p-4">
-                              {i.MinCostAmountPerUnit}
-                            </td> */}
-                              <td className="border border-slate-300 p-4">
-                                {i.Currency}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      )}
-                    {formikObj.values.type === "BillOfLading" &&
+                    {formikObj.values.type === "BillOfLading" ? (
                       quotationLadingItemsStore && (
                         <tbody>
                           {quotationLadingItemsStore.map((i, index) => (
@@ -1004,7 +1034,86 @@ function GenerateInvoice() {
                             </tr>
                           ))}
                         </tbody>
-                      )}
+                      )
+                    ) : formikObj.values.type === "AirwayBill" ? (
+                      <tbody>
+                        {AirwayItems.map((i, index) => (
+                          <tr key={index}>
+                            <td className="border border-slate-300 p-4">
+                              {index + 1}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.NoPieces}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.GrossWeight}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Unit}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Rate}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.ChargeableWeight}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.NatureOfGoods}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.RatePerCharge}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    ) : (
+                      <tbody>
+                        {quotationItemsStore.map((i, index) => (
+                          <tr>
+                            <td className="border border-slate-300 p-4">
+                              {index + 1}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.QuoteValidity}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Charges}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.ChargeDescription}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Units}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Units}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {/* {i.UnitPerKg} */}
+                              {i.RateAmountPerUnit}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.MinRateAmountPerUnit}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.MinRateAmountPerUnit}
+                            </td>
+                            {/* <td className="border border-slate-300 p-4">
+                          {i.CostAmountPerUnit}
+                        </td> */}
+                            {/* <td className="border border-slate-300 p-4">
+                          {i.MinCostAmountPerUnit}
+                        </td> */}
+                            {/* <td className="border border-slate-300 p-4">
+                          {i.MinCostAmountPerUnit}
+                        </td> */}
+                            <td className="border border-slate-300 p-4">
+                              {i.Currency}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    )}
                   </table>
                   <div className="absolute right-20">
                     <button

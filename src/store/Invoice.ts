@@ -83,7 +83,49 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     specialInstructions: "",
     termsAndConditions: "",
   },
+  AirwayInfo: {
+    CustomerName: "",
+    CustomerAddress: "",
+    SalesPerson: "",
+    AirportOfOrigin: "",
+    AirportOfDestination: "",
+    RouteDetails: "",
+    TransitTime: "",
+    FlightDetails: "",
+    ShipmentTerms: "",
+    CarrierName: "",
+    CustomerTRN: "",
+    CustomerAccount: "",
+    CustomerEmail: "",
+    CustomerPhoneNo: "",
+    othershippingDetails: "",
+    jobInitials: "",
+    method: "",
+    Currency: "",
+    Flight: "",
+    ReferenceNumber: "",
+    HandlingInformation: "",
+    address: "",
+    Discount: 0,
+    AccountingInformation: "",
+    PaymentMethod: "",
+    RequestedFlight: "",
+    Jobid: "",
+    OutstandingDues: 0,
+    VATAmount: 0,
+    specialInstructions: "",
+    termsAndConditions: "",
+  },
+  setAirwayBillItems(j) {
+    set((state) => {
+      return { ...state, AirwayItems: j };
+    });
+  },
+  setAirwayInfo(j) {
+    set((state) => ({ ...state, AirwayInfo: j }));
+  },
   Items: [],
+  AirwayItems: [],
   setInfo(j) {
     set((state) => ({ ...state, jobInfo: j }));
   },

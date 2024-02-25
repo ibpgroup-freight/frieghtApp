@@ -4,6 +4,8 @@ const useItemStore = create<ItemsStore>((set) => ({
   totalItems: 0,
   ladingItems: [],
   items: [],
+  AirwayItems: [],
+
   setitemsArray: (items) => {
     set((state) => ({ ...state, items }));
   },
@@ -35,6 +37,15 @@ const useItemStore = create<ItemsStore>((set) => ({
   },
   setBillOfLadingItems(items) {
     set((state) => ({ ...state, ladingItems: items }));
+  },
+  AddAirwayItem(item) {
+    set((state) => {
+      state.AirwayItems.push(item);
+      return { ...state, totalItems: state.totalItems + 1 };
+    });
+  },
+  setAirwayItems(items) {
+    set((state) => ({ ...state, AirwayItems: items }));
   },
 }));
 

@@ -94,12 +94,15 @@ type ItemsStore = {
   totalItems: number;
   items: QuotationItem[];
   ladingItems: LadingItems[];
+  AirwayItems: AirwayItem[];
   AddLadingItem: (item: LadingItems) => void;
+  AddAirwayItem: (item: AirwayItem) => void;
   AddItem: (item: QuotationItem) => void;
   RemoveItem: (id: string) => void;
   resetItems: () => void;
   setitemsArray: (items: QuotationItem[]) => void;
   setBillOfLadingItems: (items: LadingItems[]) => void;
+  setAirwayItems: (items: AirwayItem[]) => void;
 };
 type LadingItems = {
   Dimensions: string;
@@ -192,12 +195,16 @@ type ladleInquiry = {
 type InvoiceStore = {
   jobInfo: cargoInfo & Inquiry;
   ladleInfo: cargoInfo & ladleInquiry;
+  AirwayInfo: cargoInfo & AirwayBillInquiry;
   setladleInfo: (j: cargoInfo & ladleInquiry) => void;
+  setAirwayInfo: (j: cargoInfo & AirwayBillInquiry) => void;
   Items: QuotationItem[];
   ladingItems: LadingItems[];
+  AirwayItems: AirwayItem[];
   setladingItems: (j: LadingItems[]) => void;
   setInfo: (j: cargoInfo & Inquiry) => void;
   setItems: (j: QuotationItem[]) => void;
+  setAirwayBillItems: (j: AirwayItem[]) => void;
 };
 
 type cargoInfo = {
@@ -265,4 +272,41 @@ type CompanyBankInfo = {
   IBAN: string;
   branch: string;
   swift: string;
+};
+
+type AirwayBillInquiry = {
+  CustomerName: string;
+  CustomerAddress: string;
+  SalesPerson?: string;
+  AirportOfOrigin?: string;
+  AirportOfDestination?: string;
+  RouteDetails?: string;
+  TransitTime: string;
+  FlightDetails: string;
+  ShipmentTerms: string;
+  CarrierName: string;
+  CustomerTRN: string;
+  CustomerAccount: string;
+  CustomerEmail: string;
+  CustomerPhoneNo: string;
+  othershippingDetails?: string;
+  jobInitials?: string;
+  method: string;
+  Currency: string;
+  Flight: string;
+  ReferenceNumber: string;
+  HandlingInformation: string;
+  PaymentMethod: string;
+  AccountingInformation: string;
+  RequestedFlight: string;
+};
+
+type AirwayItem = {
+  NoPieces: number;
+  GrossWeight: number;
+  Unit: string;
+  Rate: string;
+  ChargeableWeight: string;
+  NatureOfGoods: string;
+  RatePerCharge: string;
 };
