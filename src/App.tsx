@@ -30,6 +30,8 @@ const NotFound = React.lazy(() => import("./Pages/NotFound"));
 const Authenticate = React.lazy(() => import("./Pages/Authenticate"));
 const GenerateInvoice = React.lazy(() => import("./Pages/GenerateInvoice"));
 const SearchPage = React.lazy(() => import("./Pages/Search"));
+const AirwayBill = React.lazy(() => import("./Pages/AirwayBill"));
+
 function App() {
   const { isloggedIn, AuthStateLogIn } = useUser();
   const [isloading, setisloading] = useState(true);
@@ -88,7 +90,7 @@ function App() {
                 <Route path="/analytics" Component={Analytics} />
                 <Route path="/billofladdle" Component={BillOfLaddle} />
                 <Route path="/generateJob" Component={GenerateJob} />
-
+                <Route path="/airwayBill" Component={AirwayBill} />
                 <Route path="*" Component={NotFound} />
               </Routes>
             </div>

@@ -31,8 +31,13 @@ import useCompanyInfo from "../store/CompanyInfo";
 // };
 const validationSchema = yup.object().shape(
   {
-    Jobid: yup.string().required("Job Id is required"),
+    Jobid: yup.string().when("type", {
+      is: (type: string) => !type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     CustomerName: yup.string().required("Customer Name is required"),
+
     CustomerAddress: yup.string().required("Customer Address is required"),
     CustomerEmail: yup.string().required("Customer Email is required"),
     CustomerPhoneNo: yup.string().required("Customer Phone Number is required"),
@@ -40,6 +45,8 @@ const validationSchema = yup.object().shape(
     address: yup.string().required("Your Address is required"),
     termsAndConditions: yup.string().notRequired(),
     specialInstructions: yup.string().notRequired(),
+    ConsigneeReference: yup.string().notRequired(),
+
     type: yup.string().required("Type of bill is Required"),
     VehicleDetails: yup
       .string()
@@ -121,7 +128,11 @@ const validationSchema = yup.object().shape(
       .matches(/^\d+$/, "Invalid TRN")
       .required("Customer TRN is required"),
     Weight: yup.string().required("Weight is required"),
-    Dimensions: yup.string().required("Dimensions are required"),
+    Dimensions: yup.string().when("type", {
+      is: (type: string) => !type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     ShipmentTerms: yup.string().required("Shipment Terms are required"),
     TypeOfCargo: yup.string().required("Type of Cargo is required"),
     FlightInformation: yup
@@ -173,15 +184,26 @@ const validationSchema = yup.object().shape(
       })
       .required("Place Of Delivery required"),
 
-    PlaceOfReceipt: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type?.includes("Lading"),
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Place Of Receipt required"),
-
+    PlaceOfReceipt: yup.string().when("type", {
+      is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    TotalContainers: yup.string().when("type", {
+      is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    NotifyAddress: yup.string().when("type", {
+      is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Currency: yup.string().when("type", {
+      is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     PlaceOfIssue: yup
       .string()
       .when("type", {
@@ -210,6 +232,12 @@ const validationSchema = yup.object().shape(
           : schema.required(
               "Either Container Type Or Custom Container Type is required"
             );
+      })
+      .when("type", {
+        is: (type: string) =>
+          !type?.includes("Lading") && !type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
       }),
     CustomContainerType: yup
       .string()
@@ -219,7 +247,25 @@ const validationSchema = yup.object().shape(
           : schema.required(
               "Either Container Type Or Custom Container Type is required"
             );
+      })
+      .when("type", {
+        is: (type: string) =>
+          !type?.includes("Lading") && !type?.includes("Air"),
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
       }),
+    PortOfLoading: yup.string().when("type", {
+      is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    PortOfDischarge: yup.string().when("type", {
+      is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    ExportReference: yup.string(),
+    ForwardingAgent: yup.string(),
   },
   [["ContainerType", "CustomContainerType"]]
 );
@@ -232,13 +278,17 @@ function GenerateInvoice() {
     jobInfo,
     setInfo,
     setItems: setInvoiceItems,
+    setladingItems,
+    setladleInfo,
   } = useinvoiceStore();
   const { setInformation } = useCompanyInfo();
   const { setItemInquiry, inquiry, resetInquiry } = useInquiryItem();
   const {
     setitemsArray,
     items: quotationItemsStore,
+    ladingItems: quotationLadingItemsStore,
     resetItems,
+    setBillOfLadingItems,
   } = useItemStore();
   const navigate = useNavigate();
   const [loadingdetails, setloadingdetails] = useState<boolean>(false);
@@ -269,6 +319,15 @@ function GenerateInvoice() {
       PayableAt: "",
       Movement: "",
       PlaceOfReceipt: "",
+      VesselName: "",
+      TotalContainers: 0,
+      NotifyAddress: "",
+      Currency: "",
+      PortOfLoading: "",
+      PortOfDischarge: "",
+      ExportReference: "",
+      ForwardingAgent: "",
+      ConsigneeReference: "",
     },
     onSubmit(values) {
       console.log("Here");
@@ -281,8 +340,13 @@ function GenerateInvoice() {
         toast.error("Select Bill Type First");
         return;
       }
-      setInfo(values);
-      setInvoiceItems(quotationItemsStore);
+      if (values.type === "BillOfLading") {
+        setladleInfo(values);
+        setladingItems(quotationLadingItemsStore);
+      } else {
+        setInfo(values);
+        setInvoiceItems(quotationItemsStore);
+      }
       if (values.type?.includes("Lading")) {
         navigate("/billofladdle");
       } else {
@@ -324,6 +388,8 @@ function GenerateInvoice() {
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
   const billofLadleTable = [
+    { label: "Index", name: "Sr no" },
+
     {
       label: "No of Packages",
       name: "NoOfPackages",
@@ -347,6 +413,7 @@ function GenerateInvoice() {
             name: "AirportOfOrigin",
             type: "text",
           },
+
           {
             label: "Enter Airport Of Destination",
             name: "AirportOfDestination",
@@ -362,9 +429,49 @@ function GenerateInvoice() {
     ...(formikObj.values.type?.includes("Lading")
       ? [
           {
+            label: "Notify Address",
+            name: "NotifyAddress",
+            type: "textarea",
+          },
+          {
+            label: "Consignee Reference",
+            name: "ConsigneeReference",
+            type: "textarea",
+          },
+          {
+            label: "Port Of Loading",
+            name: "PortOfLoading",
+            type: "text",
+          },
+          {
+            label: "Port Of Discharge",
+            name: "PortOfDischarge",
+            type: "text",
+          },
+          {
+            label: "Forwarding Agent",
+            name: "ForwardingAgent",
+            type: "textarea",
+          },
+          {
+            label: "Export Reference",
+            name: "ExportReference",
+            type: "text",
+          },
+          {
             label: "Movement",
             name: "Movement",
             type: "textarea",
+          },
+          {
+            label: "Notify Address",
+            name: "Notify Address",
+            type: "textarea",
+          },
+          {
+            label: "Vessel Name",
+            name: "VesselName",
+            type: "text",
           },
           {
             label: "Enter Place Of Delivery",
@@ -434,11 +541,15 @@ function GenerateInvoice() {
         ]
       : []),
     { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
-    {
-      label: "Enter Any Outstanding Dues",
-      name: "OutstandingDues",
-      type: "number",
-    },
+    ...(!formikObj.values.type?.includes("Lading")
+      ? [
+          {
+            label: "Enter Any Outstanding Dues",
+            name: "OutstandingDues",
+            type: "number",
+          },
+        ]
+      : []),
   ];
   const Column2Items = [
     { label: "Enter Customer Email", name: "CustomerEmail", type: "text" },
@@ -455,6 +566,21 @@ function GenerateInvoice() {
             type: "text",
           },
           {
+            label: "Weight",
+            name: "Weight",
+            type: "number",
+          },
+          {
+            label: "Shipment Terms",
+            name: "ShipmentTerms",
+            type: "text",
+          },
+          {
+            label: "Type Of Cargo",
+            name: "TypeOfCargo",
+            type: "text",
+          },
+          {
             label: "Place Of Issue",
             name: "PlaceOfIssue",
             type: "textarea",
@@ -466,30 +592,35 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    {
-      label: "Container Type",
-      name: "ContainerType",
-      type: "select",
-      options: [
-        "20ft",
-        "40ft",
-        "40 HC",
-        "45 HC",
-        "20 OT",
-        "40 OT",
-        "20 FR",
-        "40 FR",
-        "20 RF",
-        "40 RF",
-        "RORO",
-        "Break Bulk",
-      ],
-    },
-    {
-      label: "Custom Container Type",
-      name: "CustomContainerType",
-      type: "text",
-    },
+    ...(!formikObj.values.type?.includes("Lading") &&
+    !formikObj.values.type?.includes("Air")
+      ? [
+          {
+            label: "Container Type",
+            name: "ContainerType",
+            type: "select",
+            options: [
+              "20ft",
+              "40ft",
+              "40 HC",
+              "45 HC",
+              "20 OT",
+              "40 OT",
+              "20 FR",
+              "40 FR",
+              "20 RF",
+              "40 RF",
+              "RORO",
+              "Break Bulk",
+            ],
+          },
+          {
+            label: "Custom Container Type",
+            name: "CustomContainerType",
+            type: "text",
+          },
+        ]
+      : []),
     { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
     {
       label: "Enter Transit Time",
@@ -498,7 +629,15 @@ function GenerateInvoice() {
     },
     { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
 
-    { label: "Enter Discount If Applicable", name: "Discount", type: "number" },
+    ...(!formikObj.values.type?.includes("Lading")
+      ? [
+          {
+            label: "Enter Discount If Applicable",
+            name: "Discount",
+            type: "number",
+          },
+        ]
+      : []),
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
     {
       label: "Special Instructions",
@@ -563,6 +702,7 @@ function GenerateInvoice() {
     }
   };
   console.log("Type value", formikObj.values.type);
+  console.log("QuotationLadingItems", quotationLadingItemsStore);
   return (
     <div className="w-full ">
       <FormikProvider value={formikObj}>
@@ -571,9 +711,16 @@ function GenerateInvoice() {
             {showQuotation && (
               <AddQuotation
                 closeQuotation={setshowQuotation}
-                AddItemToInvoice={(item: QuotationItem) =>
-                  // setitems((p) => [...p, item])
-                  setitemsArray([...quotationItemsStore, item])
+                AddItemToInvoice={(item: QuotationItem | LadingItems) =>
+                  formikObj.values.type === "BillOfLading"
+                    ? setBillOfLadingItems([
+                        ...quotationLadingItemsStore,
+                        item as LadingItems,
+                      ])
+                    : setitemsArray([
+                        ...quotationItemsStore,
+                        item as QuotationItem,
+                      ])
                 }
                 quotationType={formikObj.values.type}
               />
@@ -779,54 +926,85 @@ function GenerateInvoice() {
                             ))}
                       </tr>
                     </thead>
-                    {quotationItemsStore && (
-                      <tbody>
-                        {quotationItemsStore.map((i, index) => (
-                          <tr>
-                            <td className="border border-slate-300 p-4">
-                              {index + 1}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.QuoteValidity}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.Charges}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.ChargeDescription}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.Units}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.Units}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {/* {i.UnitPerKg} */}
-                              {i.RateAmountPerUnit}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.MinRateAmountPerUnit}
-                            </td>
-                            <td className="border border-slate-300 p-4">
-                              {i.MinRateAmountPerUnit}
-                            </td>
-                            {/* <td className="border border-slate-300 p-4">
+                    {formikObj.values.type !== "BillOfLading" &&
+                      quotationItemsStore && (
+                        <tbody>
+                          {quotationItemsStore.map((i, index) => (
+                            <tr>
+                              <td className="border border-slate-300 p-4">
+                                {index + 1}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.QuoteValidity}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.Charges}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.ChargeDescription}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.Units}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.Units}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {/* {i.UnitPerKg} */}
+                                {i.RateAmountPerUnit}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.MinRateAmountPerUnit}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.MinRateAmountPerUnit}
+                              </td>
+                              {/* <td className="border border-slate-300 p-4">
                               {i.CostAmountPerUnit}
                             </td> */}
-                            {/* <td className="border border-slate-300 p-4">
+                              {/* <td className="border border-slate-300 p-4">
                               {i.MinCostAmountPerUnit}
                             </td> */}
-                            {/* <td className="border border-slate-300 p-4">
+                              {/* <td className="border border-slate-300 p-4">
                               {i.MinCostAmountPerUnit}
                             </td> */}
-                            <td className="border border-slate-300 p-4">
-                              {i.Currency}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    )}
+                              <td className="border border-slate-300 p-4">
+                                {i.Currency}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      )}
+                    {formikObj.values.type === "BillOfLading" &&
+                      quotationLadingItemsStore && (
+                        <tbody>
+                          {quotationLadingItemsStore.map((i, index) => (
+                            <tr key={index}>
+                              <td className="border border-slate-300 p-4">
+                                {index + 1}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.NoOfPackages}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.PackageDescription}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.ContainerNo}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.SealNo}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.Dimensions}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.Weight}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      )}
                   </table>
                   <div className="absolute right-20">
                     <button

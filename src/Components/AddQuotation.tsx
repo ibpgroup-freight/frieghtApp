@@ -80,26 +80,7 @@ const validationSchema = Yup.object().shape({
   Dimensions: Yup.string(),
 });
 
-const InitialState = {
-  id: "",
-  QuoteValidity: "",
-  Charges: "",
-  ChargeDescription: "",
-  // UnitPerKg: "",
-  Currency: "",
-  RateAmountPerUnit: "",
-  MinRateAmountPerUnit: "",
-  // MinCostAmountPerUnit: "",
-  // CostAmountPerUnit: "",
-  Units: "",
-  Dimensions: "",
-  Weight: "",
-  ContainerNo: "",
-  SealNo: "",
-  NoOfPackages: "",
-  PackageDescription: "",
-  type: "",
-};
+
 // const AddQuotationReducer = (state: QuotationItem, action: QuotationAction) => {
 //   switch (action.type) {
 //     case "AmountPerUnit":
@@ -120,13 +101,43 @@ function AddQuotation({
   quotationType,
 }: qprops) {
   // const [val, setval] = React.useState("");
-  const { AddItem, items } = useItemStore();
+  const { AddItem, items, AddLadingItem } = useItemStore();
   // const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
   const formikobj = useFormik({
-    initialValues: InitialState,
+    initialValues: {
+      id: "",
+      QuoteValidity: "",
+      Charges: "",
+      ChargeDescription: "",
+      // UnitPerKg: "",
+      Currency: "",
+      RateAmountPerUnit: "",
+      MinRateAmountPerUnit: "",
+      // MinCostAmountPerUnit: "",
+      // CostAmountPerUnit: "",
+      Units: "",
+      Dimensions: "",
+      Weight: "",
+      ContainerNo: "",
+      SealNo: "",
+      NoOfPackages: "",
+      PackageDescription: "",
+      type: quotationType,
+    },
     validationSchema,
     onSubmit: (values) => {
-      !AddItemToInvoice ? AddItem(values) : AddItemToInvoice(values);
+      !AddItemToInvoice
+        ? formikobj.values.type === "BillOfLading"
+          ? AddLadingItem({
+              ContainerNo: values.ContainerNo,
+              Dimensions: values.Dimensions,
+              NoOfPackages: values.NoOfPackages,
+              PackageDescription: values.PackageDescription,
+              SealNo: values.SealNo,
+              Weight: values.Weight,
+            })
+          : AddItem(values)
+        : AddItemToInvoice(values);
       closeQuotation((p) => !p);
       ctx.setToggle();
     },
@@ -162,11 +173,11 @@ function AddQuotation({
     {
       label: "Package Description",
       name: "PackageDescription",
-      type: "number",
+      type: "text",
     },
-    { label: "Container Number", name: "ContainerNo", type: "number" },
-    { label: "Seal Number", name: "SealNo", type: "number" },
-    { label: "Measurement", name: "Measurement", type: "text" },
+    { label: "Container Number", name: "ContainerNo", type: "text" },
+    { label: "Seal Number", name: "SealNo", type: "text" },
+    { label: "Dimensions", name: "Dimensions", type: "text" },
     { label: "Weight", name: "Weight", type: "number" },
   ];
   // const Column3 = [
@@ -191,6 +202,7 @@ function AddQuotation({
             formikobj.handleSubmit(e);
           }}
         >
+          <Field hidden name="type" />
           <div
             className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl absolute right-9"
             onClick={(e) => {

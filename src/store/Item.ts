@@ -2,6 +2,7 @@ import { create } from "zustand";
 
 const useItemStore = create<ItemsStore>((set) => ({
   totalItems: 0,
+  ladingItems: [],
   items: [],
   setitemsArray: (items) => {
     set((state) => ({ ...state, items }));
@@ -9,6 +10,12 @@ const useItemStore = create<ItemsStore>((set) => ({
   AddItem: (item) => {
     set((state) => {
       state.items.push(item);
+      return { ...state, totalItems: state.totalItems + 1 };
+    });
+  },
+  AddLadingItem(item) {
+    set((state) => {
+      state.ladingItems.push(item);
       return { ...state, totalItems: state.totalItems + 1 };
     });
   },
@@ -25,6 +32,9 @@ const useItemStore = create<ItemsStore>((set) => ({
     set((state) => {
       return { totalItems: 0, items: [] };
     });
+  },
+  setBillOfLadingItems(items) {
+    set((state) => ({ ...state, ladingItems: items }));
   },
 }));
 

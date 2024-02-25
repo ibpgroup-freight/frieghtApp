@@ -42,6 +42,47 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     quotationId: "",
     address: "",
   },
+  ladleInfo: {
+    ConsigneeReference: "",
+    CustomerName: "",
+    CustomerAddress: "",
+    SalesPerson: "",
+    PlaceOfOrigin: "",
+    PlaceOfDestination: "",
+    VesselName: "",
+    RouteDetails: "",
+    TypeOfCargo: "",
+    Weight: "",
+    TransitTime: "",
+    ShipmentTerms: "",
+    CarrierName: "",
+    TotalContainers: 0,
+    CustomerTRN: "",
+    CustomerEmail: "",
+    CustomerPhoneNo: "",
+    VesselDetails: "",
+    othershippingDetails: "",
+    ExportReference: "",
+    ForwardingAgent: "",
+    PortOfDischarge: "",
+    PortOfLoading: "",
+    jobInitials: "",
+    method: "",
+    PlaceOfIssue: "",
+    PlaceOfReceipt: "",
+    PayableAt: "",
+    PlaceOfDelivery: "",
+    Movement: "",
+    NotifyAddress: "",
+    Currency: "",
+    address: "",
+    Discount: 0,
+    Jobid: "",
+    OutstandingDues: 0,
+    VATAmount: 0,
+    specialInstructions: "",
+    termsAndConditions: "",
+  },
   Items: [],
   setInfo(j) {
     set((state) => ({ ...state, jobInfo: j }));
@@ -50,6 +91,15 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     set((state) => {
       return { ...state, Items: j };
     });
+  },
+  ladingItems: [],
+  setladingItems(j) {
+    set((state) => {
+      return { ...state, ladingItems: j };
+    });
+  },
+  setladleInfo(j) {
+    set((state) => ({ ...state, ladleInfo: j }));
   },
 }));
 

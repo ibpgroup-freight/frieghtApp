@@ -93,12 +93,22 @@ type QuotationAction = {
 type ItemsStore = {
   totalItems: number;
   items: QuotationItem[];
+  ladingItems: LadingItems[];
+  AddLadingItem: (item: LadingItems) => void;
   AddItem: (item: QuotationItem) => void;
   RemoveItem: (id: string) => void;
   resetItems: () => void;
   setitemsArray: (items: QuotationItem[]) => void;
+  setBillOfLadingItems: (items: LadingItems[]) => void;
 };
-
+type LadingItems = {
+  Dimensions: string;
+  Weight: string;
+  ContainerNo: string;
+  SealNo: string;
+  NoOfPackages: string;
+  PackageDescription: string;
+};
 type Job = {
   id?: string;
   jobid: string;
@@ -144,9 +154,48 @@ interface registrationTypes {
   password: string;
 }
 
+type ladleInquiry = {
+  CustomerName: string;
+  CustomerAddress: string;
+  SalesPerson: string;
+  PlaceOfOrigin?: string;
+  PlaceOfDestination?: string;
+  VesselName: string;
+  RouteDetails?: string;
+  TypeOfCargo?: string;
+  Weight: string;
+  TransitTime: string;
+  ShipmentTerms: string;
+  CarrierName: string;
+  TotalContainers: number;
+  CustomerTRN: string;
+  CustomerEmail: string;
+  CustomerPhoneNo: string;
+  VesselDetails?: string;
+  othershippingDetails?: string;
+  jobInitials: string;
+  method: string;
+  PlaceOfIssue?: string;
+  PlaceOfReceipt?: string;
+  PayableAt?: string;
+  PlaceOfDelivery?: string;
+  Movement?: string;
+  NotifyAddress: string;
+  Currency: string;
+  PortOfLoading: string;
+  PortOfDischarge: string;
+  ExportReference: string;
+  ForwardingAgent: string;
+  ConsigneeReference: string;
+  address: string;
+};
 type InvoiceStore = {
   jobInfo: cargoInfo & Inquiry;
+  ladleInfo: cargoInfo & ladleInquiry;
+  setladleInfo: (j: cargoInfo & ladleInquiry) => void;
   Items: QuotationItem[];
+  ladingItems: LadingItems[];
+  setladingItems: (j: LadingItems[]) => void;
   setInfo: (j: cargoInfo & Inquiry) => void;
   setItems: (j: QuotationItem[]) => void;
 };
