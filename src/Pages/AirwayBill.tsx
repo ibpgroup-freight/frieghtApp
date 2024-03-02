@@ -68,7 +68,7 @@ function AirwayBill() {
             fixed
             wrap={false}
             style={{
-              fontFamily: "Courier-BoldOblique",
+              fontFamily: "Courier-Bold",
             }}
           />
           <View
@@ -146,7 +146,7 @@ function Column1({
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 100,
+          minHeight: 20,
           borderBottom: 1,
           borderBottomColor: "black",
           paddingBottom: 5,
@@ -158,13 +158,12 @@ function Column1({
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            height: 30,
           }}
         >
           <Text
             style={{
-              fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+              fontFamily: "Courier-Bold",
+
               width: "40%",
             }}
           >
@@ -204,7 +203,7 @@ function Column1({
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 100,
+          minHeight: 30,
           borderBottom: 1,
           borderBottomColor: "black",
         }}
@@ -218,8 +217,8 @@ function Column1({
         >
           <Text
             style={{
-              fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+              fontFamily: "Courier-Bold",
+
               width: "40%",
             }}
           >
@@ -248,7 +247,65 @@ function Column1({
           Customer TRN {jobInfo.CustomerTRN}
         </Text>
       </View>
+      <View
+        style={{
+          borderRight: 1,
+          borderRightColor: "black",
+          width: "100%",
+          height: 40,
+          borderBottom: 1,
+          borderBottomColor: "black",
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            minHeight: 30,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
 
+              width: "100%",
+            }}
+          >
+            Issuing Carrier's Agent Name and City
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          borderRight: 1,
+          borderRightColor: "black",
+          width: "100%",
+          minHeight: 30,
+          borderBottom: 1,
+          borderBottomColor: "black",
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{}}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+            }}
+          >
+            Agents IATA Code
+          </Text>
+        </View>
+        <View style={{}}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+            }}
+          >
+            Account No
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           borderRight: 1,
@@ -264,55 +321,15 @@ function Column1({
         <View>
           <Text
             style={{
-              fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+              fontFamily: "Courier-Bold",
             }}
           >
             Accounting Information
           </Text>
           <Text style={{}}>{jobInfo.AccountingInformation}</Text>
         </View>
+      </View>
 
-        <Text
-          style={{
-            fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
-          }}
-        >
-          Mode Of Payment
-        </Text>
-        <Text
-          style={{
-            textDecoration: "none",
-            marginLeft: 5,
-          }}
-        >
-          {jobInfo.PaymentMethod}
-        </Text>
-      </View>
-      <View
-        style={{
-          borderRight: 1,
-          borderRightColor: "black",
-          width: "100%",
-          minHeight: 40,
-          borderBottom: 1,
-          borderBottomColor: "black",
-          padding: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
-          }}
-        >
-          Currency
-        </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
-          {jobInfo.Currency}
-        </Text>
-      </View>
       <View
         style={{
           borderRight: 1,
@@ -326,7 +343,7 @@ function Column1({
       >
         <Text
           style={{
-            fontFamily: "Courier-BoldOblique",
+            fontFamily: "Courier-Bold",
             textDecoration: "underline",
           }}
         >
@@ -338,7 +355,10 @@ function Column1({
               fontSize: 10,
             }}
           >
-            (Addr. of first Carrier) and requested Routing
+            <Text style={{ fontSize: 8 }}>
+              {" "}
+              (Addr. of first Carrier) and requested Routing
+            </Text>
           </Text>
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
@@ -358,7 +378,7 @@ function Column1({
       >
         <Text
           style={{
-            fontFamily: "Courier-BoldOblique",
+            fontFamily: "Courier-Bold",
             textDecoration: "underline",
           }}
         >
@@ -381,7 +401,7 @@ function Column1({
       >
         <Text
           style={{
-            fontFamily: "Courier-BoldOblique",
+            fontFamily: "Courier-Bold",
             textDecoration: "underline",
           }}
         >
@@ -402,7 +422,7 @@ function Column1({
       >
         <Text
           style={{
-            fontFamily: "Courier-BoldOblique",
+            fontFamily: "Courier-Bold",
             textDecoration: "underline",
           }}
         >
@@ -410,6 +430,34 @@ function Column1({
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
           {jobInfo.HandlingInformation}
+        </Text>
+      </View>
+      <View
+        style={{
+          borderRight: 1,
+          borderRightColor: "black",
+          width: "100%",
+          minHeight: 50,
+          borderBottom: 1,
+          borderBottomColor: "black",
+          padding: 5,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textDecoration: "underline",
+          }}
+        >
+          Mode Of Payment
+        </Text>
+        <Text
+          style={{
+            textDecoration: "none",
+            marginLeft: 5,
+          }}
+        >
+          {jobInfo.PaymentMethod}
         </Text>
       </View>
     </View>
@@ -467,12 +515,12 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRightColor: "black",
           width: "100%",
           padding: 4,
-          height: 165,
+          height: 135,
           borderBottom: 1,
           borderBottomColor: "black",
         }}
       >
-        <Text style={{ fontSize: 10 }}>
+        <Text style={{ fontSize: 9 }}>
           It is agreed that the goods described herein are accepted in apparent
           good order and condition (except as noted) for carriage SUBJECT TO THE
           CONDITIONS OF CONTRACT ON THE REVERSE HEREOF. ALL GOODS MAY BE CARRIED
@@ -481,7 +529,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           AGREES THAT THE SHIPMENT MAY BE CARRIED VIA INTERMEDIATE STOPPING
           PLACES WHICH THE CARRIER DEEMS APPROPRIATE. THE SHIPPERS ATTENTION IS
           DRAWN TO THE NOTICE CONCERNING CARRIERS LIMITATION OF LIABILITY.
-          <Text style={{ fontSize: 9 }}>
+          <Text style={{ fontSize: 8 }}>
             Shipper may increase such limitation of liability by declaring a
             higher value for carriage and paying a supplemental charge if
             required.
@@ -502,31 +550,96 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderBottomColor: "black",
         }}
       >
-        <Text
-          style={{
-            fontSize: 9,
-            width: "32%",
-            textDecoration: "underline",
-          }}
-        >
-          Consignee Reference
-        </Text>
-        <Text
-          style={{
-            fontSize: 9,
-            width: "32%",
-          }}
-        >
-          Declared Value for Carriage
-        </Text>
-        <Text
-          style={{
-            fontSize: 9,
-            width: "32%",
-          }}
-        >
-          Declared Value for Customs
-        </Text>
+        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+          <Text
+            style={{
+              fontSize: 9,
+            }}
+          >
+            Currency
+          </Text>
+        </View>
+        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+          <Text
+            style={{
+              fontSize: 9,
+            }}
+          >
+            Chgs Code
+          </Text>
+        </View>
+        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+          <Text
+            style={{
+              fontSize: 9,
+            }}
+          >
+            Wt/Val
+          </Text>
+          <View style={{ flexDirection: "row", borderBottom: 1 }}>
+            <Text
+              style={{
+                fontSize: 7,
+                borderRightColor: "black",
+                borderRightWidth: 1,
+              }}
+            >
+              PPD
+            </Text>{" "}
+            <Text
+              style={{
+                fontSize: 7,
+              }}
+            >
+              COLL
+            </Text>
+          </View>
+        </View>
+        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+          <Text
+            style={{
+              fontSize: 9,
+            }}
+          >
+            Other
+          </Text>
+          <View style={{ flexDirection: "row", borderBottom: 1 }}>
+            <Text
+              style={{
+                fontSize: 7,
+                borderRightColor: "black",
+                borderRightWidth: 1,
+              }}
+            >
+              PPD
+            </Text>{" "}
+            <Text
+              style={{
+                fontSize: 7,
+              }}
+            >
+              COLL
+            </Text>
+          </View>
+        </View>
+        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+          <Text
+            style={{
+              fontSize: 8,
+            }}
+          >
+            Declared Value for Carriage
+          </Text>
+        </View>
+        <View style={{ width: "15%", height: 30 }}>
+          <Text
+            style={{
+              fontSize: 8,
+            }}
+          >
+            Declared Value for Customs
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -544,8 +657,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
         <View style={{ width: "50%" }}>
           <Text
             style={{
-              fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+              fontFamily: "Courier-Bold",
             }}
           >
             Reference Number
@@ -558,7 +670,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+
               fontSize: 10,
             }}
           >
@@ -583,8 +695,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
       >
         <Text
           style={{
-            fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
+            fontFamily: "Courier-Bold",
           }}
         >
           Insurance Information
@@ -609,17 +720,86 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
       >
         <Text
           style={{
-            fontFamily: "Courier-BoldOblique",
+            fontFamily: "Courier-Bold",
             textDecoration: "underline",
           }}
         >
-          Requested Flight
+          Requested Flight / Date
         </Text>
-        <Text style={{ fontSize: 8 }}>
-          INSURANCE - If Carrier offers insurance, and such insurance is
-          requested in accordance with the conditions thereof, indicate amount
-          to be insured in figures in box marked 'Amount of Insurance'
-        </Text>
+      </View>
+      <View
+        style={{
+          borderRight: 1,
+          borderRightColor: "black",
+          width: "100%",
+          padding: 4,
+          height: 50,
+          borderBottom: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          borderBottomColor: "black",
+        }}
+      >
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+            }}
+          >
+            To
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+            }}
+          >
+            By First Carrier
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+            }}
+          >
+            To
+          </Text>
+        </View>{" "}
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+            }}
+          >
+            By
+          </Text>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+            }}
+          >
+            To
+          </Text>
+        </View>{" "}
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+            }}
+          >
+            By
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -695,8 +875,9 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
     <View
       style={{
         width: "50%",
-        fontFamily: "Courier-BoldOblique",
+        fontFamily: "Courier-Bold",
       }}
+      wrap={false}
     >
       <View
         style={{
@@ -706,59 +887,341 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           minHeight: 50,
           borderBottom: 1,
           borderBottomColor: "black",
-          padding: 5,
+
           flexDirection: "row",
           justifyContent: "space-between",
         }}
       >
-        <View style={{ flexDirection: "column" }}>
-          <Text
-            style={{
-              fontFamily: "Courier-BoldOblique",
-            }}
-          >
-            Total
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Courier-BoldOblique",
-            }}
-          >
-            Outstanding Charges
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
-              fontSize: 12,
-            }}
-          >
-            Total Other Charges
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
-              fontSize: 12,
-            }}
-          >
-            Total Prepaid
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
-              fontSize: 12,
-            }}
-          >
-            Grand Total
-          </Text>
+        <View style={{ width: "100%" }}>
+          <View style={{ flexDirection: "column" }}>
+            <View style={{ width: "100%", flexDirection: "row" }}>
+              <View style={{ width: "50%", borderRight: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    borderBottom: 1,
+                    textAlign: "center",
+                  }}
+                >
+                  Prepaid
+                </Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    borderBottom: 1,
+                    textAlign: "center",
+                  }}
+                >
+                  Collect
+                </Text>
+              </View>
+            </View>
+            <View style={{ height: 40, borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+                  textAlign: "center",
+                  border: 1,
+                  width: "50%",
+                  alignSelf: "center",
+                }}
+              >
+                Weight Charges
+              </Text>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  height: "100%",
+                }}
+              >
+                <View style={{ width: "50%", borderRight: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Pre
+                  </Text>
+                </View>
+
+                <View style={{ width: "50%" }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Collect
+                  </Text>{" "}
+                </View>
+              </View>
+            </View>
+            <View style={{ height: 40, borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+                  textAlign: "center",
+                  border: 1,
+                  width: "50%",
+                  alignSelf: "center",
+                }}
+              >
+                Valuation Charges
+              </Text>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  height: "100%",
+                }}
+              >
+                <View style={{ width: "50%", borderRight: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Pre
+                  </Text>
+                </View>
+
+                <View style={{ width: "50%" }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Collect
+                  </Text>{" "}
+                </View>
+              </View>
+            </View>
+            <View style={{ height: 40, borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+                  textAlign: "center",
+                  border: 1,
+                  width: "50%",
+                  alignSelf: "center",
+                }}
+              >
+                Tax
+              </Text>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  height: "100%",
+                }}
+              >
+                <View style={{ width: "50%", borderRight: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Pre
+                  </Text>
+                </View>
+
+                <View style={{ width: "50%" }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Collect
+                  </Text>{" "}
+                </View>
+              </View>
+            </View>
+            <View style={{ height: 40, borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+                  textAlign: "center",
+                  fontSize: 7,
+                  border: 1,
+                  width: "50%",
+                  alignSelf: "center",
+                }}
+              >
+                Total Other Charges Due Agent
+              </Text>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+                  height: "100%",
+                }}
+              >
+                <View style={{ width: "50%", borderRight: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Pre
+                  </Text>
+                </View>
+
+                <View style={{ width: "50%" }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Collect
+                  </Text>{" "}
+                </View>
+              </View>
+            </View>
+            <View style={{ height: 40, borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+                  textAlign: "center",
+                  fontSize: 7,
+                  border: 1,
+                  width: "50%",
+                  alignSelf: "center",
+                }}
+              >
+                Total Other Charges Due Carrier
+              </Text>
+              <View
+                style={{
+                  width: "100%",
+                  flexDirection: "row",
+
+                  height: "100%",
+                }}
+              >
+                <View style={{ width: "50%", borderRight: 1 }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Pre
+                  </Text>
+                </View>
+
+                <View style={{ width: "50%" }}>
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      textAlign: "center",
+                    }}
+                  >
+                    Collect
+                  </Text>{" "}
+                </View>
+              </View>
+            </View>
+            <View style={{ height: 40, borderBottom: 1, flexDirection: "row" }}>
+              <View style={{ width: "50%", borderRight: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    textAlign: "center",
+
+                    fontSize: 9,
+                  }}
+                >
+                  Total Prepaid
+                </Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    textAlign: "center",
+
+                    fontSize: 9,
+                  }}
+                >
+                  Total Collect
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                height: 40,
+                borderBottom: 1,
+                flexDirection: "row",
+              }}
+            >
+              <View style={{ width: "50%", borderRight: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    textAlign: "center",
+
+                    fontSize: 9,
+                  }}
+                >
+                  Currenct Conversion Rate
+                </Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    textAlign: "center",
+
+                    fontSize: 9,
+                  }}
+                >
+                  CC charges in Dest. Currency
+                </Text>
+              </View>
+            </View>
+
+            <View style={{ height: 40, borderBottom: 1, flexDirection: "row" }}>
+              <View style={{ width: "50%", borderRight: 1 }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    textAlign: "center",
+
+                    fontSize: 8,
+                  }}
+                >
+                  For Carriers Use Only At Destination
+                </Text>
+              </View>
+              <View style={{ width: "50%" }}>
+                <Text
+                  style={{
+                    fontFamily: "Courier-Bold",
+                    textAlign: "center",
+
+                    fontSize: 9,
+                  }}
+                >
+                  Charges at Destination
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
       </View>
       <View
         style={{
-          borderRight: 1,
-          borderRightColor: "black",
+          border: 1,
           width: "100%",
           borderBottom: 1,
           borderBottomColor: "black",
@@ -771,29 +1234,31 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
         <View>
           <Text
             style={{
-              fontFamily: "Courier-BoldOblique",
+              fontFamily: "Courier-Bold",
             }}
           >
             For Carriers Use Only *
           </Text>
         </View>
-        <View>
-          <Text
-            style={{
-              fontFamily: "Courier-BoldOblique",
-            }}
-          >
-            Charges At Destination
-          </Text>
-        </View>
-        <View>
-          <Text
-            style={{
-              fontFamily: "Courier-BoldOblique",
-            }}
-          >
-            Total Collect Charges
-          </Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ width: "50%", borderRight: 1, height: "100%" }}>
+            <Text
+              style={{
+                fontFamily: "Courier-Bold",
+              }}
+            >
+              Charges At Destination
+            </Text>
+          </View>
+          <View style={{ width: "50%", height: "100%" }}>
+            <Text
+              style={{
+                fontFamily: "Courier-Bold",
+              }}
+            >
+              Total Collect Charges
+            </Text>
+          </View>
         </View>
       </View>
     </View>

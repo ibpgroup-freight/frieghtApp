@@ -5,7 +5,6 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./Components/Header";
 import SideBar from "./Components/SIdeBar";
 import { Oval } from "react-loader-spinner";
-import Contacts from "./Pages/Contacts";
 import InvoicePdf from "./Components/InvoicePdf";
 import useUser from "./store/User";
 import { onAuthStateChanged } from "firebase/auth";
@@ -16,13 +15,17 @@ import { ToastContainer } from "react-toastify";
 import CustomLoader from "./Components/CustomLoader";
 import { FormikProvider } from "formik";
 import TestingInvoice from "./Components/TestingInvoice";
-import ManageUsers from "./Pages/ManageUsers";
-import Analytics from "./Pages/Analytics";
-import BillOfLaddle from "./Pages/BillOfLaddle";
 import Ejspagestest from "./Pages/ejspagestest.js";
-import GenerateJob from "./Pages/GenerateJob";
 import { collection, getDocs } from "firebase/firestore";
 import useCompanyInfo from "./store/CompanyInfo";
+import ProofOfDelivery from "./Pages/ProofOfDelivery";
+const CargoManifest = React.lazy(() => import("./Pages/CargoManifest"));
+const GenerateJob = React.lazy(() => import("./Pages/GenerateJob"));
+const BillOfLaddle = React.lazy(() => import("./Pages/BillOfLaddle"));
+const Analytics = React.lazy(() => import("./Pages/Analytics"));
+const ManageUsers = React.lazy(() => import("./Pages/ManageUsers"));
+const Contacts = React.lazy(() => import("./Pages/Contacts"));
+
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
 const Dashboard = React.lazy(() => import("./Pages/Dashboard"));
@@ -91,6 +94,9 @@ function App() {
                 <Route path="/billofladdle" Component={BillOfLaddle} />
                 <Route path="/generateJob" Component={GenerateJob} />
                 <Route path="/airwayBill" Component={AirwayBill} />
+                <Route path="/cargoManifest" Component={CargoManifest} />
+                <Route path="/ProofOfDelivery" Component={ProofOfDelivery} />
+
                 <Route path="*" Component={NotFound} />
               </Routes>
             </div>
