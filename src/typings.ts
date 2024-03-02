@@ -310,3 +310,46 @@ type AirwayItem = {
   NatureOfGoods: string;
   RatePerCharge: string;
 };
+
+type ProofOfDelivery = {
+  JobNo: string;
+  Description: string;
+  Transporter: string;
+  Shipper: string;
+  DeliveryTo: string;
+  ContactPerson: string;
+  DeliveryDate: string;
+  Time: string;
+  ReceiverNameAndSignature: string;
+  MobileNumber: string;
+  CompanyStamp: string;
+  Remarks: string;
+};
+
+type ProofOfDeliveryItems = {
+  MAWB: string;
+  HAWBNo: string;
+  NoOfPackages: string;
+  Weight: string;
+  CBM: string;
+};
+
+type CargoManifest = {
+  Consolidation: string;
+  MAWB: string;
+  Flights: string;
+  Date: string;
+  From: string;
+  To: string;
+  Total: string;
+  HeaderAddress: string;
+};
+
+type CargoManifestItems = {
+  HAWB: string;
+  ParcelsWeight: string;
+  Description: string;
+  Shipper: string;
+  Charges: string;
+  Collect: string;
+};

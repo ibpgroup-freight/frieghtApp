@@ -1,174 +1,196 @@
-import useInquiryItem from "../store/Inquiry";
-import useItemStore from "../store/Item";
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
-import { PDFViewer } from "@react-pdf/renderer";
-import { useSearchParams } from "react-router-dom";
+import {
+  PDFViewer,
+  Document,
+  Page,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+} from "@react-pdf/renderer";
+import React from "react";
+import useinvoiceStore from "../store/Invoice";
+import useCompanyInfo from "../store/CompanyInfo";
+import logo from "../assets/images/Logo.png";
 
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-  logo: {
-    backgroundColor: "blue",
-    color: "white",
-    padding: 25,
-    opacity: 0.7,
-  },
-  table: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginVertical: 10,
-    border: 1,
-    width: "90%",
-    alignSelf: "center",
-  },
-  inquiryText: {
-    fontSize: 12,
-    margin: 3,
-    fontWeight: "normal",
-    textAlign: "justify",
-  },
-  inquiryHeading: {
-    fontWeight: "bold",
-    fontSize: 14,
-    color: "blue",
-    textDecoration: "underline",
-    padding: 10,
-  },
-  inquiryView: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-});
-type jobPdfProps = {
-  job?: Job;
-};
-function CargoManifest({ job }: jobPdfProps) {
-  const { inquiry: inquiryStoreItems } = useInquiryItem();
-  const { items: itemStoreItems } = useItemStore();
-  const items = job ? job.Items : itemStoreItems;
-  const inquiry = job ? job.inquiry : inquiryStoreItems;
-  console.log(job?.inquiry.ContainerType);
-  console.log(job?.inquiry.CustomContainerType);
+function CargoManifest() {
+  const styles = StyleSheet.create({
+    page: {
+      fontFamily: "Helvetica",
+      fontSize: 11,
+      flexDirection: "column",
+      justifyContent: "flex-start",
+      padding: 10,
+      borderTopWidth: 1,
+      borderBottomWidth: 1,
+      borderColor: "black",
+      width: "100%",
+      height: "100%",
+    },
+    logo: {
+      width: 74,
+      height: 66,
+    },
+  });
+  const { Items, jobInfo, ladingItems, ladleInfo } = useinvoiceStore();
+  const { Location } = useCompanyInfo();
+  console.log("loca", Location);
+  const companyLocation = Location.find((l) => l.key === ladleInfo.address);
+  console.log("loca2", jobInfo);
 
   return (
-    <PDFViewer className="w-3/4 h-full">
+    <PDFViewer className="w-full h-screen">
       <Document>
-        <Page size="A4">
-          <View>
-            <View style={styles.logo}>
-              <Text>Logo</Text>
-            </View>
-          </View>
-          <Text style={{ textAlign: "center" }}>Inquiry Information</Text>
-          <View style={styles.table}>
-            <View style={{ justifyContent: "flex-start" }}>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Customer Name</Text>
-                <Text style={styles.inquiryText}>{inquiry.CustomerName}</Text>
-              </View>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Customer Address</Text>
-                <Text style={styles.inquiryText}>
-                  {inquiry.CustomerAddress}
-                </Text>
-              </View>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Sales Person</Text>
-                <Text style={styles.inquiryText}>{inquiry.SalesPerson}</Text>
-              </View>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>CarrierName</Text>
-                <Text style={styles.inquiryText}>{inquiry.CarrierName}</Text>
-              </View>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Weight</Text>
-                <Text style={styles.inquiryText}>{inquiry.Weight}</Text>
-              </View>
-            </View>
-            <View style={{ justifyContent: "flex-start" }}>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Customer Address</Text>
-                <Text style={styles.inquiryText}>{inquiry.Dimensions}</Text>
-              </View>
-
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Port Of Destination</Text>
-                <Text style={styles.inquiryText}>
-                  {inquiry.PortOfDestination}
-                </Text>
-              </View>
-
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Port Of Origin</Text>
-                <Text style={styles.inquiryText}>{inquiry.PortOfOrigin}</Text>
-              </View>
-
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Transit Time</Text>
-                <Text style={styles.inquiryText}>{inquiry.TransitTime}</Text>
-              </View>
-              <View style={styles.inquiryView}>
-                <Text style={styles.inquiryHeading}>Container Type</Text>
-                <Text style={styles.inquiryText}>
-                  {inquiry?.ContainerType ?? ""}
-                  {inquiry?.CustomContainerType?.split(",").join("") ?? ""}
-                </Text>
-              </View>
-            </View>
-
-            {/* Add more inquiry data fields as needed */}
-          </View>
-
-          <View style={styles.section}>
-            <Text style={{ textAlign: "center", marginVertical: 10 }}>
-              Items
-            </Text>
-
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                border: 1,
-                padding: 3,
-              }}
-            >
-              <Text style={styles.inquiryHeading}>Item ID</Text>
-              <Text style={styles.inquiryHeading}>Quote Validity</Text>
-              <Text style={styles.inquiryHeading}>Unit/Kg</Text>
-              <Text style={styles.inquiryHeading}>Currency</Text>
-              <Text style={styles.inquiryHeading}>Amount/Unit</Text>
-            </View>
-            {items.map((i) => (
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  margin: 5,
-                }}
-              >
-                <Text style={styles.inquiryText}>{i.id}</Text>
-                <Text style={styles.inquiryText}>{i.QuoteValidity}</Text>
-                {/* <Text style={styles.inquiryText}>{i.UnitPerKg}</Text> */}
-                <Text style={styles.inquiryText}>{i.Currency}</Text>
-                {/* <Text style={styles.inquiryText}>{i.AmountPerUnit}</Text> */}
-              </View>
-            ))}
-          </View>
+        <Page size="A4" style={styles.page}>
+          <ManifestHeader />
+          <PresentationHeader />
+          <TableHeader />
+          <Table />
         </Page>
       </Document>
     </PDFViewer>
   );
 }
 
+function ManifestHeader() {
+  return (
+    <View
+      style={{
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+        flexDirection: "row",
+      }}
+    >
+      <View style={{ width: "50%" }}>
+        <Image
+          source={logo}
+          style={{ width: "50%", height: 50, objectFit: "contain" }}
+        />
+      </View>
+      <View style={{ width: "50%" }}>
+        <Text style={{ fontFamily: "Courier-Bold" }}>Testing Place</Text>
+      </View>
+    </View>
+  );
+}
+
+function PresentationHeader() {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "flex-end",
+        height: 70,
+      }}
+    >
+      <View style={{ width: "50%", alignItems: "center" }}>
+        <Text
+          render={({ totalPages, pageNumber }) => (
+            <Text style={{ fontFamily: "Courier-Bold" }}>
+              Page : {pageNumber}/{totalPages}
+            </Text>
+          )}
+        />
+      </View>
+      <View
+        style={{
+          width: "50%",
+          border: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          alignSelf: "flex-start",
+          height: "100%",
+          borderWidth: 2,
+        }}
+      >
+        <Text style={{ fontFamily: "Courier-Bold", fontSize: 19 }}>
+          Cargo Manifest
+        </Text>
+      </View>
+      <View style={{ width: "50%", alignItems: "center" }}>
+        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+          Date: {new Date().toLocaleDateString()}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function TableHeader() {
+  return (
+    <View
+      style={{
+        border: 1,
+        height: 90,
+        padding: 5,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 10,
+        borderWidth: 2,
+      }}
+    >
+      <View style={{ width: "50%" }}></View>
+      <View style={{ width: "50%", paddingLeft: 5, alignItems: "flex-start" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            fontWeight: "ultralight",
+          }}
+        >
+          Consolidation{" "}
+        </Text>
+        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+          M.A.W.B{" "}
+        </Text>
+        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+          Flights{" "}
+        </Text>
+        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+          Date{" "}
+        </Text>
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+            From{" "}
+          </Text>
+          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+            To{" "}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function Table() {
+  return (
+    <View>
+      <HeaderItems />
+    </View>
+  );
+}
+function HeaderItems() {
+  return (
+    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        H.A.W.B
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        Parcels Weight
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        Description
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        Shipper/Consignee
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        Charges
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        Collect
+      </Text>
+    </View>
+  );
+}
 export default CargoManifest;

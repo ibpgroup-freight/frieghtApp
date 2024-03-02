@@ -725,6 +725,27 @@ function GenerateInvoice() {
       options: ["Dubai", "Bahrain"],
     },
   ];
+  const PODCol1 = [
+    { label: "Enter JobNumber", name: "JobNo", type: "text" },
+    { label: "Description", name: "Description", type: "textarea" },
+    { label: "Transporter", name: "Transporter", type: "text" },
+    { label: "Shipper", name: "Shipper", type: "text" },
+    { label: "Delivery To", name: "DeliveryTo", type: "text" },
+    { label: "Contact Person", name: "ContactPerson", type: "text" },
+  ];
+  const PODCol2 = [
+    { label: "Delivery Date", name: "DeliveryDate", type: "date" },
+    { label: "Time", name: "Time", type: "datetime-local" },
+    {
+      label: "Receiver Name And Signature",
+      name: "ReceiverNameAndSignature",
+      type: "text",
+    },
+    { label: "Mobile Number", name: "MobileNo", type: "text" },
+    { label: "Company Stamp", name: "CompanyStamp", type: "text" },
+    { label: "Remarks", name: "Remarks", type: "textarea" },
+  ];
+
   console.log(temp_Items, "   ", jobInfo);
   const filljobDetailsbyId = async () => {
     try {
@@ -854,6 +875,8 @@ function GenerateInvoice() {
                   <option value={"SeaFreight"}>SeaFreight Invoice</option>
                   <option value={"BillOfLading"}>Bill Of Lading</option>
                   <option value={"AirwayBill"}>AirWay Bill</option>
+                  <option value={"CargoManifest"}>Cargo Manifest</option>
+                  <option value={"ProofOfDelivery"}>Proof Of Delivery</option>
                 </Field>
                 <ErrorMessage
                   name={"type"}
@@ -867,72 +890,110 @@ function GenerateInvoice() {
                   Fill Details
                 </h1>
                 <div className="w-4/5 flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3">
-                  {Column1Items.map((i) => (
-                    <div key={i.name} className="px-4 w-2/5">
-                      <label className="text-xl" key={i.name}>
-                        {i.label}
-                      </label>
-                      <Field
-                        as={i.type === "textarea" ? "textarea" : "input"}
-                        type={i.type}
-                        name={i.name}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                      />
-                      <ErrorMessage
-                        name={i.name}
-                        component="div"
-                        className="text-red-500"
-                      />
-                    </div>
-                  ))}
+                  {formikObj.values.type === "ProofOfDelivery"
+                    ? PODCol1.map((i) => (
+                        <div key={i.name} className="px-4 w-2/5">
+                          <label className="text-xl" key={i.name}>
+                            {i.label}
+                          </label>
+                          <Field
+                            as={i.type === "textarea" ? "textarea" : "input"}
+                            type={i.type}
+                            name={i.name}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </div>
+                      ))
+                    : Column1Items.map((i) => (
+                        <div key={i.name} className="px-4 w-2/5">
+                          <label className="text-xl" key={i.name}>
+                            {i.label}
+                          </label>
+                          <Field
+                            as={i.type === "textarea" ? "textarea" : "input"}
+                            type={i.type}
+                            name={i.name}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </div>
+                      ))}
                 </div>
                 <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
-                  {Column2Items.map((i) =>
-                    i.type === "select" ? (
-                      <div key={i.name} className="px-4 w-2/5">
-                        <label className="text-xl" key={i.name}>
-                          {i.label}
-                        </label>
+                  {formikObj.values.type === "ProofOfDelivery"
+                    ? PODCol2.map((i) => (
+                        <div key={i.name} className="px-4 w-2/5">
+                          <label className="text-xl" key={i.name}>
+                            {i.label}
+                          </label>
+                          <Field
+                            as={i.type === "textarea" ? "textarea" : "input"}
+                            type={i.type}
+                            name={i.name}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </div>
+                      ))
+                    : Column2Items.map((i) =>
+                        i.type === "select" ? (
+                          <div key={i.name} className="px-4 w-2/5">
+                            <label className="text-xl" key={i.name}>
+                              {i.label}
+                            </label>
 
-                        <Field
-                          as="select"
-                          type={i.type}
-                          name={i.name}
-                          className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                        >
-                          <option>Select</option>
-                          {i.options?.map((o) => (
-                            <option key={o} value={o}>
-                              {o}
-                            </option>
-                          ))}
-                        </Field>
-                        <ErrorMessage
-                          name={i.name}
-                          component="div"
-                          className="text-red-500"
-                        />
-                      </div>
-                    ) : (
-                      <div key={i.name} className="px-4 w-2/5">
-                        <label className="text-xl" key={i.name}>
-                          {i.label}
-                        </label>
+                            <Field
+                              as="select"
+                              type={i.type}
+                              name={i.name}
+                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                            >
+                              <option>Select</option>
+                              {i.options?.map((o) => (
+                                <option key={o} value={o}>
+                                  {o}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage
+                              name={i.name}
+                              component="div"
+                              className="text-red-500"
+                            />
+                          </div>
+                        ) : (
+                          <div key={i.name} className="px-4 w-2/5">
+                            <label className="text-xl" key={i.name}>
+                              {i.label}
+                            </label>
 
-                        <Field
-                          as={i.type === "textarea" ? "textarea" : "input"}
-                          type={i.type}
-                          name={i.name}
-                          className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                        />
-                        <ErrorMessage
-                          name={i.name}
-                          component="div"
-                          className="text-red-500"
-                        />
-                      </div>
-                    )
-                  )}
+                            <Field
+                              as={i.type === "textarea" ? "textarea" : "input"}
+                              type={i.type}
+                              name={i.name}
+                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                            />
+                            <ErrorMessage
+                              name={i.name}
+                              component="div"
+                              className="text-red-500"
+                            />
+                          </div>
+                        )
+                      )}
                 </div>
               </div>
               <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
