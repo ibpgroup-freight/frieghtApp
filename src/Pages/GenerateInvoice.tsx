@@ -267,7 +267,99 @@ const validationSchema = yup.object().shape(
     }),
     ExportReference: yup.string(),
     ForwardingAgent: yup.string(),
+    JobNo: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Description: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Transporter: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Shipper: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    DeliveryTo: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    ContactPerson: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    DeliveryDate: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Time: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    ReceiverNameAndSignature: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    MobileNumber: yup.string().when("type", {
+      is: (type: string) => type === "ProofOfDelivery",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Remarks: yup.string(),
+    Consolidation: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    MAWB: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Flights: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Date: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    From: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    To: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Total: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    HeaderAddress: yup.string().when("type", {
+      is: (type: string) => type === "CargoManifest",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   },
+
   [["ContainerType", "CustomContainerType"]]
 );
 
@@ -283,6 +375,8 @@ function GenerateInvoice() {
     setladleInfo,
     setAirwayInfo,
     setAirwayBillItems,
+    setManifestInfo,
+    setPODInfo,
   } = useinvoiceStore();
   const { setInformation } = useCompanyInfo();
   const { setItemInquiry, inquiry, resetInquiry } = useInquiryItem();
@@ -290,10 +384,14 @@ function GenerateInvoice() {
     setitemsArray,
     items: quotationItemsStore,
     ladingItems: quotationLadingItemsStore,
+    ManifestItems: quotationManifestItems,
+    PODItems: quotationPODItems,
     resetItems,
     setBillOfLadingItems,
     AirwayItems,
     setAirwayItems,
+    setManifestItems,
+    setPODItems,
   } = useItemStore();
   const navigate = useNavigate();
   const [loadingdetails, setloadingdetails] = useState<boolean>(false);
@@ -342,6 +440,26 @@ function GenerateInvoice() {
       PaymentMethod: "",
       AccountingInformation: "",
       RequestedFlight: "",
+      JobNo: "",
+      Description: "",
+      Transporter: "",
+      Shipper: "",
+      DeliveryTo: "",
+      ContactPerson: "",
+      DeliveryDate: "",
+      Time: "",
+      ReceiverNameAndSignature: "",
+      MobileNumber: "",
+      CompanyStamp: "",
+      Remarks: "",
+      Consolidation: "",
+      MAWB: "",
+      Flights: "",
+      Date: "",
+      From: "",
+      To: "",
+      Total: "",
+      HeaderAddress: "",
     },
     onSubmit(values) {
       console.log("Here");
@@ -361,6 +479,12 @@ function GenerateInvoice() {
         setAirwayInfo(values);
         console.log("Airwat items", AirwayItems);
         setAirwayBillItems(AirwayItems);
+      } else if (values.type === "CargoManifest") {
+        setManifestInfo(values);
+        setManifestItems(quotationManifestItems);
+      } else if (values.type === "ProofOfDelivery") {
+        setPODInfo(values);
+        setPODItems(quotationPODItems);
       } else {
         setInfo(values);
         setInvoiceItems(quotationItemsStore);
@@ -369,6 +493,10 @@ function GenerateInvoice() {
         navigate("/billofladdle");
       } else if (values.type?.includes("Airway")) {
         navigate("/airwayBill");
+      } else if (values.type === "CargoManifest") {
+        navigate("/cargoManifest");
+      } else if (values.type === "ProofOfDelivery") {
+        navigate("/proofOfDelivery");
       } else {
         navigate("/testPdf", {
           state: {
@@ -382,6 +510,23 @@ function GenerateInvoice() {
   });
   console.log("qi", formikObj.errors);
 
+  const CargoManifestTable = [
+    { label: "Index", name: "Sr no" },
+    { label: "HAWB", name: "HAWB" },
+    { label: "Parcels Weight", name: "ParcelsWeight" },
+    { label: "Description", name: "Description" },
+    { label: "Shipper", name: "Shipper" },
+    { label: "Charges", name: "Charges" },
+    { label: "Collect", name: "Collect" },
+  ];
+  const ProofOfDeliveryTable = [
+    { label: "Index", name: "Sr no" },
+    { label: "MAWB", name: "MAWB" },
+    { label: "HAWB No", name: "HAWBNo" },
+    { label: "No Of Packages", name: "NoOfPackages" },
+    { label: "Weight", name: "Weight" },
+    { label: "CBM", name: "CBM" },
+  ];
   const Column1 = [
     { label: "Index", name: "Sr no" },
     { label: "Quote Validity", name: "QuoteValidity" },
@@ -741,11 +886,22 @@ function GenerateInvoice() {
       name: "ReceiverNameAndSignature",
       type: "text",
     },
-    { label: "Mobile Number", name: "MobileNo", type: "text" },
+    { label: "Mobile Number", name: "MobileNumber", type: "text" },
     { label: "Company Stamp", name: "CompanyStamp", type: "text" },
     { label: "Remarks", name: "Remarks", type: "textarea" },
   ];
-
+  const CManifestCol1 = [
+    { label: "Consolidation", name: "Consolidation", type: "text" },
+    { label: "M.A.W.B", name: "MAWB", type: "text" },
+    { label: "Flights", name: "Flights", type: "text" },
+    { label: "Date", name: "Date", type: "date" },
+  ];
+  const CManifestCol2 = [
+    { label: "From", name: "From", type: "text" },
+    { label: "To", name: "To", type: "text" },
+    { label: "Total", name: "Total", type: "text" },
+    { label: "HeaderAddress", name: "HeaderAddress", type: "textarea" },
+  ];
   console.log(temp_Items, "   ", jobInfo);
   const filljobDetailsbyId = async () => {
     try {
@@ -800,7 +956,12 @@ function GenerateInvoice() {
               <AddQuotation
                 closeQuotation={setshowQuotation}
                 AddItemToInvoice={(
-                  item: QuotationItem | LadingItems | AirwayItem
+                  item:
+                    | QuotationItem
+                    | LadingItems
+                    | AirwayItem
+                    | ProofOfDeliveryItems
+                    | CargoManifestItems
                 ) =>
                   formikObj.values.type === "BillOfLading"
                     ? setBillOfLadingItems([
@@ -809,6 +970,16 @@ function GenerateInvoice() {
                       ])
                     : formikObj.values.type === "AirwayBill"
                     ? setAirwayItems([...AirwayItems, item as AirwayItem])
+                    : formikObj.values.type === "ProofOfDelivery"
+                    ? setPODItems([
+                        ...quotationPODItems,
+                        item as ProofOfDeliveryItems,
+                      ])
+                    : formikObj.values.type === "CargoManifest"
+                    ? setManifestItems([
+                        ...quotationManifestItems,
+                        item as CargoManifestItems,
+                      ])
                     : setitemsArray([
                         ...quotationItemsStore,
                         item as QuotationItem,
@@ -909,6 +1080,25 @@ function GenerateInvoice() {
                           />
                         </div>
                       ))
+                    : formikObj.values.type === "CargoManifest"
+                    ? CManifestCol1.map((i) => (
+                        <div key={i.name} className="px-4 w-2/5">
+                          <label className="text-xl" key={i.name}>
+                            {i.label}
+                          </label>
+                          <Field
+                            as={i.type === "textarea" ? "textarea" : "input"}
+                            type={i.type}
+                            name={i.name}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </div>
+                      ))
                     : Column1Items.map((i) => (
                         <div key={i.name} className="px-4 w-2/5">
                           <label className="text-xl" key={i.name}>
@@ -931,6 +1121,25 @@ function GenerateInvoice() {
                 <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
                   {formikObj.values.type === "ProofOfDelivery"
                     ? PODCol2.map((i) => (
+                        <div key={i.name} className="px-4 w-2/5">
+                          <label className="text-xl" key={i.name}>
+                            {i.label}
+                          </label>
+                          <Field
+                            as={i.type === "textarea" ? "textarea" : "input"}
+                            type={i.type}
+                            name={i.name}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </div>
+                      ))
+                    : formikObj.values.type === "CargoManifest"
+                    ? CManifestCol2.map((i) => (
                         <div key={i.name} className="px-4 w-2/5">
                           <label className="text-xl" key={i.name}>
                             {i.label}
@@ -1038,6 +1247,22 @@ function GenerateInvoice() {
                                 </th>
                               </React.Fragment>
                             ))
+                          : formikObj.values.type === "CargoManifest"
+                          ? CargoManifestTable.map((column) => (
+                              <React.Fragment key={column.name}>
+                                <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                                  {column.label}
+                                </th>
+                              </React.Fragment>
+                            ))
+                          : formikObj.values.type === "ProofOfDelivery"
+                          ? ProofOfDeliveryTable.map((column) => (
+                              <React.Fragment key={column.name}>
+                                <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                                  {column.label}
+                                </th>
+                              </React.Fragment>
+                            ))
                           : Column1.map((column) => (
                               <React.Fragment key={column.name}>
                                 <th
@@ -1127,10 +1352,64 @@ function GenerateInvoice() {
                           </tr>
                         ))}
                       </tbody>
+                    ) : formikObj.values.type === "CargoManifest" ? (
+                      <tbody>
+                        {quotationManifestItems.map((i, index) => (
+                          <tr key={index}>
+                            <td className="border border-slate-300 p-4">
+                              {index + 1}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.HAWB}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.ParcelsWeight}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Description}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Shipper}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Charges}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {/* {i.UnitPerKg} */}
+                              {i.Collect}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    ) : formikObj.values.type === "ProofOfDelivery" ? (
+                      <tbody>
+                        {quotationPODItems.map((i, index) => (
+                          <tr key={index}>
+                            <td className="border border-slate-300 p-4">
+                              {index + 1}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.MAWB}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.HAWBNo}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.NoOfPackages}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Weight}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.CBM}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
                     ) : (
                       <tbody>
                         {quotationItemsStore.map((i, index) => (
-                          <tr>
+                          <tr key={index}>
                             <td className="border border-slate-300 p-4">
                               {index + 1}
                             </td>

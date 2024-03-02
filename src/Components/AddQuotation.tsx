@@ -12,19 +12,29 @@ type qprops = {
 const validationSchema = Yup.object().shape({
   QuoteValidity: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      !type?.includes("BillOfLading") &&
+      !type.includes("AirwayBill") &&
+      !type.includes("CargoManifest") &&
+      !type.includes("ProofOfDelivery"),
     then: (schema) => schema.required("Quote Validity is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
   Charges: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      (!type?.includes("BillOfLading") &&
+        !type.includes("AirwayBill") &&
+        !type.includes("CargoManifest") &&
+        !type.includes("ProofOfDelivery")) ||
+      type === "CargoManifest",
     then: (schema) => schema.required("Charges required"),
     otherwise: (schema) => schema.notRequired(),
   }),
   ChargeDescription: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      !type?.includes("BillOfLading") &&
+      !type.includes("AirwayBill") &&
+      !type.includes("CargoManifest") &&
+      !type.includes("ProofOfDelivery"),
     then: (schema) => schema.required("Charge Description is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -32,24 +42,34 @@ const validationSchema = Yup.object().shape({
   type: Yup.string(),
   Currency: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      !type?.includes("BillOfLading") &&
+      !type.includes("AirwayBill") &&
+      !type.includes("CargoManifest") &&
+      !type.includes("ProofOfDelivery"),
     then: (schema) => schema.required("Currency is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
   RateAmountPerUnit: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      !type?.includes("BillOfLading") &&
+      !type.includes("AirwayBill") &&
+      !type.includes("CargoManifest") &&
+      !type.includes("ProofOfDelivery"),
     then: (schema) => schema.required("Rate Amount Per Unit is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
   MinRateAmountPerUnit: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      !type?.includes("BillOfLading") &&
+      !type.includes("AirwayBill") &&
+      !type.includes("CargoManifest") &&
+      !type.includes("ProofOfDelivery"),
     then: (schema) => schema.required("Min Rate Amount Per Unit is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
   NoOfPackages: Yup.string().when("type", {
-    is: (type: string) => type?.includes("BillOfLading"),
+    is: (type: string) =>
+      type?.includes("BillOfLading") || type === "ProofOfDelivery",
     then: (schema) => schema.required("No Of Packages are required"),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -79,7 +99,10 @@ const validationSchema = Yup.object().shape({
   // maxUnits: Yup.string().required("max Units are required"),
   Units: Yup.string().when("type", {
     is: (type: string) =>
-      !type?.includes("BillOfLading") && !type.includes("AirwayBill"),
+      !type?.includes("BillOfLading") &&
+      !type.includes("AirwayBill") &&
+      !type.includes("CargoManifest") &&
+      !type.includes("ProofOfDelivery"),
     then: (schema) => schema.required("Units Are required"),
     otherwise: (schema) => schema.notRequired(),
   }),
@@ -120,6 +143,41 @@ const validationSchema = Yup.object().shape({
     then: (schema) => schema.required("RatePerCharge is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
+  MAWB: Yup.string().when("type", {
+    is: (type: string) => type === "ProofOfDelivery",
+    then: (schema) => schema.required("MAWB is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  HAWBNo: Yup.string().when("type", {
+    is: (type: string) => type === "ProofOfDelivery",
+    then: (schema) => schema.required("HAWBNo is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  CBM: Yup.string().when("type", {
+    is: (type: string) => type === "ProofOfDelivery",
+    then: (schema) => schema.required("CBM is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  ParcelsWeight: Yup.string().when("type", {
+    is: (type: string) => type === "CargoManifest",
+    then: (schema) => schema.required("CBM is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  Description: Yup.string().when("type", {
+    is: (type: string) => type === "CargoManifest",
+    then: (schema) => schema.required("CBM is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  Shipper: Yup.string().when("type", {
+    is: (type: string) => type === "CargoManifest",
+    then: (schema) => schema.required("CBM is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
+  Collect: Yup.string().when("type", {
+    is: (type: string) => type === "CargoManifest",
+    then: (schema) => schema.required("CBM is required"),
+    otherwise: (schema) => schema.notRequired(),
+  }),
 });
 
 // const AddQuotationReducer = (state: QuotationItem, action: QuotationAction) => {
@@ -142,7 +200,14 @@ function AddQuotation({
   quotationType,
 }: qprops) {
   // const [val, setval] = React.useState("");
-  const { AddItem, items, AddLadingItem, AddAirwayItem } = useItemStore();
+  const {
+    AddItem,
+    items,
+    AddLadingItem,
+    AddAirwayItem,
+    addPODItem,
+    addManifestItem,
+  } = useItemStore();
   // const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
   const formikobj = useFormik({
     initialValues: {
@@ -171,6 +236,21 @@ function AddQuotation({
       ChargeableWeight: "",
       RatePerCharge: "",
       NatureOfGoods: "",
+      HAWB: "",
+      ParcelsWeight: "",
+      Description: "",
+      Shipper: "",
+      Collect: "",
+      Consolidation: "",
+      MAWB: "",
+      Flights: "",
+      Date: "",
+      From: "",
+      To: "",
+      Total: "",
+      HeaderAddress: "",
+      HAWBNo: "",
+      CBM: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -187,6 +267,10 @@ function AddQuotation({
               })
             : values.type === "AirwayBill"
             ? AddAirwayItem(values)
+            : values.type === "CargoManifest"
+            ? addManifestItem(values)
+            : values.type === "ProofOfDelivery"
+            ? addPODItem(values)
             : AddItem(values)
           : AddItemToInvoice(values);
         closeQuotation((p) => !p);
@@ -248,6 +332,21 @@ function AddQuotation({
     { label: "Nature Of Goods", name: "NatureOfGoods", type: "text" },
     { label: "Rate Per Charge", name: "RatePerCharge", type: "number" },
   ];
+  const CargoManifestTable = [
+    { label: "HAWB", name: "HAWB", type: "text", options: [] },
+    { label: "Parcels Weight", name: "ParcelsWeight", type: "text" },
+    { label: "Description", name: "Description", type: "textarea" },
+    { label: "Shipper", name: "Shipper", type: "text" },
+    { label: "Charges", name: "Charges", type: "number" },
+    { label: "Collect", name: "Collect", type: "number" },
+  ];
+  const ProofOfDeliveryTable = [
+    { label: "MAWB", name: "MAWB", type: "number", options: [] },
+    { label: "HAWB No", name: "HAWBNo", type: "number" },
+    { label: "No Of Packages", name: "NoOfPackages", type: "number" },
+    { label: "Weight", name: "Weight", type: "number" },
+    { label: "CBM", name: "CBM", type: "text" },
+  ];
   // const Column3 = [
   //   {
   //     label: "Currency",
@@ -286,7 +385,9 @@ function AddQuotation({
           <hr className="mb-10 mt-5"></hr>
           <div className="flex flex-col sm:flex-row justify-evenly">
             {quotationType !== "BillOfLading" &&
-              quotationType !== "AirwayBill" && (
+              quotationType !== "AirwayBill" &&
+              quotationType !== "CargoManifest" &&
+              quotationType !== "ProofOfDelivery" && (
                 <div className="flex flex-col space-y-3 items-center">
                   <h1 className="text-2xl text-black-800 w-full font-serif text-center">
                     Info Section
@@ -312,7 +413,9 @@ function AddQuotation({
                 </div>
               )}
             {quotationType !== "BillOfLading" &&
-              quotationType !== "AirwayBill" && (
+              quotationType !== "AirwayBill" &&
+              quotationType !== "CargoManifest" &&
+              quotationType !== "ProofOfDelivery" && (
                 <div className="flex flex-col space-y-2 items-center">
                   <h2 className="text-2xl text-black-800 w-full font-serif text-center">
                     Rate Section
@@ -416,6 +519,104 @@ function AddQuotation({
                   Airway Bill Info
                 </h2>
                 {AirwayBillTable.map((i) => (
+                  <div
+                    className="flex flex-col items-center justify-start"
+                    key={i.name}
+                  >
+                    <label className="text-xl">{i.label}</label>
+                    {i.type === "select" ? (
+                      <>
+                        <Field
+                          as="select"
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        >
+                          <option value="">Select Value </option>
+                          {i.options?.map((o) => (
+                            <option value={o} key={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Field
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {quotationType === "CargoManifest" && (
+              <div className="flex flex-col space-y-2 items-center">
+                <h2 className="text-2xl text-black-800 w-full font-serif text-center">
+                  CargoManifest Info
+                </h2>
+                {CargoManifestTable.map((i) => (
+                  <div
+                    className="flex flex-col items-center justify-start"
+                    key={i.name}
+                  >
+                    <label className="text-xl">{i.label}</label>
+                    {i.type === "select" ? (
+                      <>
+                        <Field
+                          as="select"
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        >
+                          <option value="">Select Value </option>
+                          {i.options?.map((o) => (
+                            <option value={o} key={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Field
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {quotationType === "ProofOfDelivery" && (
+              <div className="flex flex-col space-y-2 items-center">
+                <h2 className="text-2xl text-black-800 w-full font-serif text-center">
+                  Proof Of Delivery
+                </h2>
+                {ProofOfDeliveryTable.map((i) => (
                   <div
                     className="flex flex-col items-center justify-start"
                     key={i.name}

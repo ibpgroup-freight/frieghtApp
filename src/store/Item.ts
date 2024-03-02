@@ -47,6 +47,26 @@ const useItemStore = create<ItemsStore>((set) => ({
   setAirwayItems(items) {
     set((state) => ({ ...state, AirwayItems: items }));
   },
+  ManifestItems: [],
+  PODItems: [],
+  setManifestItems(items) {
+    set((state) => ({ ...state, ManifestItems: items }));
+  },
+  setPODItems(items) {
+    set((state) => ({ ...state, PODItems: items }));
+  },
+  addManifestItem(item) {
+    set((state) => {
+      state.ManifestItems.push(item);
+      return { ...state, totalItems: state.totalItems + 1 };
+    });
+  },
+  addPODItem(item) {
+    set((state) => {
+      state.PODItems.push(item);
+      return { ...state, totalItems: state.totalItems + 1 };
+    });
+  },
 }));
 
 export default useItemStore;

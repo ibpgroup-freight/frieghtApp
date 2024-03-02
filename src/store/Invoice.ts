@@ -143,6 +143,58 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
   setladleInfo(j) {
     set((state) => ({ ...state, ladleInfo: j }));
   },
+  manifestInfo: {
+    address: "",
+    Consolidation: "",
+    Date: "",
+    Discount: 0,
+    Flights: "",
+    From: "",
+    HeaderAddress: "",
+    Jobid: "",
+    MAWB: "",
+    OutstandingDues: 0,
+    To: "",
+    Total: "",
+    VATAmount: 0,
+    specialInstructions: "",
+    termsAndConditions: "",
+  },
+  PODInfo: {
+    JobNo: "",
+    Description: "",
+    Transporter: "",
+    Shipper: "",
+    DeliveryTo: "",
+    ContactPerson: "",
+    DeliveryDate: "",
+    Time: "",
+    ReceiverNameAndSignature: "",
+    MobileNumber: "",
+    CompanyStamp: "",
+    Remarks: "",
+    address: "",
+    Discount: 0,
+    VATAmount: 0,
+    specialInstructions: "",
+    termsAndConditions: "",
+    Jobid: "",
+    OutstandingDues: 0,
+  },
+  ManifestItems: [],
+  PODItems: [],
+  setManifestInfo(j) {
+    set((state) => ({ ...state, manifestInfo: j }));
+  },
+  setManifestItems(items) {
+    set((state) => ({ ...state, ManifestItems: items }));
+  },
+  setPODInfo(j) {
+    set((state) => ({ ...state, PODInfo: j }));
+  },
+  setPODItems(items) {
+    set((state) => ({ ...state, PODItems: items }));
+  },
 }));
 
 export default useinvoiceStore;

@@ -95,14 +95,21 @@ type ItemsStore = {
   items: QuotationItem[];
   ladingItems: LadingItems[];
   AirwayItems: AirwayItem[];
+  PODItems: ProofOfDeliveryItems[];
+  ManifestItems: CargoManifestItems[];
   AddLadingItem: (item: LadingItems) => void;
   AddAirwayItem: (item: AirwayItem) => void;
+  addManifestItem: (item: CargoManifestItems) => void;
+  addPODItem: (item: ProofOfDeliveryItems) => void;
+
   AddItem: (item: QuotationItem) => void;
   RemoveItem: (id: string) => void;
   resetItems: () => void;
   setitemsArray: (items: QuotationItem[]) => void;
   setBillOfLadingItems: (items: LadingItems[]) => void;
   setAirwayItems: (items: AirwayItem[]) => void;
+  setManifestItems: (items: CargoManifestItems[]) => void;
+  setPODItems: (items: ProofOfDeliveryItems[]) => void;
 };
 type LadingItems = {
   Dimensions: string;
@@ -196,15 +203,23 @@ type InvoiceStore = {
   jobInfo: cargoInfo & Inquiry;
   ladleInfo: cargoInfo & ladleInquiry;
   AirwayInfo: cargoInfo & AirwayBillInquiry;
+  manifestInfo: cargoInfo & CargoManifestInquiry;
+  PODInfo: cargoInfo & ProofOfDeliveryInquiry;
   setladleInfo: (j: cargoInfo & ladleInquiry) => void;
   setAirwayInfo: (j: cargoInfo & AirwayBillInquiry) => void;
+  setManifestInfo: (j: cargoInfo & CargoManifestInquiry) => void;
+  setPODInfo: (j: cargoInfo & ProofOfDeliveryInquiry) => void;
   Items: QuotationItem[];
   ladingItems: LadingItems[];
   AirwayItems: AirwayItem[];
+  ManifestItems: CargoManifestItems[];
+  PODItems: ProofOfDeliveryItems[];
   setladingItems: (j: LadingItems[]) => void;
   setInfo: (j: cargoInfo & Inquiry) => void;
   setItems: (j: QuotationItem[]) => void;
   setAirwayBillItems: (j: AirwayItem[]) => void;
+  setManifestItems: (items: CargoManifestItems[]) => void;
+  setPODItems: (items: ProofOfDeliveryItems[]) => void;
 };
 
 type cargoInfo = {
@@ -311,7 +326,7 @@ type AirwayItem = {
   RatePerCharge: string;
 };
 
-type ProofOfDelivery = {
+type ProofOfDeliveryInquiry = {
   JobNo: string;
   Description: string;
   Transporter: string;
@@ -334,7 +349,7 @@ type ProofOfDeliveryItems = {
   CBM: string;
 };
 
-type CargoManifest = {
+type CargoManifestInquiry = {
   Consolidation: string;
   MAWB: string;
   Flights: string;
