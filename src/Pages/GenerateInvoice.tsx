@@ -33,17 +33,68 @@ const validationSchema = yup.object().shape(
   {
     Jobid: yup.string().when("type", {
       is: (type: string) =>
-        !type?.includes("Lading") && !type?.includes("Airway"),
+        !type?.includes("Lading") &&
+        !type?.includes("Airway") &&
+        type !== "CargoManifest" &&
+        type !== "ProofOfDelivery",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    CustomerName: yup.string().required("Customer Name is required"),
+    CustomerName: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Customer Name is required"),
 
-    CustomerAddress: yup.string().required("Customer Address is required"),
-    CustomerEmail: yup.string().required("Customer Email is required"),
-    CustomerPhoneNo: yup.string().required("Customer Phone Number is required"),
-    SalesPerson: yup.string().required("Sales Person is required"),
-    address: yup.string().required("Your Address is required"),
+    CustomerAddress: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Customer Address is required"),
+    CustomerEmail: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Customer Email is required"),
+    CustomerPhoneNo: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Customer Phone Number is required"),
+    SalesPerson: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Sales Person is required"),
+    officeAddress: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Your Address is required"),
     termsAndConditions: yup.string().notRequired(),
     specialInstructions: yup.string().notRequired(),
     ConsigneeReference: yup.string().notRequired(),
@@ -121,21 +172,67 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Airport of Destination is required"),
-    CarrierName: yup.string().required("Carrier Name is required"),
+    CarrierName: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Carrier Name is required"),
     // TodaysDate: yup.string().required("Carrier Name is required"),
-    TransitTime: yup.string().required("Transit Time is required"),
+    TransitTime: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Transit Time is required"),
     CustomerTRN: yup
       .string()
-      .matches(/^\d+$/, "Invalid TRN")
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
       .required("Customer TRN is required"),
-    Weight: yup.string().required("Weight is required"),
+    Weight: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Weight is required"),
     Dimensions: yup.string().when("type", {
-      is: (type: string) => !type?.includes("Lading"),
+      is: (type: string) =>
+        type !== "CargoManifest" && type !== "ProofOfDelivery",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    ShipmentTerms: yup.string().required("Shipment Terms are required"),
-    TypeOfCargo: yup.string().required("Type of Cargo is required"),
+    ShipmentTerms: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Shipment Terms are required"),
+    TypeOfCargo: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Type of Cargo is required"),
     FlightInformation: yup
       .string()
       .when("type", {
@@ -221,9 +318,23 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Payable at required"),
-    Departure: yup.string().required("Departure Time is required"),
+    Departure: yup
+      .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
+      .required("Departure Time is required"),
     EstimatedArrival: yup
       .string()
+      .when("type", {
+        is: (type: string) =>
+          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        then: (schema) => schema.required(),
+        otherwise: (schema) => schema.notRequired(),
+      })
       .required("Estimated Arrival Time is required"),
     ContainerType: yup
       .string()
@@ -236,7 +347,10 @@ const validationSchema = yup.object().shape(
       })
       .when("type", {
         is: (type: string) =>
-          !type?.includes("Lading") && !type?.includes("Air"),
+          !type?.includes("Lading") &&
+          !type?.includes("Air") &&
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       }),
@@ -251,7 +365,10 @@ const validationSchema = yup.object().shape(
       })
       .when("type", {
         is: (type: string) =>
-          !type?.includes("Lading") && !type?.includes("Air"),
+          !type?.includes("Lading") &&
+          !type?.includes("Air") &&
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       }),
@@ -414,7 +531,7 @@ function GenerateInvoice() {
       Discount: 0,
       OutstandingDues: 0,
       VATAmount: 0,
-      address: "",
+      officeAddress: "",
       termsAndConditions: "",
       specialInstructions: "",
       PlaceOfIssue: "",
@@ -865,7 +982,7 @@ function GenerateInvoice() {
     },
     {
       label: "Address",
-      name: "address",
+      name: "officeAddress",
       type: "select",
       options: ["Dubai", "Bahrain"],
     },
@@ -889,6 +1006,12 @@ function GenerateInvoice() {
     { label: "Mobile Number", name: "MobileNumber", type: "text" },
     { label: "Company Stamp", name: "CompanyStamp", type: "text" },
     { label: "Remarks", name: "Remarks", type: "textarea" },
+    {
+      label: "Address",
+      name: "officeAddress",
+      type: "select",
+      options: ["Dubai", "Bahrain"],
+    },
   ];
   const CManifestCol1 = [
     { label: "Consolidation", name: "Consolidation", type: "text" },
@@ -901,6 +1024,12 @@ function GenerateInvoice() {
     { label: "To", name: "To", type: "text" },
     { label: "Total", name: "Total", type: "text" },
     { label: "HeaderAddress", name: "HeaderAddress", type: "textarea" },
+    {
+      label: "Address",
+      name: "officeAddress",
+      type: "select",
+      options: ["Dubai", "Bahrain"],
+    },
   ];
   console.log(temp_Items, "   ", jobInfo);
   const filljobDetailsbyId = async () => {
@@ -1120,43 +1249,99 @@ function GenerateInvoice() {
                 </div>
                 <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
                   {formikObj.values.type === "ProofOfDelivery"
-                    ? PODCol2.map((i) => (
-                        <div key={i.name} className="px-4 w-2/5">
-                          <label className="text-xl" key={i.name}>
-                            {i.label}
-                          </label>
-                          <Field
-                            as={i.type === "textarea" ? "textarea" : "input"}
-                            type={i.type}
-                            name={i.name}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                          />
-                          <ErrorMessage
-                            name={i.name}
-                            component="div"
-                            className="text-red-500"
-                          />
-                        </div>
-                      ))
+                    ? PODCol2.map((i) =>
+                        i.type === "select" ? (
+                          <div key={i.name} className="px-4 w-2/5">
+                            <label className="text-xl" key={i.name}>
+                              {i.label}
+                            </label>
+
+                            <Field
+                              as="select"
+                              type={i.type}
+                              name={i.name}
+                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                            >
+                              <option>Select</option>
+                              {i.options?.map((o) => (
+                                <option key={o} value={o}>
+                                  {o}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage
+                              name={i.name}
+                              component="div"
+                              className="text-red-500"
+                            />
+                          </div>
+                        ) : (
+                          <div key={i.name} className="px-4 w-2/5">
+                            <label className="text-xl" key={i.name}>
+                              {i.label}
+                            </label>
+
+                            <Field
+                              as={i.type === "textarea" ? "textarea" : "input"}
+                              type={i.type}
+                              name={i.name}
+                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                            />
+                            <ErrorMessage
+                              name={i.name}
+                              component="div"
+                              className="text-red-500"
+                            />
+                          </div>
+                        )
+                      )
                     : formikObj.values.type === "CargoManifest"
-                    ? CManifestCol2.map((i) => (
-                        <div key={i.name} className="px-4 w-2/5">
-                          <label className="text-xl" key={i.name}>
-                            {i.label}
-                          </label>
-                          <Field
-                            as={i.type === "textarea" ? "textarea" : "input"}
-                            type={i.type}
-                            name={i.name}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                          />
-                          <ErrorMessage
-                            name={i.name}
-                            component="div"
-                            className="text-red-500"
-                          />
-                        </div>
-                      ))
+                    ? CManifestCol2.map((i) =>
+                        i.type === "select" ? (
+                          <div key={i.name} className="px-4 w-2/5">
+                            <label className="text-xl" key={i.name}>
+                              {i.label}
+                            </label>
+
+                            <Field
+                              as="select"
+                              type={i.type}
+                              name={i.name}
+                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                            >
+                              <option>Select</option>
+                              {i.options?.map((o) => (
+                                <option key={o} value={o}>
+                                  {o}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage
+                              name={i.name}
+                              component="div"
+                              className="text-red-500"
+                            />
+                          </div>
+                        ) : (
+                          <div key={i.name} className="px-4 w-2/5">
+                            <label className="text-xl" key={i.name}>
+                              {i.label}
+                            </label>
+
+                            <Field
+                              as={i.type === "textarea" ? "textarea" : "input"}
+                              type={i.type}
+                              name={i.name}
+                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                            />
+                            <ErrorMessage
+                              name={i.name}
+                              component="div"
+                              className="text-red-500"
+                            />
+                          </div>
+                        )
+                      )
                     : Column2Items.map((i) =>
                         i.type === "select" ? (
                           <div key={i.name} className="px-4 w-2/5">

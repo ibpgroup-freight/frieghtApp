@@ -40,7 +40,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     method: "",
     othershippingDetails: "",
     quotationId: "",
-    address: "",
+    officeAddress: "",
   },
   ladleInfo: {
     ConsigneeReference: "",
@@ -82,6 +82,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     VATAmount: 0,
     specialInstructions: "",
     termsAndConditions: "",
+    officeAddress: "",
   },
   AirwayInfo: {
     CustomerName: "",
@@ -105,7 +106,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     Flight: "",
     ReferenceNumber: "",
     HandlingInformation: "",
-    address: "",
+    officeAddress: "",
     Discount: 0,
     AccountingInformation: "",
     PaymentMethod: "",
@@ -144,7 +145,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     set((state) => ({ ...state, ladleInfo: j }));
   },
   manifestInfo: {
-    address: "",
+    officeAddress: "",
     Consolidation: "",
     Date: "",
     Discount: 0,
@@ -173,7 +174,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     MobileNumber: "",
     CompanyStamp: "",
     Remarks: "",
-    address: "",
+    officeAddress: "",
     Discount: 0,
     VATAmount: 0,
     specialInstructions: "",

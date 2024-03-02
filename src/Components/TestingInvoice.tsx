@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
 const TestingInvoice = () => {
   const { Items, jobInfo } = useinvoiceStore();
   const { Location } = useCompanyInfo();
-  const companyLocation = Location.find((l) => l.key === jobInfo.address);
+  const companyLocation = Location.find((l) => l.key === jobInfo.officeAddress);
   console.log(Items, "Item");
   console.log(jobInfo, "jobInfo");
 

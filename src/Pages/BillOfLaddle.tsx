@@ -992,7 +992,7 @@ const styles3 = StyleSheet.create({
   },
 });
 const InvoiceTableRow = ({ items }: { items: LadingItems[] }) => {
-  const rows = items.map((item: LadingItems, index) => (
+  const rows = items?.map((item: LadingItems, index) => (
     <View style={styles3.container} key={index} wrap={false}>
       <Text style={styles3.description}>{item.PackageDescription}</Text>
       <Text style={styles2.amount}>{item.ContainerNo}</Text>

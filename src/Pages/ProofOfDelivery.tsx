@@ -31,11 +31,9 @@ function ProofOfDelivery() {
       height: 66,
     },
   });
-  const { Items, jobInfo, ladingItems, ladleInfo } = useinvoiceStore();
+  const { PODInfo, PODItems } = useinvoiceStore();
   const { Location } = useCompanyInfo();
-  console.log("loca", Location);
-  const companyLocation = Location.find((l) => l.key === ladleInfo.address);
-  console.log("loca2", jobInfo);
+  const companyLocation = Location.find((l) => l.key === PODInfo.officeAddress);
 
   return (
     <PDFViewer className="w-full h-screen">
@@ -44,8 +42,9 @@ function ProofOfDelivery() {
           <PageHeader />
           <PresentationHeader />
           <Table />
-          <TableHeader />
-          <TableFooter />
+          <TableHeader podInfo={PODInfo} />
+          <TableRows podItems={PODItems} />
+          <PageFooter companyInfo={companyLocation!} />
         </Page>
       </Document>
     </PDFViewer>
@@ -136,12 +135,12 @@ function PresentationHeader() {
   );
 }
 
-function TableHeader() {
+function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
   return (
     <View
       style={{
         border: 1,
-        padding: 5,
+        padding: 15,
         flexDirection: "row",
         justifyContent: "space-between",
         marginVertical: 10,
@@ -149,72 +148,139 @@ function TableHeader() {
       }}
     >
       <View style={{ width: "50%", paddingLeft: 5, alignItems: "flex-start" }}>
-        <View>
+        <View style={{ minHeight: 20 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
+              textDecoration: "underline",
               textAlign: "center",
               fontWeight: "ultralight",
             }}
           >
-            Job No
+            Job No {podInfo.JobNo}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Description
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Description {podInfo.Description}
           </Text>
         </View>
-        <View>
+        <View style={{ minHeight: 20 }}>
           {" "}
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Transporter
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Transporter {podInfo.Transporter}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Shipper
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Shipper {podInfo.Shipper}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Delivery To
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Delivery To {podInfo.DeliveryTo}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Contact Person
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Contact Person {podInfo.ContactPerson}
           </Text>
         </View>
 
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Delivery Date
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Delivery Date {podInfo.DeliveryDate}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Time
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Time {podInfo.Time}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Receiver Name And Signature
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Receiver Name And Signature {podInfo.ReceiverNameAndSignature}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Mobile Number
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Mobile Number {podInfo.MobileNumber}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Company Stamp
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Company Stamp {podInfo.CompanyStamp}
           </Text>
         </View>
-        <View>
-          <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            Remarks (If any)
+        <View style={{ minHeight: 20 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+            }}
+          >
+            Remarks (If any) {podInfo.Remarks}
           </Text>
         </View>
       </View>
@@ -242,7 +308,13 @@ function HeaderItems() {
         padding: 5,
       }}
     >
-      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+      <Text
+        style={{
+          fontFamily: "Courier-Bold",
+          textDecoration: "underline",
+          textAlign: "center",
+        }}
+      >
         M.A.W.B
       </Text>
       <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
@@ -260,39 +332,75 @@ function HeaderItems() {
     </View>
   );
 }
+function TableRows({ podItems }: { podItems: ProofOfDeliveryItems[] }) {
+  const rows = podItems?.map((i, ind) => (
+    <View
+      key={ind}
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 10,
+        alignSelf: "center",
+        width: "80%",
+        border: 1,
+        padding: 5,
+      }}
+    >
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.MAWB}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.HAWBNo}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.NoOfPackages}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.Weight}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.CBM}
+      </Text>
+    </View>
+  ));
+  return <>{rows}</>;
+}
 
-function TableFooter() {
+function PageFooter({ companyInfo }: { companyInfo: CompanyLocationInfo }) {
   return (
     <View
       style={{
         position: "absolute",
         bottom: 10,
         width: "80%",
-        flexDirection: "row",
+        flexDirection: "column",
         borderTopWidth: 3,
-        padding: 20,
-        height: 30,
+        height: 80,
         borderTop: 2,
         alignSelf: "center",
         justifyContent: "center",
       }}
       fixed
     >
-      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-        License No{" "}
-      </Text>
-      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-        Office{" "}
-      </Text>
-      <View style={{ flexDirection: "row" }}>
+      <View>
         <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-          P.O Box{" "}
+          License No{" "}
+        </Text>
+      </View>
+      <View>
+        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+          Office {companyInfo?.office}
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+          P.O Box {companyInfo?.pobox}
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-          Country{" "}
+          Country {companyInfo?.country}
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-          Office Telephone{" "}
+          Office Telephone {companyInfo?.telephone}
         </Text>
       </View>
     </View>

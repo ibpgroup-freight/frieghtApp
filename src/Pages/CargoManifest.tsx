@@ -31,27 +31,36 @@ function CargoManifest() {
       height: 66,
     },
   });
-  const { Items, jobInfo, ladingItems, ladleInfo } = useinvoiceStore();
+  const { ManifestItems, ladleInfo, manifestInfo } = useinvoiceStore();
   const { Location } = useCompanyInfo();
   console.log("loca", Location);
-  const companyLocation = Location.find((l) => l.key === ladleInfo.address);
-  console.log("loca2", jobInfo);
+  const companyLocation = Location.find(
+    (l) => l.key === manifestInfo.officeAddress
+  );
+  console.log("loca2", ManifestItems);
 
   return (
     <PDFViewer className="w-full h-screen">
       <Document>
         <Page size="A4" style={styles.page}>
-          <ManifestHeader />
+          <ManifestHeader manifestInfo={manifestInfo} />
           <PresentationHeader />
-          <TableHeader />
-          <Table />
+          <TableHeader
+            manifestInfo={manifestInfo}
+            companyLocation={companyLocation!}
+          />
+          <Table manifestItems={ManifestItems} />
         </Page>
       </Document>
     </PDFViewer>
   );
 }
 
-function ManifestHeader() {
+function ManifestHeader({
+  manifestInfo,
+}: {
+  manifestInfo: CargoManifestInquiry;
+}) {
   return (
     <View
       style={{
@@ -67,7 +76,9 @@ function ManifestHeader() {
         />
       </View>
       <View style={{ width: "50%" }}>
-        <Text style={{ fontFamily: "Courier-Bold" }}>Testing Place</Text>
+        <Text style={{ fontFamily: "Courier-Bold" }}>
+          {manifestInfo.HeaderAddress}
+        </Text>
       </View>
     </View>
   );
@@ -116,7 +127,13 @@ function PresentationHeader() {
   );
 }
 
-function TableHeader() {
+function TableHeader({
+  manifestInfo,
+  companyLocation,
+}: {
+  manifestInfo: CargoManifestInquiry;
+  companyLocation: CompanyLocationInfo;
+}) {
   return (
     <View
       style={{
@@ -129,7 +146,53 @@ function TableHeader() {
         borderWidth: 2,
       }}
     >
-      <View style={{ width: "50%" }}></View>
+      <View style={{ width: "50%", alignItems: "flex-start" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            fontWeight: "ultralight",
+          }}
+        >
+          {companyLocation?.name}
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            fontWeight: "ultralight",
+          }}
+        >
+          {companyLocation?.location}
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            fontWeight: "ultralight",
+          }}
+        >
+          {companyLocation?.office}
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            fontWeight: "ultralight",
+          }}
+        >
+          {companyLocation?.telephone}
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            fontWeight: "ultralight",
+          }}
+        >
+          {companyLocation?.country}
+        </Text>
+      </View>
       <View style={{ width: "50%", paddingLeft: 5, alignItems: "flex-start" }}>
         <Text
           style={{
@@ -138,23 +201,23 @@ function TableHeader() {
             fontWeight: "ultralight",
           }}
         >
-          Consolidation{" "}
+          Consolidation {"       "} {manifestInfo.Consolidation}
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-          M.A.W.B{" "}
+          M.A.W.B {"       "} {manifestInfo.MAWB}
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-          Flights{" "}
+          Flights {"       "} {manifestInfo.Flights}
         </Text>
         <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-          Date{" "}
+          Date {"       "} {manifestInfo.Date}
         </Text>
         <View style={{ flexDirection: "row" }}>
           <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            From{" "}
+            From {"       "} {manifestInfo.From} {"       "}
           </Text>
           <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
-            To{" "}
+            To {"       "} {manifestInfo.To}
           </Text>
         </View>
       </View>
@@ -162,12 +225,42 @@ function TableHeader() {
   );
 }
 
-function Table() {
+function Table({ manifestItems }: { manifestItems: CargoManifestItems[] }) {
   return (
     <View>
       <HeaderItems />
+      <TableRows manifestItems={manifestItems} />
     </View>
   );
+}
+function TableRows({ manifestItems }: { manifestItems: CargoManifestItems[] }) {
+  if (!manifestItems) return null;
+  const rows = manifestItems?.map((i, ind) => (
+    <View
+      style={{ flexDirection: "row", justifyContent: "space-between" }}
+      key={ind}
+    >
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.HAWB}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.ParcelsWeight}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.Description}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.Shipper}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.Charges}
+      </Text>
+      <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        {i.Collect}
+      </Text>
+    </View>
+  ));
+  return <>{rows}</>;
 }
 function HeaderItems() {
   return (

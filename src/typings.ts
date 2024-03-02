@@ -197,7 +197,7 @@ type ladleInquiry = {
   ExportReference: string;
   ForwardingAgent: string;
   ConsigneeReference: string;
-  address: string;
+  address?: string;
 };
 type InvoiceStore = {
   jobInfo: cargoInfo & Inquiry;
@@ -227,7 +227,7 @@ type cargoInfo = {
   Discount: number;
   OutstandingDues: number;
   VATAmount: number;
-  address: string;
+  officeAddress: string;
   specialInstructions?: string;
   termsAndConditions?: string;
 };

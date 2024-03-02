@@ -52,7 +52,9 @@ function AirwayBill() {
   const { AirwayInfo, AirwayItems } = useinvoiceStore();
   const { Location } = useCompanyInfo();
   console.log("loca", Location);
-  const companyLocation = Location.find((l) => l.key === AirwayInfo.address);
+  const companyLocation = Location.find(
+    (l) => l.key === AirwayInfo.officeAddress
+  );
   console.log("loca2", AirwayItems);
 
   return (
