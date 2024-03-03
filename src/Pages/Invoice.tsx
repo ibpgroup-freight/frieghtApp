@@ -386,11 +386,20 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            Bill To {"   "}
+            Bill To {"   "} {jobInfo.CustomerName}
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
             {jobInfo.CustomerName}
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
       </View>
       <View
         style={{
@@ -408,10 +417,19 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             }}
           >
             TRN Number {"  "}
-            {jobInfo.CustomerTRN}
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerTRN}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -428,8 +446,18 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            Address {"   "}
-            {jobInfo.CustomerAddress}
+            Address {"  "}
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerAddress}
           </Text>
         </View>
       </View>

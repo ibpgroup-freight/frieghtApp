@@ -199,26 +199,12 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Customer TRN is required"),
-    Weight: yup
-      .string()
-      .when("type", {
-        is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Weight is required"),
-    Dimensions: yup.string().when("type", {
-      is: (type: string) =>
-        type !== "CargoManifest" && type !== "ProofOfDelivery",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    Weight: yup.string(),
+    Dimensions: yup.string(),
     ShipmentTerms: yup
       .string()
       .when("type", {
-        is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        is: (type: string) => type === "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -226,8 +212,7 @@ const validationSchema = yup.object().shape(
     TypeOfCargo: yup
       .string()
       .when("type", {
-        is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+        is: (type: string) => type === "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -575,12 +560,7 @@ function GenerateInvoice() {
       } else if (values.type === "ProofOfDelivery") {
         navigate("/proofOfDelivery");
       } else {
-        navigate("/testPdf", {
-          state: {
-            quotationItemsStore,
-            jobInfo: values,
-          },
-        });
+        navigate("/Invoice");
       }
     },
     validationSchema,
@@ -1133,7 +1113,7 @@ function GenerateInvoice() {
                   <option value={"AirFreight"}>AirFreight Invoice</option>
                   <option value={"RoadFreight"}>RoadFreight Invoice</option>
                   <option value={"SeaFreight"}>SeaFreight Invoice</option>
-                  <option value={"BillOfLading"}>Bill Of Lading</option>
+                  <option value={"BillOfLading"}>Bill Of Ladle</option>
                   <option value={"AirwayBill"}>AirWay Bill</option>
                   <option value={"CargoManifest"}>Cargo Manifest</option>
                   <option value={"ProofOfDelivery"}>Proof Of Delivery</option>
