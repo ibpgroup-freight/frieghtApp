@@ -494,6 +494,8 @@ function GenerateInvoice() {
     setAirwayBillItems,
     setManifestInfo,
     setPODInfo,
+    setManifestItems,
+    setPODItems,
   } = useinvoiceStore();
   const { setInformation } = useCompanyInfo();
   const { setItemInquiry, inquiry, resetInquiry } = useInquiryItem();
@@ -507,8 +509,8 @@ function GenerateInvoice() {
     setBillOfLadingItems,
     AirwayItems,
     setAirwayItems,
-    setManifestItems,
-    setPODItems,
+    setManifestItems: manifestItem,
+    setPODItems: PodItem,
   } = useItemStore();
   const navigate = useNavigate();
   const [loadingdetails, setloadingdetails] = useState<boolean>(false);
@@ -1100,12 +1102,12 @@ function GenerateInvoice() {
                     : formikObj.values.type === "AirwayBill"
                     ? setAirwayItems([...AirwayItems, item as AirwayItem])
                     : formikObj.values.type === "ProofOfDelivery"
-                    ? setPODItems([
+                    ? PodItem([
                         ...quotationPODItems,
                         item as ProofOfDeliveryItems,
                       ])
                     : formikObj.values.type === "CargoManifest"
-                    ? setManifestItems([
+                    ? manifestItem([
                         ...quotationManifestItems,
                         item as CargoManifestItems,
                       ])

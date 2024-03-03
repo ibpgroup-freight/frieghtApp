@@ -25,6 +25,7 @@ function ProofOfDelivery() {
       borderColor: "black",
       width: "100%",
       height: "100%",
+      paddingVertical: 20,
     },
     logo: {
       width: 74,
@@ -42,8 +43,9 @@ function ProofOfDelivery() {
           <PageHeader />
           <PresentationHeader />
           <Table />
-          <TableHeader podInfo={PODInfo} />
           <TableRows podItems={PODItems} />
+
+          <TableHeader podInfo={PODInfo} />
           <PageFooter companyInfo={companyLocation!} />
         </Page>
       </Document>
@@ -148,140 +150,204 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
       }}
     >
       <View style={{ width: "50%", paddingLeft: 5, alignItems: "flex-start" }}>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
               fontWeight: "ultralight",
             }}
           >
-            Job No {podInfo.JobNo}
+            Job No
           </Text>
+          <Text style={{ fontFamily: "Courier" }}> {podInfo.JobNo}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Description {podInfo.Description}
+            Description
           </Text>
+          <Text style={{ fontFamily: "Courier" }}> {podInfo.Description}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
-          {" "}
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Transporter {podInfo.Transporter}
+            Transporter
           </Text>
+          <Text style={{ fontFamily: "Courier" }}> {podInfo.Transporter}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Shipper {podInfo.Shipper}
+            Shipper
           </Text>
+          <Text style={{ fontFamily: "Courier" }}>{podInfo.Shipper}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Delivery To {podInfo.DeliveryTo}
+            Delivery To
           </Text>
+          <Text style={{ fontFamily: "Courier" }}> {podInfo.DeliveryTo}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Contact Person {podInfo.ContactPerson}
+            Contact Person
+          </Text>
+          <Text style={{ fontFamily: "Courier" }}>
+            {" "}
+            {podInfo.ContactPerson}
           </Text>
         </View>
 
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Delivery Date {podInfo.DeliveryDate}
+            Delivery Date
+          </Text>
+          <Text style={{ fontFamily: "Courier" }}>{podInfo.DeliveryDate}</Text>
+        </View>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+              fontSize: 13,
+            }}
+          >
+            Time
+          </Text>
+          <Text style={{ fontFamily: "Courier" }}>{podInfo.Time}</Text>
+        </View>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              textDecoration: "underline",
+              textAlign: "center",
+              fontSize: 13,
+            }}
+          >
+            Receiver Name And Signature
+          </Text>
+          <Text style={{ fontFamily: "Courier" }}>
+            {podInfo.ReceiverNameAndSignature}
           </Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Time {podInfo.Time}
+            Mobile Number
           </Text>
+          <Text style={{ fontFamily: "Courier" }}>{podInfo.MobileNumber}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Receiver Name And Signature {podInfo.ReceiverNameAndSignature}
+            Company Stamp
           </Text>
+          <Text style={{ fontFamily: "Courier" }}>{podInfo.CompanyStamp}</Text>
         </View>
-        <View style={{ minHeight: 20 }}>
+        <View
+          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          wrap={false}
+        >
           <Text
             style={{
               fontFamily: "Courier-Bold",
               textDecoration: "underline",
               textAlign: "center",
+              fontSize: 13,
             }}
           >
-            Mobile Number {podInfo.MobileNumber}
+            Remarks (If any)
           </Text>
-        </View>
-        <View style={{ minHeight: 20 }}>
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-              textDecoration: "underline",
-              textAlign: "center",
-            }}
-          >
-            Company Stamp {podInfo.CompanyStamp}
-          </Text>
-        </View>
-        <View style={{ minHeight: 20 }}>
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-              textDecoration: "underline",
-              textAlign: "center",
-            }}
-          >
-            Remarks (If any) {podInfo.Remarks}
-          </Text>
+          <Text style={{ fontFamily: "Courier" }}>{podInfo.Remarks}</Text>
         </View>
       </View>
     </View>
@@ -301,7 +367,7 @@ function HeaderItems() {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        marginVertical: 10,
+        marginTop: 10,
         alignSelf: "center",
         width: "80%",
         border: 1,
@@ -339,12 +405,12 @@ function TableRows({ podItems }: { podItems: ProofOfDeliveryItems[] }) {
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
-        marginVertical: 10,
         alignSelf: "center",
         width: "80%",
         border: 1,
         padding: 5,
       }}
+      wrap={false}
     >
       <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
         {i.MAWB}
