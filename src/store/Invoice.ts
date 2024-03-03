@@ -50,6 +50,8 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     PlaceOfReceipt: "",
     specialInstructions: "",
     termsAndConditions: "",
+    dueDate: "",
+    PostingDate: "",
   },
   ladleInfo: {
     ConsigneeReference: "",

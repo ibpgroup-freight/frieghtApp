@@ -45,6 +45,8 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     PlaceOfDelivery: "",
     PlaceOfIssue: "",
     PlaceOfReceipt: "",
+    dueDate: "",
+    PostingDate: "",
   },
   setItemInquiry: (i) => {
     set((state) => {
@@ -97,6 +99,8 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           PlaceOfDelivery: "",
           PlaceOfIssue: "",
           PlaceOfReceipt: "",
+          dueDate: "",
+          PostingDate: "",
         },
       };
     });

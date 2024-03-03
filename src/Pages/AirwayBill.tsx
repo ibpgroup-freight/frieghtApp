@@ -180,11 +180,17 @@ function Column1({
             }}
           >
             <Text>Shippers Account Number</Text>
-            <Text>{companyInfo?.BankInfo?.IBAN}</Text>
+            <Text
+              style={{
+                fontFamily: "Courier",
+              }}
+            >
+              {companyInfo?.BankInfo?.IBAN}
+            </Text>
           </View>
         </View>
 
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 12 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 12 }}>
           {companyInfo?.name} {"\n"}
           {companyInfo?.office} {"\n"}
           {companyInfo?.location} {"\n"}
@@ -235,10 +241,16 @@ function Column1({
             }}
           >
             <Text> Consignees Account Number</Text>
-            <Text>{jobInfo.CustomerAccount || ""}</Text>
+            <Text
+              style={{
+                fontFamily: "Courier",
+              }}
+            >
+              {jobInfo.CustomerAccount || ""}
+            </Text>
           </View>
         </View>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 12 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 12 }}>
           {jobInfo.CustomerName}
           {"\n"}
           {jobInfo.CustomerEmail}
@@ -275,6 +287,13 @@ function Column1({
           >
             Issuing Carrier's Agent Name and City
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier",
+
+              width: "100%",
+            }}
+          ></Text>
         </View>
       </View>
       <View
@@ -297,6 +316,13 @@ function Column1({
           >
             Agents IATA Code
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier",
+            }}
+          >
+            {jobInfo.AgentsIATA}
+          </Text>
         </View>
         <View style={{}}>
           <Text
@@ -306,6 +332,11 @@ function Column1({
           >
             Account No
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier",
+            }}
+          ></Text>
         </View>
       </View>
       <View
@@ -328,7 +359,13 @@ function Column1({
           >
             Accounting Information
           </Text>
-          <Text style={{}}>{jobInfo.AccountingInformation}</Text>
+          <Text
+            style={{
+              fontFamily: "Courier",
+            }}
+          >
+            {jobInfo.AccountingInformation}
+          </Text>
         </View>
       </View>
 
@@ -363,7 +400,7 @@ function Column1({
             </Text>
           </Text>
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.AirportOfOrigin}
         </Text>
       </View>
@@ -386,7 +423,7 @@ function Column1({
         >
           Airport Of Destination
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.AirportOfDestination}
         </Text>
       </View>
@@ -409,7 +446,9 @@ function Column1({
         >
           Flight Details
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}></Text>
+        <Text style={{ fontFamily: "Courier", fontSize: 9 }}>
+          {jobInfo.FlightDetails}
+        </Text>
       </View>
       <View
         style={{
@@ -430,7 +469,7 @@ function Column1({
         >
           Handling Information
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.HandlingInformation}
         </Text>
       </View>
@@ -457,6 +496,7 @@ function Column1({
           style={{
             textDecoration: "none",
             marginLeft: 5,
+            fontFamily: "Courier",
           }}
         >
           {jobInfo.PaymentMethod}
@@ -517,12 +557,12 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRightColor: "black",
           width: "100%",
           padding: 4,
-          height: 135,
+          height: 145,
           borderBottom: 1,
           borderBottomColor: "black",
         }}
       >
-        <Text style={{ fontSize: 9 }}>
+        <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
           It is agreed that the goods described herein are accepted in apparent
           good order and condition (except as noted) for carriage SUBJECT TO THE
           CONDITIONS OF CONTRACT ON THE REVERSE HEREOF. ALL GOODS MAY BE CARRIED
@@ -560,6 +600,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             Currency
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.Currency}
+          </Text>
         </View>
         <View style={{ width: "15%", height: 30, borderRight: 1 }}>
           <Text
@@ -569,59 +617,118 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             Chgs Code
           </Text>
-        </View>
-        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
           <Text
             style={{
               fontSize: 9,
             }}
           >
-            Wt/Val
+            {jobInfo.ChargesCode}
           </Text>
-          <View style={{ flexDirection: "row", borderBottom: 1 }}>
+        </View>
+        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+          <View>
             <Text
               style={{
-                fontSize: 7,
-                borderRightColor: "black",
-                borderRightWidth: 1,
+                fontSize: 9,
               }}
             >
-              PPD
-            </Text>{" "}
-            <Text
-              style={{
-                fontSize: 7,
-              }}
-            >
-              COLL
+              Wt/Val
             </Text>
+            <View style={{ flexDirection: "row", borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontSize: 7,
+                  borderRightColor: "black",
+                  borderRightWidth: 1,
+                }}
+              >
+                PPD
+              </Text>{" "}
+              <Text
+                style={{
+                  fontSize: 7,
+                }}
+              >
+                COLL
+              </Text>
+            </View>
+          </View>
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 7,
+                  borderRightColor: "black",
+                }}
+              >
+                {jobInfo.WVPPD}
+              </Text>{" "}
+              <Text
+                style={{
+                  fontSize: 7,
+                }}
+              >
+                {jobInfo.WVColl}
+              </Text>
+            </View>
           </View>
         </View>
         <View style={{ width: "15%", height: 30, borderRight: 1 }}>
-          <Text
-            style={{
-              fontSize: 9,
-            }}
-          >
-            Other
-          </Text>
-          <View style={{ flexDirection: "row", borderBottom: 1 }}>
+          <View>
             <Text
               style={{
-                fontSize: 7,
-                borderRightColor: "black",
-                borderRightWidth: 1,
+                fontSize: 9,
               }}
             >
-              PPD
-            </Text>{" "}
-            <Text
-              style={{
-                fontSize: 7,
-              }}
-            >
-              COLL
+              Other
             </Text>
+            <View style={{ flexDirection: "row", borderBottom: 1 }}>
+              <Text
+                style={{
+                  fontSize: 7,
+                  borderRightColor: "black",
+                  borderRightWidth: 1,
+                }}
+              >
+                PPD
+              </Text>{" "}
+              <Text
+                style={{
+                  fontSize: 7,
+                }}
+              >
+                COLL
+              </Text>
+            </View>
+          </View>
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 7,
+                  borderRightColor: "black",
+                }}
+              >
+                {jobInfo.OtherPPD}
+              </Text>{" "}
+              <Text
+                style={{
+                  fontSize: 7,
+                }}
+              >
+                {jobInfo.OtherColl}
+              </Text>
+            </View>
           </View>
         </View>
         <View style={{ width: "15%", height: 30, borderRight: 1 }}>
@@ -631,6 +738,15 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             }}
           >
             Declared Value for Carriage
+          </Text>{" "}
+          <Text
+            style={{
+              fontSize: 8,
+              marginTop: 9,
+              fontFamily: "Courier",
+            }}
+          >
+            {jobInfo.DeclaredValCarriage}
           </Text>
         </View>
         <View style={{ width: "15%", height: 30 }}>
@@ -640,6 +756,15 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             }}
           >
             Declared Value for Customs
+          </Text>
+          <Text
+            style={{
+              fontSize: 8,
+              marginTop: 9,
+              fontFamily: "Courier",
+            }}
+          >
+            {jobInfo.DeclaredValCustoms}
           </Text>
         </View>
       </View>
@@ -664,7 +789,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             Reference Number
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
             {jobInfo.ReferenceNumber}
           </Text>
         </View>
@@ -678,7 +803,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             Optional Shipping Information
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 8 }}>
+          <Text style={{ fontFamily: "Courier", fontSize: 8 }}>
             {jobInfo.othershippingDetails}
           </Text>
         </View>
@@ -695,13 +820,23 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderBottomColor: "black",
         }}
       >
-        <Text
-          style={{
-            fontFamily: "Courier-Bold",
-          }}
-        >
-          Insurance Information
-        </Text>
+        <View>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+            }}
+          >
+            Insurance Information
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Courier",
+            }}
+          >
+            {jobInfo.AmountInsurance}
+          </Text>
+        </View>
+
         <Text style={{ fontSize: 8 }}>
           INSURANCE - If Carrier offers insurance, and such insurance is
           requested in accordance with the conditions thereof, indicate amount
@@ -727,6 +862,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           }}
         >
           Requested Flight / Date
+        </Text>
+        <Text
+          style={{
+            fontFamily: "Courier",
+            fontSize: 9,
+          }}
+        >
+          {jobInfo.RequestedFlight}
         </Text>
       </View>
       <View
@@ -948,6 +1091,15 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   >
                     Pre
                   </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.PPDWeight}
+                  </Text>
                 </View>
 
                 <View style={{ width: "50%" }}>
@@ -958,7 +1110,16 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     }}
                   >
                     Collect
-                  </Text>{" "}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.CollWeight}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -990,6 +1151,15 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   >
                     Pre
                   </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.PPDValuation}
+                  </Text>
                 </View>
 
                 <View style={{ width: "50%" }}>
@@ -1000,7 +1170,16 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     }}
                   >
                     Collect
-                  </Text>{" "}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.CollValuation}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1032,6 +1211,15 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   >
                     Pre
                   </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.PPDTax}
+                  </Text>
                 </View>
 
                 <View style={{ width: "50%" }}>
@@ -1042,7 +1230,16 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     }}
                   >
                     Collect
-                  </Text>{" "}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: "Courier",
+                      textAlign: "center",
+                    }}
+                  >
+                    {jobInfo.CollTax}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1075,6 +1272,13 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   >
                     Pre
                   </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  ></Text>
                 </View>
 
                 <View style={{ width: "50%" }}>
@@ -1140,7 +1344,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 9,
+                    fontSize: 12,
                   }}
                 >
                   Total Prepaid
@@ -1152,7 +1356,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 9,
+                    fontSize: 12,
                   }}
                 >
                   Total Collect
@@ -1171,11 +1375,19 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   style={{
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
-
-                    fontSize: 9,
+                    fontSize: 12,
                   }}
                 >
-                  Currenct Conversion Rate
+                  Currency Conversion Rate
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontFamily: "Courier",
+                    textAlign: "center",
+                  }}
+                >
+                  {jobInfo.CurrConv}
                 </Text>
               </View>
               <View style={{ width: "50%" }}>
@@ -1184,10 +1396,19 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 9,
+                    fontSize: 12,
                   }}
                 >
                   CC charges in Dest. Currency
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontFamily: "Courier",
+                    textAlign: "center",
+                  }}
+                >
+                  {jobInfo.CCChargesinDestCurr}
                 </Text>
               </View>
             </View>
@@ -1211,7 +1432,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 9,
+                    fontSize: 12,
                   }}
                 >
                   Charges at Destination

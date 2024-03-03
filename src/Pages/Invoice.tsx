@@ -33,7 +33,7 @@ function Invoice() {
   });
   const { jobInfo, Items } = useinvoiceStore();
   const { Location } = useCompanyInfo();
-  console.log("loca", Location);
+  console.log("loca", jobInfo);
   const companyLocation = Location.find(
     (l) => l.key === jobInfo?.officeAddress
   );
@@ -135,12 +135,18 @@ const CompanyInfo = ({
 }) => {
   return (
     <View style={styles.headerContainer}>
-      <About companyLocation={location} />
+      <About companyLocation={location} jobInfo={jobInfo} />
     </View>
   );
 };
 
-function About({ companyLocation }: { companyLocation: CompanyLocationInfo }) {
+function About({
+  companyLocation,
+  jobInfo,
+}: {
+  companyLocation: CompanyLocationInfo;
+  jobInfo: Inquiry & cargoInfo;
+}) {
   return (
     <>
       <View
@@ -225,12 +231,12 @@ function About({ companyLocation }: { companyLocation: CompanyLocationInfo }) {
         </View>
       </View>
 
-      <AuxiliaryInfo />
+      <AuxiliaryInfo jobInfo={jobInfo} />
     </>
   );
 }
 
-function AuxiliaryInfo() {
+function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
   return (
     <View
       style={{
@@ -260,7 +266,17 @@ function AuxiliaryInfo() {
             Posting Date
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.PostingDate}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -280,7 +296,17 @@ function AuxiliaryInfo() {
             Due Date
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.dueDate}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -300,7 +326,21 @@ function AuxiliaryInfo() {
             Origin
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.type.includes("road") || jobInfo.type.includes("Road")
+              ? jobInfo.PlaceOfOrigin
+              : jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
+              ? jobInfo.PortOfOrigin
+              : jobInfo.AirportOfOrigin}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -320,7 +360,21 @@ function AuxiliaryInfo() {
             Destination
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.type.includes("road") || jobInfo.type.includes("Road")
+              ? jobInfo.PlaceOfDestination
+              : jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
+              ? jobInfo.PortOfDestination
+              : jobInfo.AirportOfDestination}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -386,7 +440,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            Bill To {"   "} {jobInfo.CustomerName}
+            Bill To {"   "}
           </Text>
         </View>
         <View style={{ width: "70%" }}>
@@ -514,7 +568,17 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             bl # {"  "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}> {jobInfo?.blNo}</View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.blNo}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -534,7 +598,17 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Served By {"   "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}>{jobInfo?.SalesPerson}</View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.SalesPerson}
+          </Text>{" "}
+        </View>
       </View>
       <View
         style={{
@@ -554,7 +628,19 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Job #
           </Text>
         </View>
-        <View style={{ width: "70%" }}> {jobInfo?.Jobid}</View>
+        <View style={{ width: "70%" }}>
+          {" "}
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {" "}
+            {jobInfo?.Jobid}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -574,7 +660,17 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             H.A.W.B
           </Text>
         </View>
-        <View style={{ width: "70%" }}>{jobInfo?.HAWB}</View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.HAWB}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -864,11 +960,14 @@ function TableFooterCol2({
 }) {
   const Total = items.reduce((acc, i, index) => {
     acc += parseInt(i.RateAmountPerUnit);
-    acc = acc - i.Discount! ?? 0;
-    acc = acc + i.VAT! ?? 0;
+    acc = acc - (i.Discount ?? 0);
+    acc = acc + (i.VAT ?? 0);
     return acc;
   }, 0);
   const TWO = Total + jobInfo.OutstandingDues;
+  console.log("Titems", items);
+  console.log("Total", Total);
+  console.log("TWo", TWO);
   return (
     <View
       style={{
@@ -906,7 +1005,18 @@ function TableFooterCol2({
             Total Before VAT
           </Text>
         </View>
-        <View style={{ width: "40%" }}>{Total}</View>
+        <View style={{ width: "40%" }}>
+          {" "}
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {Total}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -1046,7 +1156,17 @@ function TableFooterCol2({
             Outstanding Dues
           </Text>
         </View>
-        <View style={{ width: "40%" }}>{TWO}</View>
+        <View style={{ width: "40%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {TWO}
+          </Text>
+        </View>
       </View>
     </View>
   );

@@ -73,7 +73,9 @@ type Inquiry = {
   PlaceOfDelivery?: string;
   Movement?: string;
   blNo: string;
-  HAWB?: string;
+  HAWB: string;
+  dueDate: string;
+  PostingDate: string;
 };
 type InquiryStore = {
   inquiry: Inquiry;
