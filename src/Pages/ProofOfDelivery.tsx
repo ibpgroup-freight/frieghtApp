@@ -151,7 +151,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
     >
       <View style={{ width: "50%", paddingLeft: 5, alignItems: "flex-start" }}>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -168,7 +168,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}> {podInfo.JobNo}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -184,7 +184,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}> {podInfo.Description}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -200,7 +200,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}> {podInfo.Transporter}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -216,7 +216,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}>{podInfo.Shipper}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -232,7 +232,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}> {podInfo.DeliveryTo}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -252,7 +252,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
         </View>
 
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -268,7 +268,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}>{podInfo.DeliveryDate}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -284,7 +284,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}>{podInfo.Time}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -302,7 +302,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           </Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -318,7 +318,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}>{podInfo.MobileNumber}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
@@ -334,7 +334,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text style={{ fontFamily: "Courier" }}>{podInfo.CompanyStamp}</Text>
         </View>
         <View
-          style={{ minHeight: 35, flexDirection: "row", gap: 30 }}
+          style={{ minHeight: 15, flexDirection: "row", gap: 30 }}
           wrap={false}
         >
           <Text
