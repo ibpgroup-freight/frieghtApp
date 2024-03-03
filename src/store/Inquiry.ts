@@ -38,6 +38,13 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     method: "",
     othershippingDetails: "",
     quotationId: "",
+    blNo: "",
+    HAWB: "",
+    Movement: "",
+    PayableAt: "",
+    PlaceOfDelivery: "",
+    PlaceOfIssue: "",
+    PlaceOfReceipt: "",
   },
   setItemInquiry: (i) => {
     set((state) => {
@@ -83,6 +90,13 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           VesselDetails: "",
           VesselName: "",
           quotationId: "",
+          blNo: "",
+          HAWB: "",
+          Movement: "",
+          PayableAt: "",
+          PlaceOfDelivery: "",
+          PlaceOfIssue: "",
+          PlaceOfReceipt: "",
         },
       };
     });

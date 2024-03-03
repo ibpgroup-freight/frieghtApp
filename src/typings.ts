@@ -27,6 +27,9 @@ type QuotationItem = {
   // maxUnits: string;
   Units: string;
   Weight: string;
+  quantity?: number;
+  Discount?: number;
+  VAT?: number;
 };
 type Inquiry = {
   CustomerName: string;
@@ -69,6 +72,8 @@ type Inquiry = {
   PayableAt?: string;
   PlaceOfDelivery?: string;
   Movement?: string;
+  blNo: string;
+  HAWB?: string;
 };
 type InquiryStore = {
   inquiry: Inquiry;
@@ -181,15 +186,15 @@ type ladleInquiry = {
   CustomerTRN: string;
   CustomerEmail: string;
   CustomerPhoneNo: string;
-  VesselDetails?: string;
   othershippingDetails?: string;
   jobInitials: string;
   method: string;
-  PlaceOfIssue?: string;
-  PlaceOfReceipt?: string;
-  PayableAt?: string;
-  PlaceOfDelivery?: string;
-  Movement?: string;
+  PlaceOfIssue: string;
+  DateOfIssue: string;
+  PlaceOfReceipt: string;
+  PayableAt: string;
+  PlaceOfDelivery: string;
+  Movement: string;
   NotifyAddress: string;
   Currency: string;
   PortOfLoading: string;
@@ -197,7 +202,17 @@ type ladleInquiry = {
   ExportReference: string;
   ForwardingAgent: string;
   ConsigneeReference: string;
-  address?: string;
+  address: string;
+  BLNo: string;
+  CarrierReference: string;
+  VoyageNo: string;
+  Carrier: string;
+  ContainersReceived: string;
+  PackagesReceived: string;
+  FreightPrepaid: string;
+  FreightCollected: string;
+  TotalFreight: string;
+  OriginalBSL: string;
 };
 type InvoiceStore = {
   jobInfo: cargoInfo & Inquiry;
@@ -292,10 +307,10 @@ type CompanyBankInfo = {
 type AirwayBillInquiry = {
   CustomerName: string;
   CustomerAddress: string;
-  SalesPerson?: string;
-  AirportOfOrigin?: string;
-  AirportOfDestination?: string;
-  RouteDetails?: string;
+  SalesPerson: string;
+  AirportOfOrigin: string;
+  AirportOfDestination: string;
+  RouteDetails: string;
   TransitTime: string;
   FlightDetails: string;
   ShipmentTerms: string;
@@ -304,7 +319,7 @@ type AirwayBillInquiry = {
   CustomerAccount: string;
   CustomerEmail: string;
   CustomerPhoneNo: string;
-  othershippingDetails?: string;
+  othershippingDetails: string;
   jobInitials?: string;
   method: string;
   Currency: string;
@@ -314,6 +329,34 @@ type AirwayBillInquiry = {
   PaymentMethod: string;
   AccountingInformation: string;
   RequestedFlight: string;
+  AgentsIATA: string;
+  ModeOfPayment: string;
+  ChargesCode: string;
+  WVPPD: string;
+  WVColl: string;
+  OtherPPD: string;
+  OtherColl: string;
+  DeclaredValCarriage: string;
+  DeclaredValCustoms: string;
+  AmountInsurance: string;
+  ShipperName: string;
+  ShipperPhone: string;
+  ShipperAddress: string;
+  OtherShipperInfo: string;
+  ShippersAccount: string;
+  ConsigneesAccount: string;
+  SCI: string;
+  PPDWeight: string;
+  PPDValuation: string;
+  PPDTax: string;
+  PPDOther: string;
+  CollWeight: string;
+  CollValuation: string;
+  CollTax: string;
+  CollOther: string;
+  CurrConv: string;
+  CCChargesinDestCurr: string;
+  ChargesAtDestination: string;
 };
 
 type AirwayItem = {

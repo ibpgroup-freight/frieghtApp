@@ -19,6 +19,7 @@ import Ejspagestest from "./Pages/ejspagestest.js";
 import { collection, getDocs } from "firebase/firestore";
 import useCompanyInfo from "./store/CompanyInfo";
 import ProofOfDelivery from "./Pages/ProofOfDelivery";
+import Invoice from "./Pages/Invoice";
 const CargoManifest = React.lazy(() => import("./Pages/CargoManifest"));
 const GenerateJob = React.lazy(() => import("./Pages/GenerateJob"));
 const BillOfLaddle = React.lazy(() => import("./Pages/BillOfLaddle"));
@@ -87,6 +88,8 @@ function App() {
                 <Route path="/generateInvoice" Component={GenerateInvoice} />
                 <Route path="/manageContacts" Component={Contacts} />
                 <Route path="/invoicePdf" Component={InvoicePdf} />
+                <Route path="/invoice" Component={Invoice} />
+
                 <Route path="/testPdf" Component={TestingInvoice} />
                 <Route path="/manageUsers" Component={ManageUsers} />
                 <Route path="/search" Component={SearchPage} />

@@ -90,20 +90,44 @@ const TestingInvoice = () => {
     <PDFViewer className="w-full h-screen">
       <Document>
         <Page size="A4" style={styles.page} wrap>
-          <View
+          <Text
+            render={({ pageNumber, totalPages }) => (
+              <Text>
+                Page. {pageNumber} / {totalPages}
+              </Text>
+            )}
             fixed
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          />
+          <View
+            style={{
+              width: "100%",
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 20,
+              borderBottomColor: "red",
+              borderBottomWidth: 2,
+            }}
           >
-            <Image style={styles.logo} src={logo} fixed />
             <View
-              render={({ pageNumber }) => <Text>Page. {pageNumber}</Text>}
               fixed
-            />
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "25%",
+              }}
+            >
+              <Image style={styles.logo} src={logo} fixed />
+            </View>
+            <View style={{ width: "70%", alignItems: "flex-start" }}>
+              <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
+                IBP Cargo Services L.L.C
+              </Text>
+            </View>
           </View>
 
           <InvoiceTitle title={jobInfo.type.toUpperCase() + " Invoice"} />
           <InvoiceNo jobInfo={jobInfo} location={companyLocation!} />
-          <BillTo jobInfo={jobInfo} />
+          <BillTo jobInfo={jobInfo} location={companyLocation!} />
           <TableShipmentDetails jobInfo={jobInfo} />
           <OtherShipmentDetails jobInfo={jobInfo} />
           <InvoiceItemsTable Items={Items} jobInfo={jobInfo} />
@@ -122,7 +146,7 @@ const TestingInvoice = () => {
                 style={{
                   width: "20%",
                   textDecoration: "underline",
-                  color: "dodgerblue",
+                  color: "red",
                 }}
               >
                 Sales Conditions:
@@ -158,7 +182,7 @@ const TestingInvoice = () => {
                 style={{
                   width: "20%",
                   textDecoration: "underline",
-                  color: "dodgerblue",
+                  color: "red",
                 }}
               >
                 Payment Terms
@@ -183,9 +207,9 @@ const TestingInvoice = () => {
                 marginVertical: 5,
               }}
             >
-              <Text style={{ color: "dodgerblue" }}>Check For Agreement</Text>
-              <Text style={{ color: "dodgerblue" }}>Date</Text>
-              <Text style={{ color: "dodgerblue" }}>Company Stamp</Text>
+              <Text style={{ color: "red" }}>Check For Agreement</Text>
+              <Text style={{ color: "red" }}>Date</Text>
+              <Text style={{ color: "red" }}>Company Stamp</Text>
             </View>
           </View>
           <View
@@ -195,7 +219,7 @@ const TestingInvoice = () => {
               bottom: 0,
               height: 20,
               width: "100%",
-              backgroundColor: "dodgerblue",
+              backgroundColor: "red",
               marginTop: 20,
             }}
           ></View>
