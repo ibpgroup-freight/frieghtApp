@@ -1387,7 +1387,7 @@ function GenerateInvoice() {
                   <option value={"AirFreight"}>AirFreight Invoice</option>
                   <option value={"RoadFreight"}>RoadFreight Invoice</option>
                   <option value={"SeaFreight"}>SeaFreight Invoice</option>
-                  <option value={"BillOfLading"}>Bill Of Ladle</option>
+                  <option value={"BillOfLading"}>Bill Of Lading</option>
                   <option value={"AirwayBill"}>AirWay Bill</option>
                   <option value={"CargoManifest"}>Cargo Manifest</option>
                   <option value={"ProofOfDelivery"}>Proof Of Delivery</option>
