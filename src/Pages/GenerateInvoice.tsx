@@ -486,7 +486,7 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    HAWB: yup.string().required(),
+    HAWB: yup.string(),
     address: yup.string().when("type", {
       is: (type: string) => type === "BillOfLading",
       then: (schema) => schema.required(),
