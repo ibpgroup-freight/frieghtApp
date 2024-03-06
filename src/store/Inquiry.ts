@@ -47,11 +47,36 @@ const useInquiryItem = create<InquiryStore>((set) => ({
     PlaceOfReceipt: "",
     dueDate: "",
     PostingDate: "",
+    Arrival: "",
+    Department: "",
+    Incharge: "",
+    IncoTerm: "",
+    Periodicity: "",
+    validFrom: "",
+    validTo: "",
+    Yref: "",
   },
+  address: "",
+  setaddress(address) {
+    set((state) => ({ ...state, address }));
+  },
+  prestation: [],
   setItemInquiry: (i) => {
     set((state) => {
       return { inquiry: i };
     });
+  },
+  resetPrestation() {
+    set((state) => ({ ...state, prestation: [] }));
+  },
+  setPrestation(i) {
+    set((state) => {
+      state.prestation.push(i);
+      return { ...state };
+    });
+  },
+  setPrestationArray(i) {
+    set((state) => ({ ...state, prestation: i }));
   },
   resetInquiry: () => {
     set((state) => {
@@ -101,6 +126,15 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           PlaceOfReceipt: "",
           dueDate: "",
           PostingDate: "",
+          AdditionalInfo: "",
+          Arrival: "",
+          Department: "",
+          Incharge: "",
+          IncoTerm: "",
+          Periodicity: "",
+          validFrom: "",
+          validTo: "",
+          Yref: "",
         },
       };
     });

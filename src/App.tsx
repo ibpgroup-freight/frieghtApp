@@ -26,6 +26,7 @@ const BillOfLaddle = React.lazy(() => import("./Pages/BillOfLaddle"));
 const Analytics = React.lazy(() => import("./Pages/Analytics"));
 const ManageUsers = React.lazy(() => import("./Pages/ManageUsers"));
 const Contacts = React.lazy(() => import("./Pages/Contacts"));
+const QuotationDoc = React.lazy(() => import("./Pages/QuotationDoc"));
 
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
@@ -91,6 +92,8 @@ function App() {
                 <Route path="/invoice" Component={Invoice} />
 
                 <Route path="/testPdf" Component={TestingInvoice} />
+                <Route path="/quotationDoc" Component={QuotationDoc} />
+
                 <Route path="/manageUsers" Component={ManageUsers} />
                 <Route path="/search" Component={SearchPage} />
                 <Route path="/analytics" Component={Analytics} />

@@ -30,6 +30,7 @@ type QuotationItem = {
   quantity?: number;
   Discount?: number;
   VAT?: number;
+  Dimensions: string;
 };
 type Inquiry = {
   CustomerName: string;
@@ -76,11 +77,31 @@ type Inquiry = {
   HAWB: string;
   dueDate: string;
   PostingDate: string;
+  Arrival?: string;
+  IncoTerm?: string;
+  Periodicity?: string;
+  Department?: string;
+  Yref?: string;
+  Incharge?: string;
+  validFrom?: string;
+  validTo?: string;
+  termsAndConditions?: string;
+};
+type PrestationItem = {
+  description: string;
+  currency: string;
+  total: number;
 };
 type InquiryStore = {
   inquiry: Inquiry;
+  address: string;
   setItemInquiry: (i: Inquiry) => void;
   resetInquiry: () => void;
+  setPrestation: (i: PrestationItem) => void;
+  resetPrestation: () => void;
+  prestation: PrestationItem[];
+  setaddress: (address: string) => void;
+  setPrestationArray: (i: PrestationItem[]) => void;
 };
 type actionType = keyof Inquiry;
 type action = {

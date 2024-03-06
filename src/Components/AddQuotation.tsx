@@ -255,6 +255,7 @@ function AddQuotation({
     validationSchema,
     onSubmit: (values) => {
       try {
+        console.log(values);
         !AddItemToInvoice
           ? values.type === "BillOfLading"
             ? AddLadingItem({

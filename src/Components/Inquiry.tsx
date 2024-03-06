@@ -8,7 +8,7 @@ const RoadvalidationSchema = Yup.object().shape(
     CustomerName: Yup.string().required("Customer Name is required"),
     CustomerAddress: Yup.string().required("Customer Address is required"),
     CustomerEmail: Yup.string().required("Customer Email is required"),
-    CustomerPhoneNo: Yup.string().required("Customer Phone Number is required"),
+    CustomerPhoneNo: Yup.string(),
     SalesPerson: Yup.string().required("Sales Person is required"),
     VehicleDetails: Yup.string().required("Vehicle Details required"),
     DriverDetails: Yup.string().required("Driver Details required"),
@@ -20,35 +20,54 @@ const RoadvalidationSchema = Yup.object().shape(
     Weight: Yup.string().required("Weight is required"),
     TypeOfCargo: Yup.string().required("Type Of Cargo is required"),
     Dimensions: Yup.string().required("Dimensions are required"),
-    TransitTime: Yup.number().required("Transit Time is required"),
+    TransitTime: Yup.string().required("Transit Time is required"),
     ShipmentTerms: Yup.string().required("Shipment Terms are required"),
-    ContainerType: Yup.string().when(
-      "CustomContainerType",
-      ([CustomContainerType], schema) => {
+    ContainerType: Yup.string()
+      .when("CustomContainerType", ([CustomContainerType], schema) => {
         return CustomContainerType
           ? schema.notRequired()
           : schema.required(
               "Either Container Type Or Custom Container Type is required"
             );
-      }
-    ),
-    CustomContainerType: Yup.string().when(
-      "ContainerType",
-      ([ContainerType], schema) => {
+      })
+      .when("type", {
+        is: (type: string) =>
+          !type.includes("Air") ||
+          !type.includes("air") ||
+          type !== "Quotation",
+        then: (schema) => schema.required("Units Are required"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+    CustomContainerType: Yup.string()
+      .when("ContainerType", ([ContainerType], schema) => {
         return ContainerType
           ? schema.notRequired()
           : schema.required(
               "Either Container Type Or Custom Container Type is required"
             );
-      }
-    ),
+      })
+      .when("type", {
+        is: (type: string) =>
+          !type.includes("Air") ||
+          !type.includes("air") ||
+          type !== "Quotation",
+        then: (schema) => schema.required("Units Are required"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
     CarrierName: Yup.string().required("Carrier Name is required"),
 
-    Departure: Yup.string().required("Departure Time is required"),
-    EstimatedArrival: Yup.string().required(
-      "Estimated Arrival Time is required"
-    ),
-    CustomerTRN: Yup.string().required("Customer TRN is required"),
+    Departure: Yup.string(),
+    EstimatedArrival: Yup.string(),
+    CustomerTRN: Yup.string(),
+    Arrival: Yup.string(),
+    IncoTerm: Yup.string(),
+    Periodicity: Yup.string(),
+
+    Department: Yup.string(),
+    Yref: Yup.string(),
+    Incharge: Yup.string(),
+    validFrom: Yup.string(),
+    validTo: Yup.string(),
     // Add validation rules for other fields
   },
   [["CustomContainerType", "ContainerType"]]
@@ -58,46 +77,65 @@ const SeavalidationSchema = Yup.object().shape(
     CustomerName: Yup.string().required("Customer Name is required"),
     CustomerAddress: Yup.string().required("Customer Address is required"),
     CustomerEmail: Yup.string().required("Customer Email is required"),
-    CustomerPhoneNo: Yup.string().required("Customer Phone Number is required"),
+    CustomerPhoneNo: Yup.string(),
     SalesPerson: Yup.string().required("Sales Person is required"),
     PortOfOrigin: Yup.string().required("Port of Origin is required"),
     PortOfDestination: Yup.string().required("Port of Destination is required"),
     Weight: Yup.string().required("Weight is required"),
     Dimensions: Yup.string().required("Dimensions are required"),
-    TransitTime: Yup.number().required("Transit Time is required"),
+    TransitTime: Yup.string().required("Transit Time is required"),
     ShipmentTerms: Yup.string().required("Shipment Terms are required"),
-    ContainerType: Yup.string().when(
-      "CustomContainerType",
-      ([CustomContainerType], schema) => {
+    ContainerType: Yup.string()
+      .when("CustomContainerType", ([CustomContainerType], schema) => {
         return CustomContainerType
           ? schema.notRequired()
           : schema.required(
               "Either Container Type Or Custom Container Type is required"
             );
-      }
-    ),
-    Departure: Yup.string().required("Departure Time is required"),
-    EstimatedArrival: Yup.string().required(
-      "Estimated Arrival Time is required"
-    ),
-    CustomerTRN: Yup.string().required("Customer TRN is required"),
+      })
+      .when("type", {
+        is: (type: string) =>
+          !type.includes("Air") ||
+          !type.includes("air") ||
+          type !== "Quotation",
+        then: (schema) => schema.required("Units Are required"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
+    Departure: Yup.string(),
+    EstimatedArrival: Yup.string(),
+    CustomerTRN: Yup.string(),
     VesselName: Yup.string().required("Carrier Name is required"),
     VesselDetails: Yup.string().required("Vessel Details are required"),
     ShippingLaneDetails: Yup.string().required(
       "Shipping Lane Details are required"
     ),
-    CustomContainerType: Yup.string().when(
-      "ContainerType",
-      ([ContainerType], schema) => {
+    CustomContainerType: Yup.string()
+      .when("ContainerType", ([ContainerType], schema) => {
         return ContainerType
           ? schema.notRequired()
           : schema.required(
               "Either Container Type Or Custom Container Type is required"
             );
-      }
-    ),
+      })
+      .when("type", {
+        is: (type: string) =>
+          !type.includes("Air") ||
+          !type.includes("air") ||
+          type !== "Quotation",
+        then: (schema) => schema.required("Units Are required"),
+        otherwise: (schema) => schema.notRequired(),
+      }),
     TypeOfCargo: Yup.string().required("Type of Cargo is required"),
     CarrierName: Yup.string().required("Carrier Name is required"),
+    Arrival: Yup.string(),
+    IncoTerm: Yup.string(),
+    Periodicity: Yup.string(),
+
+    Department: Yup.string(),
+    Yref: Yup.string(),
+    Incharge: Yup.string(),
+    validFrom: Yup.string(),
+    validTo: Yup.string(),
     // Add validation rules for other fields
   },
   [["CustomContainerType", "ContainerType"]]
@@ -106,7 +144,7 @@ const AirvalidationSchema = Yup.object().shape({
   CustomerName: Yup.string().required("Customer Name is required"),
   CustomerAddress: Yup.string().required("Customer Address is required"),
   CustomerEmail: Yup.string().required("Customer Email is required"),
-  CustomerPhoneNo: Yup.string().required("Customer Phone Number is required"),
+  CustomerPhoneNo: Yup.string(),
   SalesPerson: Yup.string().required("Sales Person is required"),
   AirportOfOrigin: Yup.string().required("Airport of Origin is required"),
   AirportOfDestination: Yup.string().required(
@@ -114,14 +152,23 @@ const AirvalidationSchema = Yup.object().shape({
   ),
   Weight: Yup.string().required("Weight is required"),
   Dimensions: Yup.string().required("Dimensions are required"),
-  TransitTime: Yup.number().required("Transit Time is required"),
+  TransitTime: Yup.string().required("Transit Time is required"),
   ShipmentTerms: Yup.string().required("Shipment Terms are required"),
   TypeOfCargo: Yup.string().required("Type of Cargo is required"),
   CarrierName: Yup.string().required("Carrier Name is required"),
   FlightInformation: Yup.string().notRequired(),
-  Departure: Yup.string().required("Departure Time is required"),
+  Departure: Yup.string(),
   EstimatedArrival: Yup.string().required("Estimated Arrival Time is required"),
-  CustomerTRN: Yup.string().required("Customer TRN is required"),
+  CustomerTRN: Yup.string(),
+  Arrival: Yup.string(),
+  IncoTerm: Yup.string(),
+  Periodicity: Yup.string(),
+
+  Department: Yup.string(),
+  Yref: Yup.string(),
+  Incharge: Yup.string(),
+  validFrom: Yup.string(),
+  validTo: Yup.string(),
 });
 
 function Inquiry(props: InquiryAndQuotationProps) {
@@ -138,7 +185,10 @@ function Inquiry(props: InquiryAndQuotationProps) {
     }
   }, []);
   const formik = useFormik({
-    initialValues: inquiry,
+    initialValues: {
+      ...inquiry,
+      type: Airtype ? "air" : Seatype ? "sea" : "road",
+    },
     validationSchema: Airtype
       ? AirvalidationSchema
       : Roadtype
@@ -234,6 +284,9 @@ function Inquiry(props: InquiryAndQuotationProps) {
           },
         ]
       : []),
+    { label: "Enter Arrival", name: "Arrival", type: "text" },
+    { label: "Enter Periodicity", name: "Periodicity", type: "text" },
+    { label: "Enter Yref", name: "Yref", type: "text" },
   ];
   const Column2Items = [
     { label: "Enter Customer Email", name: "CustomerEmail", type: "text" },
@@ -242,7 +295,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
       name: "CustomerPhoneNo",
       type: "text",
     },
-    ...(!Airtype
+    ...(!Airtype && formik.values.type !== "Quotation"
       ? [
           {
             label: "Container Type",
@@ -281,8 +334,12 @@ function Inquiry(props: InquiryAndQuotationProps) {
     {
       label: "Enter Transit Time",
       name: "TransitTime",
-      type: "number",
+      type: "text",
     },
+    { label: "Enter Incharge", name: "Incharge", type: "text" },
+    { label: "Enter IncoTerm", name: "IncoTerm", type: "text" },
+    { label: "Enter Department", name: "Department", type: "text" },
+
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
   ];
   const Column3 = [
@@ -319,12 +376,23 @@ function Inquiry(props: InquiryAndQuotationProps) {
       name: "EstimatedArrival",
       type: "datetime-local",
     },
+    {
+      label: "Valid From",
+      name: "validFrom",
+      type: "date",
+    },
+    {
+      label: "Valid To",
+      name: "validTo",
+      type: "date",
+    },
   ];
   return (
     <FormikProvider value={formik}>
       <div className="w-full flex flex-col justify-center space-y-7 py-5 flex-wrap ">
         <form onSubmit={formik.handleSubmit}>
           <div className="px-5 flex flex-col lg:flex-row justify-between w-full my-5">
+            <Field hidden name={"type"} />
             <div className="flex flex-col space-y-1">
               {Column1Items.map((i) => (
                 <div key={i.name} className="px-4">

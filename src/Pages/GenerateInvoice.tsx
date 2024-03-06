@@ -36,7 +36,8 @@ const validationSchema = yup.object().shape(
         !type?.includes("Lading") &&
         !type?.includes("Airway") &&
         type !== "CargoManifest" &&
-        type !== "ProofOfDelivery",
+        type !== "ProofOfDelivery" &&
+        type !== "Quotation",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -334,7 +335,8 @@ const validationSchema = yup.object().shape(
           !type?.includes("Lading") &&
           !type?.includes("Air") &&
           type !== "CargoManifest" &&
-          type !== "ProofOfDelivery",
+          type !== "ProofOfDelivery" &&
+          type !== "Quotation",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       }),
@@ -352,7 +354,8 @@ const validationSchema = yup.object().shape(
           !type?.includes("Lading") &&
           !type?.includes("Air") &&
           type !== "CargoManifest" &&
-          type !== "ProofOfDelivery",
+          type !== "ProofOfDelivery" &&
+          type !== "Quotation",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       }),
@@ -464,7 +467,8 @@ const validationSchema = yup.object().shape(
         type !== "CargoManifest" &&
         type !== "ProofOfDelivery" &&
         type !== "AirwayBill" &&
-        type !== "BillOfLading",
+        type !== "BillOfLading" &&
+        type !== "Quotation",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -473,7 +477,8 @@ const validationSchema = yup.object().shape(
         type !== "CargoManifest" &&
         type !== "ProofOfDelivery" &&
         type !== "AirwayBill" &&
-        type !== "BillOfLading",
+        type !== "BillOfLading" &&
+        type !== "Quotation",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -482,7 +487,8 @@ const validationSchema = yup.object().shape(
         type !== "CargoManifest" &&
         type !== "ProofOfDelivery" &&
         type !== "AirwayBill" &&
-        type !== "BillOfLading",
+        type !== "BillOfLading" &&
+        type !== "Quotation",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -687,6 +693,47 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
+    Arrival: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    IncoTerm: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Periodicity: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+
+    Department: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Yref: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Incharge: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    validFrom: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    validTo: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   },
 
   [["ContainerType", "CustomContainerType"]]
@@ -714,8 +761,14 @@ function GenerateInvoice() {
     manifestInfo,
   } = useinvoiceStore();
   const { setInformation } = useCompanyInfo();
-  const { setItemInquiry, inquiry, resetInquiry } = useInquiryItem();
-  console.log("inquiry", inquiry);
+  const {
+    setItemInquiry,
+    inquiry,
+    resetInquiry,
+    setaddress,
+    setPrestationArray,
+  } = useInquiryItem();
+
   const {
     setitemsArray,
     items: quotationItemsStore,
@@ -758,7 +811,7 @@ function GenerateInvoice() {
       //   toast.error("Add Some Items First");
       //   return;
       // }
-      console.log(values, "all cvalues");
+      console.log(values.type, "all cvalues");
       if (!values.type) {
         toast.error("Select Bill Type First");
         return;
@@ -776,6 +829,8 @@ function GenerateInvoice() {
       } else if (values.type === "ProofOfDelivery") {
         setPODInfo(values);
         setPODItems(quotationPODItems);
+      } else if (values.type === "Quotation") {
+        setItemInquiry(values);
       } else {
         setInfo(values);
         setInvoiceItems(quotationItemsStore);
@@ -788,6 +843,9 @@ function GenerateInvoice() {
         navigate("/cargoManifest");
       } else if (values.type === "ProofOfDelivery") {
         navigate("/proofOfDelivery");
+      } else if (values.type === "Quotation") {
+        setaddress(values.officeAddress);
+        navigate("/quotationDoc");
       } else {
         navigate("/Invoice");
       }
@@ -871,11 +929,19 @@ function GenerateInvoice() {
     { label: "Rate Per Charge", name: "RatePerCharge", type: "number" },
   ];
   const Column1Items = [
-    { label: "Enter Customer Name", name: "CustomerName", type: "text" },
-    { label: "HAWB", name: "HAWB", type: "text" },
-    { label: "blNo", name: "blNo", type: "text" },
+    ...(formikObj.values.type !== "Quotation"
+      ? [
+          { label: "Enter Customer Name", name: "CustomerName", type: "text" },
+          { label: "HAWB", name: "HAWB", type: "text" },
+          { label: "blNo", name: "blNo", type: "text" },
 
-    { label: "Enter Customer Address", name: "CustomerAddress", type: "text" },
+          {
+            label: "Enter Customer Address",
+            name: "CustomerAddress",
+            type: "text",
+          },
+        ]
+      : []),
     { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
     ...(formikObj.values.type?.includes("Air")
       ? [
@@ -1059,15 +1125,23 @@ function GenerateInvoice() {
     },
   ];
   const Column2Items = [
-    { label: "Enter Customer Email", name: "CustomerEmail", type: "text" },
-    { label: "Enter Due Date", name: "dueDate", type: "date" },
-    { label: "Enter Posting Date", name: "PostingDate", type: "date" },
+    ...(formikObj.values.type !== "Quotation"
+      ? [
+          {
+            label: "Enter Customer Email",
+            name: "CustomerEmail",
+            type: "text",
+          },
+          { label: "Enter Due Date", name: "dueDate", type: "date" },
+          { label: "Enter Posting Date", name: "PostingDate", type: "date" },
 
-    {
-      label: "Enter Customer Phone Number",
-      name: "CustomerPhoneNo",
-      type: "text",
-    },
+          {
+            label: "Enter Customer Phone Number",
+            name: "CustomerPhoneNo",
+            type: "text",
+          },
+        ]
+      : []),
     ...(formikObj.values.type?.includes("Lading")
       ? [
           {
@@ -1103,7 +1177,8 @@ function GenerateInvoice() {
         ]
       : []),
     ...(!formikObj.values.type?.includes("Lading") &&
-    !formikObj.values.type?.includes("Air")
+    !formikObj.values.type?.includes("Air") &&
+    formikObj.values.type !== "Quotation"
       ? [
           {
             label: "Container Type",
@@ -1135,7 +1210,7 @@ function GenerateInvoice() {
     {
       label: "Enter Transit Time",
       name: "TransitTime",
-      type: "number",
+      type: "text",
     },
     { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
 
@@ -1178,11 +1253,15 @@ function GenerateInvoice() {
         ]
       : []),
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
-    {
-      label: "Special Instructions",
-      name: "specialInstructions",
-      type: "textarea",
-    },
+    ...(formikObj.values.type !== "Quotation"
+      ? [
+          {
+            label: "Special Instructions",
+            name: "specialInstructions",
+            type: "textarea",
+          },
+        ]
+      : []),
     {
       label: "Departure",
       name: "Departure",
@@ -1198,6 +1277,54 @@ function GenerateInvoice() {
       name: "officeAddress",
       type: "select",
       options: ["Dubai", "Bahrain"],
+    },
+  ];
+  const quotationNewCol = [
+    {
+      label: "Arrival",
+      name: "Arrival",
+      type: "text",
+    },
+    {
+      label: "IncoTerm",
+      name: "IncoTerm",
+      type: "text",
+    },
+    {
+      label: "Periodicity",
+      name: "Periodicity",
+      type: "text",
+    },
+
+    {
+      label: "Department",
+      name: "Department",
+      type: "text",
+    },
+    {
+      label: "Yref",
+      name: "Yref",
+      type: "text",
+    },
+    {
+      label: "Incharge",
+      name: "Incharge",
+      type: "text",
+    },
+    {
+      label: "validFrom",
+      name: "validFrom",
+      type: "text",
+    },
+    {
+      label: "validTo",
+      name: "validTo",
+      type: "text",
+    },
+    {
+      label: "other Shipping Details",
+      name: "othershippingDetails",
+      type: "text",
     },
   ];
   const PODCol1 = [
@@ -1244,21 +1371,37 @@ function GenerateInvoice() {
       options: ["Dubai", "Bahrain"],
     },
   ];
+
   console.log(temp_Items, "   ", jobInfo);
   const filljobDetailsbyId = async () => {
     try {
       setloadingdetails(true);
       console.log("job", jobidRef.current?.value);
-      const docs = await getDocs(
-        query(
-          collection(db, "jobs"),
-          where("jobid", "==", jobidRef.current?.value!)
-        )
-      );
-      if (docs.empty) return toast.error("No Such Job Exists");
-      const mydoc = docs.docs[0];
-      console.log("Data", docs.docs[0]?.data());
-      const jobtype = mydoc?.data()?.type;
+      let jobtype;
+      let mydoc;
+      if (formikObj.values.type === "Quotation") {
+        const docs = await getDocs(
+          query(
+            collection(db, "quotations"),
+            where("quotationId", "==", jobidRef.current?.value!)
+          )
+        );
+        if (docs.empty) return toast.error("No Such Job Exists");
+        mydoc = docs.docs[0];
+        console.log("Data", docs.docs[0]?.data());
+        jobtype = mydoc?.data()?.type;
+      } else {
+        const docs = await getDocs(
+          query(
+            collection(db, "jobs"),
+            where("jobid", "==", jobidRef.current?.value!)
+          )
+        );
+        if (docs.empty) return toast.error("No Such Job Exists");
+        mydoc = docs.docs[0];
+        console.log("Data", docs.docs[0]?.data());
+        jobtype = mydoc?.data()?.type;
+      }
 
       // console.log("Data", formikObj.values);
       resetInquiry();
@@ -1266,6 +1409,7 @@ function GenerateInvoice() {
         ...inquiry,
         ...(mydoc?.data()?.inquiry as Inquiry),
         method: mydoc?.data()?.method,
+        quotationId: mydoc?.data()?.quotationId,
         jobInitials: mydoc?.data()?.jobInitials,
         type:
           jobtype === "road"
@@ -1274,6 +1418,7 @@ function GenerateInvoice() {
             ? "SeaFreight"
             : "AirFreight",
       });
+      setPrestationArray(mydoc?.data().prestation as PrestationItem[]);
       setitemsArray(mydoc?.data()?.Items as QuotationItem[]);
 
       // setInfo(docs.docs[0]?.data()?.inquiry as Inquiry);
@@ -1384,6 +1529,7 @@ function GenerateInvoice() {
                   defaultValue={formikObj.values.type}
                 >
                   <option value={""}>Select Type</option>
+                  <option value={"Quotation"}>Quotation</option>
                   <option value={"AirFreight"}>AirFreight Invoice</option>
                   <option value={"RoadFreight"}>RoadFreight Invoice</option>
                   <option value={"SeaFreight"}>SeaFreight Invoice</option>
@@ -1606,48 +1752,69 @@ function GenerateInvoice() {
               </div>
               <div className="flex  flex-col space-y-2">
                 <div className="w-4/5 flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3">
-                  {formikObj.values.type === "AirwayBill"
-                    && AWBCol1.map((i) => (
-                        <div key={i.name} className="px-4 w-2/5">
-                          <label className="text-xl" key={i.name}>
-                            {i.label}
-                          </label>
-                          <Field
-                            as={i.type === "textarea" ? "textarea" : "input"}
-                            type={i.type}
-                            name={i.name}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                          />
-                          <ErrorMessage
-                            name={i.name}
-                            component="div"
-                            className="text-red-500"
-                          />
-                        </div>
-                      ))
-                    }
+                  {formikObj.values.type === "AirwayBill" &&
+                    AWBCol1.map((i) => (
+                      <div key={i.name} className="px-4 w-2/5">
+                        <label className="text-xl" key={i.name}>
+                          {i.label}
+                        </label>
+                        <Field
+                          as={i.type === "textarea" ? "textarea" : "input"}
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </div>
+                    ))}
                 </div>
                 <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
-                {formikObj.values.type === "AirwayBill"
-                    && AWBCol2.map((i) => (
-                        <div key={i.name} className="px-4 w-2/5">
-                          <label className="text-xl" key={i.name}>
-                            {i.label}
-                          </label>
-                          <Field
-                            as={i.type === "textarea" ? "textarea" : "input"}
-                            type={i.type}
-                            name={i.name}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                          />
-                          <ErrorMessage
-                            name={i.name}
-                            component="div"
-                            className="text-red-500"
-                          />
-                        </div>
-                      ))
-                    }
+                  {formikObj.values.type === "AirwayBill" &&
+                    AWBCol2.map((i) => (
+                      <div key={i.name} className="px-4 w-2/5">
+                        <label className="text-xl" key={i.name}>
+                          {i.label}
+                        </label>
+                        <Field
+                          as={i.type === "textarea" ? "textarea" : "input"}
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className="flex  flex-col space-y-2">
+                <div className="w-4/5 flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3">
+                  {formikObj.values.type === "Quotation" &&
+                    quotationNewCol?.map((i) => (
+                      <div key={i.name} className="px-4 w-2/5">
+                        <label className="text-xl" key={i.name}>
+                          {i.label}
+                        </label>
+                        <Field
+                          as={i.type === "textarea" ? "textarea" : "input"}
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </div>
+                    ))}
                 </div>
               </div>
               <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">

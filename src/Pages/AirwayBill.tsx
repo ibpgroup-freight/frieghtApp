@@ -290,7 +290,6 @@ function Column1({
           <Text
             style={{
               fontFamily: "Courier",
-
               width: "100%",
             }}
           ></Text>
