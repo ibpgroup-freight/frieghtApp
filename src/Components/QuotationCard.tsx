@@ -25,7 +25,7 @@ function QuotationCard({
   const navigate = useNavigate();
   //   const { setJob } = useJob();
   const { setQuotation } = useQuotation();
-  const { setItemInquiry } = useInquiryItem();
+  const { setItemInquiry, setPrestationArray } = useInquiryItem();
   const { setitemsArray } = useItemStore();
   const [isdeleting, setisdeleting] = useState<{
     status: boolean;
@@ -43,14 +43,20 @@ function QuotationCard({
       setisdeleting((p) => ({ status: true, id: "" }));
     }
   }, []);
-  //   const editJob = useCallback(() => {
-  //     setItemInquiry(quotation.inquiry);
-  //     setitemsArray(quotation.Items);
-  //     navigate(`/home?editJob=${quotation.id}`, { state: { job: quotation } });
-  //   }, []);
-  //   const ViewJob = useCallback(() => {
-  //     navigate(`/jobDetail/${quotation.id}`, { state: { job: quotation } });
-  //   }, []);
+  const editJob = useCallback(() => {
+    setItemInquiry(quotation.inquiry);
+    setitemsArray(quotation.Items);
+    navigate(`/home?editJob=${quotation.id}`, { state: { job: quotation } });
+  }, []);
+  const ViewJob = useCallback(() => {
+    setItemInquiry({
+      ...quotation.inquiry,
+      quotationId: quotation.quotationId,
+    });
+    setitemsArray(quotation.Items);
+    setPrestationArray(quotation.prestation);
+    navigate(`/quotationDetails`);
+  }, []);
 
   const changeQuotation = async (id: string, status: QuotationStatus) => {
     try {
@@ -67,6 +73,7 @@ function QuotationCard({
       setisdeleting({ id: "", status: false });
     }
   };
+  console.log("Quotation card", quotation);
   return (
     quotation && (
       <>
@@ -86,16 +93,16 @@ function QuotationCard({
               {i.CostAndSellSection}
             </td> */}
         <td className=" flex flex-col  space-y-2 px-2 justify-center self-center my-2 items-start">
+          <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
           {/* <ButtonBlue
-                text="View"
-                onclick={ViewJob}
-                customStyle={"bg-yellow-500"}
-              />
-              <ButtonBlue text="Edit" onclick={editJob} /> */}
+            text="Edit"
+            onclick={editJob}
+            customStyle={"text-green-900 hover:text-green-500 "}
+          /> */}
           <ButtonBlue
             text="Delete"
             onclick={deleteJob.bind(null, quotation.id!)}
-            customStyle={"bg-red-400 "}
+            customStyle={"text-red-900 hover:text-red-500 "}
             isloading={isdeleting?.status}
             disabled={isdeleting?.status}
           />
@@ -104,7 +111,7 @@ function QuotationCard({
         <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">
           <ButtonBlue
             text="Disapprove Quotation"
-            customStyle="!px-0 bg-red-400 hover:bg-red-300 hover:text-black"
+            customStyle=" hover:text-black"
             onclick={() => changeQuotation(quotation.id!, "disapproved")}
             isloading={quotation?.id === isdeleting?.id}
             disabled={quotation?.id === isdeleting?.id}

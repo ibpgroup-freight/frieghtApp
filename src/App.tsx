@@ -27,6 +27,7 @@ const Analytics = React.lazy(() => import("./Pages/Analytics"));
 const ManageUsers = React.lazy(() => import("./Pages/ManageUsers"));
 const Contacts = React.lazy(() => import("./Pages/Contacts"));
 const QuotationDoc = React.lazy(() => import("./Pages/QuotationDoc"));
+const JobDetails = React.lazy(() => import("./Pages/JobDetails"));
 
 const CreateJob = React.lazy(() => import("./Pages/CreateJob"));
 const JobDetail = React.lazy(() => import("./Pages/JobDetail"));
@@ -36,7 +37,7 @@ const Authenticate = React.lazy(() => import("./Pages/Authenticate"));
 const GenerateInvoice = React.lazy(() => import("./Pages/GenerateInvoice"));
 const SearchPage = React.lazy(() => import("./Pages/Search"));
 const AirwayBill = React.lazy(() => import("./Pages/AirwayBill"));
-
+const QuotationDetails = React.lazy(() => import("./Pages/QuotationDetails"));
 function App() {
   const { isloggedIn, AuthStateLogIn } = useUser();
   const [isloading, setisloading] = useState(true);
@@ -84,8 +85,8 @@ function App() {
               <Routes>
                 <Route path="/home" Component={CreateJob} />
                 <Route path="/" Component={Dashboard} />
-                <Route path="/jobDetail/:id" Component={JobDetail} />
-                <Route path="/jobDetail/:id" Component={JobDetail} />
+                {/* <Route path="/jobDetail/:id" Component={JobDetail} />
+                <Route path="/jobDetail/:id" Component={JobDetail} /> */}
                 <Route path="/generateInvoice" Component={GenerateInvoice} />
                 <Route path="/manageContacts" Component={Contacts} />
                 <Route path="/invoicePdf" Component={InvoicePdf} />
@@ -102,6 +103,8 @@ function App() {
                 <Route path="/airwayBill" Component={AirwayBill} />
                 <Route path="/cargoManifest" Component={CargoManifest} />
                 <Route path="/ProofOfDelivery" Component={ProofOfDelivery} />
+                <Route path="/quotationDetails" Component={QuotationDetails} />
+                <Route path="/jobDetails" Component={JobDetails} />
 
                 <Route path="*" Component={NotFound} />
               </Routes>

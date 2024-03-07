@@ -42,7 +42,9 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
     navigate(`/home?editJob=${job.id}`, { state: { job: job } });
   }, []);
   const ViewJob = useCallback(() => {
-    navigate(`/jobDetail/${job.jobid}`, { state: { job: job } });
+    setItemInquiry(job.inquiry);
+    setitemsArray(job.Items);
+    navigate(`/jobDetails`);
   }, []);
 
   const changeJob = async (id: string, status: JobStatus) => {
@@ -76,17 +78,17 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
         {/* <td className="border border-slate-300 p-4">
               {i.CostAndSellSection}
             </td> */}
-        <td className=" flex flex-col  space-y-2 px-2 justify-center self-center my-2 items-start">
+        <td className=" flex flex-col   px-2 justify-center self-center my-1 items-start">
+          <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
           {/* <ButtonBlue
-                text="View"
-                onclick={ViewJob}
-                customStyle={"bg-yellow-500"}
-              />
-              <ButtonBlue text="Edit" onclick={editJob} /> */}
+            text="Edit"
+            onclick={editJob}
+            customStyle={"text-green-900 hover:text-green-500 "}
+          /> */}
           <ButtonBlue
             text="Delete"
             onclick={deleteJob.bind(null, job.id!)}
-            customStyle={"bg-red-400 "}
+            customStyle={"text-red-400 hover:text-red-800 "}
             isloading={isdeleting?.status}
             disabled={isdeleting?.status}
           />
@@ -95,7 +97,7 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
         <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">
           <ButtonBlue
             text="Cancel Job"
-            customStyle="!px-0 bg-red-400 hover:bg-red-300 hover:text-black"
+            customStyle="!px-0 hover:text-black"
             onclick={() => changeJob(job.id!, "cancelled")}
             isloading={job?.id === isdeleting?.id}
             disabled={job?.id === isdeleting?.id}

@@ -10,7 +10,7 @@ function ButtonBlue(props: {
 }) {
   return (
     <button
-      className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md ${props.customStyle}`}
+      className={`text-blue-400 hover:text-blue-700 text-black font-bold py-2 px-4 rounded-md ${props.customStyle}`}
       onClick={props.onclick}
       disabled={props.disabled}
     >

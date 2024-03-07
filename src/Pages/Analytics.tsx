@@ -218,7 +218,7 @@ function Analytics() {
                         ondelete={handleDelete}
                         status={j.status}
                         refresh={handleDelete}
-                        inquiry={j.inquiry}
+                        inquiry={{ ...j.inquiry, quotationId: j.quotationId }}
                       />
                     </tr>
                   ))}

@@ -1484,12 +1484,19 @@ function GenerateInvoice() {
           </h1>
           <div className="flex items-center w-3/5 justify-between">
             <label className="text-xl" htmlFor="jobid">
-              Enter Job Id
+              Enter{" "}
+              {formikObj.values.type === "Quotation"
+                ? "Quotation Id"
+                : "Job Id"}
             </label>
             <input
               type={"text"}
               name={"jobid"}
-              placeholder="jobId"
+              placeholder={
+                formikObj.values.type === "Quotation"
+                  ? "Quotation Id"
+                  : "Job Id"
+              }
               className="w-3/5 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
               ref={jobidRef}
             />

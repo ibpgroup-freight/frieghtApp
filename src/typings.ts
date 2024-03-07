@@ -160,6 +160,7 @@ type Quotation = {
   inquiry: Inquiry;
   Items: QuotationItem[];
   status: QuotationStatus;
+  prestation: PrestationItem[];
 };
 type JobStatus = "completed" | "pending" | "cancelled";
 type QuotationStatus = "approved" | "pending" | "disapproved";
