@@ -60,7 +60,7 @@ const RoadvalidationSchema = Yup.object().shape(
     EstimatedArrival: Yup.string(),
     CustomerTRN: Yup.string(),
     Arrival: Yup.string(),
-    IncoTerm: Yup.string(),
+
     Periodicity: Yup.string(),
 
     Department: Yup.string(),
@@ -128,7 +128,7 @@ const SeavalidationSchema = Yup.object().shape(
     TypeOfCargo: Yup.string().required("Type of Cargo is required"),
     CarrierName: Yup.string().required("Carrier Name is required"),
     Arrival: Yup.string(),
-    IncoTerm: Yup.string(),
+
     Periodicity: Yup.string(),
 
     Department: Yup.string(),
@@ -161,7 +161,7 @@ const AirvalidationSchema = Yup.object().shape({
   EstimatedArrival: Yup.string(),
   CustomerTRN: Yup.string(),
   Arrival: Yup.string(),
-  IncoTerm: Yup.string(),
+
   Periodicity: Yup.string(),
 
   Department: Yup.string(),
@@ -337,7 +337,6 @@ function Inquiry(props: InquiryAndQuotationProps) {
       type: "text",
     },
     { label: "Enter Incharge", name: "Incharge", type: "text" },
-    { label: "Enter IncoTerm", name: "IncoTerm", type: "text" },
     { label: "Enter Department", name: "Department", type: "text" },
 
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
