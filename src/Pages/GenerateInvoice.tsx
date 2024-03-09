@@ -957,6 +957,10 @@ function GenerateInvoice() {
             name: "AirportOfDestination",
             type: "text",
           },
+        ]
+      : []),
+    ...(formikObj.values.type?.includes("Airway")
+      ? [
           {
             label: "Flight Information",
             name: "FlightInformation",

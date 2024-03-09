@@ -158,7 +158,7 @@ const AirvalidationSchema = Yup.object().shape({
   CarrierName: Yup.string().required("Carrier Name is required"),
   FlightInformation: Yup.string().notRequired(),
   Departure: Yup.string(),
-  EstimatedArrival: Yup.string().required("Estimated Arrival Time is required"),
+  EstimatedArrival: Yup.string(),
   CustomerTRN: Yup.string(),
   Arrival: Yup.string(),
   IncoTerm: Yup.string(),
