@@ -741,6 +741,7 @@ const validationSchema = yup.object().shape(
 
 function GenerateInvoice() {
   const [showQuotation, setshowQuotation] = useState(false);
+  const [toEdit, settoEdit] = useState<any>();
   const ctx = useContext(ModalCtx);
   const {
     Items: temp_Items,
@@ -865,6 +866,7 @@ function GenerateInvoice() {
     { label: "Shipper", name: "Shipper" },
     { label: "Charges", name: "Charges" },
     { label: "Collect", name: "Collect" },
+    { label: "Actions", name: "Actions" },
   ];
   const ProofOfDeliveryTable = [
     { label: "Index", name: "Sr no" },
@@ -873,6 +875,7 @@ function GenerateInvoice() {
     { label: "No Of Packages", name: "NoOfPackages" },
     { label: "Weight", name: "Weight" },
     { label: "CBM", name: "CBM" },
+    { label: "Actions", name: "Actions" },
   ];
   const Column1 = [
     { label: "Index", name: "Sr no" },
@@ -896,6 +899,8 @@ function GenerateInvoice() {
     //   subheadings: ["Cost Per Unit", "Min", "Max"],
     // },
     { label: "Currency", name: "Currency" },
+    { label: "Actions", name: "Actions" },
+
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
@@ -913,6 +918,7 @@ function GenerateInvoice() {
     { label: "Seal Number", name: "SealNo", type: "number" },
     { label: "Measurement", name: "Measurement", type: "text" },
     { label: "Weight (Optional)", name: "Weight", type: "number" },
+    { label: "Actions", name: "Actions" },
   ];
   const AirwayBillTable = [
     { label: "Index", name: "Sr no" },
@@ -928,6 +934,7 @@ function GenerateInvoice() {
     { label: "ChargeableWeight", name: "ChargeableWeight", type: "number" },
     { label: "NatureOfGoods", name: "NatureOfGoods", type: "number" },
     { label: "Rate Per Charge", name: "RatePerCharge", type: "number" },
+    { label: "Actions", name: "Actions" },
   ];
   const Column1Items = [
     ...(formikObj.values.type !== "Quotation"
@@ -1479,6 +1486,7 @@ function GenerateInvoice() {
                       ])
                 }
                 quotationType={formikObj.values.type}
+                toEdit={toEdit}
               />
             )}
           </div>
@@ -1941,6 +1949,10 @@ function GenerateInvoice() {
                               <td className="border border-slate-300 p-4">
                                 {i.Weight}
                               </td>
+                              <td className="border border-slate-300 p-4">
+                                <h1 className="text-yellow-400">Edit</h1>
+                                <h1 className="text-red-400">Remove</h1>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -1973,6 +1985,10 @@ function GenerateInvoice() {
                             <td className="border border-slate-300 p-4">
                               {i.RatePerCharge}
                             </td>
+                            <td className="border border-slate-300 p-4">
+                              <h1 className="text-yellow-400">Edit</h1>
+                              <h1 className="text-red-400">Remove</h1>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -2002,6 +2018,10 @@ function GenerateInvoice() {
                               {/* {i.UnitPerKg} */}
                               {i.Collect}
                             </td>
+                            <td className="border border-slate-300 p-4">
+                              <h1 className="text-yellow-400">Edit</h1>
+                              <h1 className="text-red-400">Remove</h1>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -2027,12 +2047,16 @@ function GenerateInvoice() {
                             <td className="border border-slate-300 p-4">
                               {i.CBM}
                             </td>
+                            <td className="border border-slate-300 p-4">
+                              <h1 className="text-yellow-400">Edit</h1>
+                              <h1 className="text-red-400">Remove</h1>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     ) : (
                       <tbody>
-                        {quotationItemsStore.map((i, index) => (
+                        {quotationItemsStore?.map((i, index) => (
                           <tr key={index}>
                             <td className="border border-slate-300 p-4">
                               {index + 1}
@@ -2074,6 +2098,31 @@ function GenerateInvoice() {
                             <td className="border border-slate-300 p-4">
                               {i.Currency}
                             </td>
+                            <td className="border border-slate-300 p-4">
+                              <h1
+                                className="text-yellow-400"
+                                onClick={() => {
+                                  console.log(i, "the i");
+                                  settoEdit({ ...i, index });
+                                  setshowQuotation(true);
+                                  ctx.setToggle();
+                                }}
+                              >
+                                Edit
+                              </h1>
+                              <h1
+                                className="text-red-400"
+                                onClick={() => {
+                                  const newquotations =
+                                    quotationItemsStore.filter(
+                                      (i, ind) => ind !== index
+                                    );
+                                  setitemsArray(newquotations);
+                                }}
+                              >
+                                Remove
+                              </h1>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -2084,6 +2133,9 @@ function GenerateInvoice() {
                       className="text-2xl rounded-full text-green-600"
                       onClick={(e) => {
                         console.log("Here");
+                        if (!formikObj.values.type) {
+                          return toast.error("Select Type Of Bill First");
+                        }
                         setshowQuotation(true);
                         ctx.setToggle();
                       }}

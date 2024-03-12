@@ -8,6 +8,7 @@ type qprops = {
   closeQuotation: React.Dispatch<React.SetStateAction<boolean>>;
   AddItemToInvoice?: (item: QuotationItem) => void;
   quotationType?: string;
+  toEdit?: any;
 };
 const validationSchema = Yup.object().shape({
   QuoteValidity: Yup.string().when("type", {
@@ -198,6 +199,7 @@ function AddQuotation({
   closeQuotation,
   AddItemToInvoice,
   quotationType,
+  toEdit,
 }: qprops) {
   // const [val, setval] = React.useState("");
   const {
@@ -228,7 +230,6 @@ function AddQuotation({
       SealNo: "",
       NoOfPackages: "",
       PackageDescription: "",
-      type: quotationType,
       NoPieces: 0,
       GrossWeight: 0,
       Unit: "",
@@ -251,6 +252,8 @@ function AddQuotation({
       HeaderAddress: "",
       HAWBNo: "",
       CBM: "",
+      type: quotationType,
+      ...(toEdit ?? {}),
     },
     validationSchema,
     onSubmit: (values) => {
@@ -358,7 +361,7 @@ function AddQuotation({
   //   { label: "Amount Per Unit", name: "CostAmountPerUnit" },
   //   { label: "Min Amount Per Unit", name: "MinCostAmountPerUnit" },
   // ];
-  console.log(formikobj.errors);
+  console.log(quotationType, "Qtype");
   return (
     <FormikProvider value={formikobj}>
       <div className=" mx-auto md:w-3/5 px-10 bg-white border border-black z-1000 py-10 rounded-md">
