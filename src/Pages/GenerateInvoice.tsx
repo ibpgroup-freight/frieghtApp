@@ -221,7 +221,7 @@ const validationSchema = yup.object().shape(
     FlightInformation: yup
       .string()
       .when("type", {
-        is: (type: string) => type?.includes("Air"),
+        is: (type: string) => type?.includes("Airway"),
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -818,17 +818,23 @@ function GenerateInvoice() {
         toast.error("Select Bill Type First");
         return;
       }
+
       if (values.type === "BillOfLading") {
         setladleInfo(values);
         setladingItems(quotationLadingItemsStore);
+        setBillOfLadingItems([...quotationLadingItemsStore]);
       } else if (values.type === "AirwayBill") {
         setAirwayInfo(values);
         console.log("Airwat items", AirwayItems);
+        setAirwayItems([...AirwayItems]);
+
         setAirwayBillItems(AirwayItems);
       } else if (values.type === "CargoManifest") {
+        manifestItem([...quotationManifestItems]);
         setManifestInfo(values);
         setManifestItems(quotationManifestItems);
       } else if (values.type === "ProofOfDelivery") {
+        PodItem([...quotationPODItems]);
         setPODInfo(values);
         setPODItems(quotationPODItems);
       } else if (values.type === "Quotation") {
@@ -836,6 +842,7 @@ function GenerateInvoice() {
       } else {
         setInfo(values);
         setInvoiceItems(quotationItemsStore);
+        setitemsArray([...quotationItemsStore]);
       }
       if (values.type?.includes("Lading")) {
         navigate("/billofladdle");
@@ -899,6 +906,10 @@ function GenerateInvoice() {
     //   subheadings: ["Cost Per Unit", "Min", "Max"],
     // },
     { label: "Currency", name: "Currency" },
+    { label: "Vat %", name: "Vat %" },
+    { label: "Vat Amount", name: "Vat Amount" },
+    { label: "Discount", name: "Discount" },
+
     { label: "Actions", name: "Actions" },
 
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
@@ -1389,6 +1400,8 @@ function GenerateInvoice() {
     try {
       setloadingdetails(true);
       console.log("job", jobidRef.current?.value);
+      if (jobidRef.current?.value === "")
+        return toast.error("Job Id is Required");
       let jobtype;
       let mydoc;
       if (formikObj.values.type === "Quotation") {
@@ -1451,7 +1464,7 @@ function GenerateInvoice() {
     <div className="w-full ">
       <FormikProvider value={formikObj}>
         <div className="flex flex-col w-full py-4 space-y-3 items-center">
-          <div className="fixed mx-auto w-5/6">
+          <div className="absolute mx-auto w-5/6">
             {showQuotation && (
               <AddQuotation
                 closeQuotation={setshowQuotation}
@@ -1462,29 +1475,31 @@ function GenerateInvoice() {
                     | AirwayItem
                     | ProofOfDeliveryItems
                     | CargoManifestItems
-                ) =>
-                  formikObj.values.type === "BillOfLading"
-                    ? setBillOfLadingItems([
-                        ...quotationLadingItemsStore,
-                        item as LadingItems,
-                      ])
-                    : formikObj.values.type === "AirwayBill"
-                    ? setAirwayItems([...AirwayItems, item as AirwayItem])
-                    : formikObj.values.type === "ProofOfDelivery"
-                    ? PodItem([
-                        ...quotationPODItems,
-                        item as ProofOfDeliveryItems,
-                      ])
-                    : formikObj.values.type === "CargoManifest"
-                    ? manifestItem([
-                        ...quotationManifestItems,
-                        item as CargoManifestItems,
-                      ])
-                    : setitemsArray([
-                        ...quotationItemsStore,
-                        item as QuotationItem,
-                      ])
-                }
+                ) => {
+                  if (formikObj.values.type === "BillOfLading") {
+                    setBillOfLadingItems([
+                      ...quotationLadingItemsStore,
+                      item as LadingItems,
+                    ]);
+                  } else if (formikObj.values.type === "AirwayBill") {
+                    setAirwayItems([...AirwayItems, item as AirwayItem]);
+                  } else if (formikObj.values.type === "ProofOfDelivery") {
+                    PodItem([
+                      ...quotationPODItems,
+                      item as ProofOfDeliveryItems,
+                    ]);
+                  } else if (formikObj.values.type === "CargoManifest") {
+                    manifestItem([
+                      ...quotationManifestItems,
+                      item as CargoManifestItems,
+                    ]);
+                  } else {
+                    setitemsArray([
+                      ...quotationItemsStore,
+                      item as QuotationItem,
+                    ]);
+                  }
+                }}
                 quotationType={formikObj.values.type}
                 toEdit={toEdit}
               />
@@ -1503,7 +1518,7 @@ function GenerateInvoice() {
             </label>
             <input
               type={"text"}
-              name={"jobid"}
+              name={"Jobid"}
               placeholder={
                 formikObj.values.type === "Quotation"
                   ? "Quotation Id"
@@ -1512,6 +1527,7 @@ function GenerateInvoice() {
               className="w-3/5 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
               ref={jobidRef}
             />
+
             <button
               className="bg-blue-500 text-white p-3 rounded-md"
               onClick={filljobDetailsbyId}
@@ -2097,6 +2113,15 @@ function GenerateInvoice() {
                         </td> */}
                             <td className="border border-slate-300 p-4">
                               {i.Currency}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.vatpercent}
+                            </td>{" "}
+                            <td className="border border-slate-300 p-4">
+                              {i.vatamount}
+                            </td>
+                            <td className="border border-slate-300 p-4">
+                              {i.Discount}
                             </td>
                             <td className="border border-slate-300 p-4">
                               <h1

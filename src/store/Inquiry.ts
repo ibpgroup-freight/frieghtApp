@@ -60,6 +60,12 @@ const useInquiryItem = create<InquiryStore>((set) => ({
   setaddress(address) {
     set((state) => ({ ...state, address }));
   },
+  editPrestation(i, index) {
+    set((state) => {
+      state.prestation[index] = i;
+      return state;
+    });
+  },
   prestation: [],
   setItemInquiry: (i) => {
     set((state) => {

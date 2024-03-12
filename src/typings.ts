@@ -29,8 +29,9 @@ type QuotationItem = {
   Weight: string;
   quantity?: number;
   Discount?: number;
-  VAT?: number;
+  vatpercent?: number;
   Dimensions: string;
+  vatamount?: number;
 };
 type Inquiry = {
   CustomerName: string;
@@ -102,6 +103,7 @@ type InquiryStore = {
   prestation: PrestationItem[];
   setaddress: (address: string) => void;
   setPrestationArray: (i: PrestationItem[]) => void;
+  editPrestation: (i: PrestationItem, index: number) => void;
 };
 type actionType = keyof Inquiry;
 type action = {

@@ -1181,7 +1181,7 @@ function TableFooterCol2({
   const Total = items.reduce((acc, i, index) => {
     acc += parseInt(i.RateAmountPerUnit);
     acc = acc - (i.Discount ?? 0);
-    acc = acc + (i.VAT ?? 0);
+    acc = acc + (i.vatamount ?? 0);
     return acc;
   }, 0);
   const TWO = Total;

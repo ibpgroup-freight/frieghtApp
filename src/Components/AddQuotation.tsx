@@ -353,6 +353,19 @@ function AddQuotation({
     { label: "Amount Per Unit", name: "RateAmountPerUnit" },
     { label: "Min Amount Per Unit", name: "MinRateAmountPerUnit" },
   ];
+  const Column3 = [
+    {
+      label: "Quantity",
+      name: "quantity",
+      type: "number",
+      options: [],
+    },
+    { label: "VAT %", name: "vatpercent", type: "number" },
+
+    { label: "Vat Amount", name: "vatamount", type: "number" },
+    { label: "Discount", name: "Discount", type: "number" },
+
+  ];
   const laddingBillColumns = [
     {
       label: "No of Packages",
@@ -412,7 +425,7 @@ function AddQuotation({
   console.log(quotationType, "Qtype");
   return (
     <FormikProvider value={formikobj}>
-      <div className=" mx-auto md:w-3/5 px-10 bg-white border border-black z-1000 py-10 rounded-md">
+      <div className=" mx-auto md:w-4/5 max-h-fit px-10 bg-white border border-black z-1000 py-10 rounded-md">
         <form
           onSubmit={(e) => {
             e.stopPropagation();
@@ -423,7 +436,7 @@ function AddQuotation({
         >
           <Field hidden name="type" />
           <div
-            className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl absolute right-9"
+            className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl relative w-9 right-9"
             onClick={(e) => {
               ctx.setToggle();
               closeQuotation((p) => !p);
@@ -473,6 +486,58 @@ function AddQuotation({
                     Rate Section
                   </h2>
                   {Column2.map((i) => (
+                    <div
+                      className="flex flex-col items-center justify-start"
+                      key={i.name}
+                    >
+                      <label className="text-xl">{i.label}</label>
+                      {i.type === "select" ? (
+                        <>
+                          <Field
+                            as="select"
+                            name={i.name}
+                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          >
+                            <option value="">Select Value </option>
+                            {i.options?.map((o) => (
+                              <option value={o} key={o}>
+                                {o}
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <Field
+                            type={i.type}
+                            name={i.name}
+                            className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={i.name}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            {quotationType !== "BillOfLading" &&
+              quotationType !== "AirwayBill" &&
+              quotationType !== "CargoManifest" &&
+              quotationType !== "ProofOfDelivery" && (
+                <div className="flex flex-col space-y-2 items-center">
+                  <h2 className="text-2xl text-black-800 w-full font-serif text-center">
+                    Other Info
+                  </h2>
+                  {Column3.map((i) => (
                     <div
                       className="flex flex-col items-center justify-start"
                       key={i.name}

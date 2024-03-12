@@ -6,9 +6,10 @@ import { useFormik, FormikProvider, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import useInquiryItem from "../store/Inquiry";
 type qprops = {
-  closeQuotation: React.Dispatch<React.SetStateAction<boolean>>;
+  closePrestation: React.Dispatch<React.SetStateAction<boolean>>;
   AddItemToInvoice?: (item: QuotationItem) => void;
   quotationType?: string;
+  toEdit: any;
 };
 const validationSchema = Yup.object().shape({
   description: Yup.string().required("Field is Required"),
@@ -31,28 +32,34 @@ const validationSchema = Yup.object().shape({
 //   }
 // };
 function AddPrestation({
-  closeQuotation,
+  closePrestation,
   AddItemToInvoice,
   quotationType,
+  toEdit,
 }: qprops) {
   // const [val, setval] = React.useState("");
-  const { prestation, setPrestation } = useInquiryItem();
+  const { prestation, setPrestation, editPrestation } = useInquiryItem();
   // const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
   const formikobj = useFormik({
     initialValues: {
       currency: "",
       description: "",
       total: 0,
+      isEditing: false,
+      ...(toEdit ?? {}),
     },
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      setPrestation({
-        currency: values.currency,
-        description: values.description,
-        total: values.total,
-      });
-      closeQuotation(true);
+      values.isEditing
+        ? editPrestation(values, values.index)
+        : setPrestation({
+            currency: values.currency,
+            description: values.description,
+            total: values.total,
+          });
+      closePrestation((p) => !p);
+      ctx.setToggle();
       try {
       } catch (e) {
         console.log(e);
@@ -82,7 +89,7 @@ function AddPrestation({
             className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl relative w-9 right-9"
             onClick={(e) => {
               ctx.setToggle();
-              closeQuotation((p) => !p);
+              closePrestation((p) => !p);
             }}
           >
             X
@@ -91,7 +98,7 @@ function AddPrestation({
             className="text-white  bg-red-600  p-1 px-3 cursor-pointer rounded-full text-xl absolute right-9"
             onClick={(e) => {
               ctx.setToggle();
-              closeQuotation((p) => !p);
+              closePrestation((p) => !p);
             }}
           >
             X

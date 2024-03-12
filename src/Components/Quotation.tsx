@@ -20,12 +20,14 @@ import AddPrestation from "./AddPrestation";
 function Quotation(props: InquiryAndQuotationProps) {
   const ctx = useContext(ModalCtx);
   // const [state, dispatch] = useReducer(QuotationReducer, quotation);
-  const { inquiry, resetInquiry, prestation } = useInquiryItem();
-  const { items, resetItems } = useItemStore();
+  const { inquiry, resetInquiry, prestation, setPrestationArray } =
+    useInquiryItem();
+  const { items, resetItems, setitemsArray } = useItemStore();
   const [searchparams, setsearchparams] = useSearchParams();
   const JobMode = searchparams.get("method");
   const isEditing = searchparams.get("editJob");
   const JobInitials = JobMode?.slice(-2);
+  const [toEdit, settoEdit] = useState<any>();
   const [isloading, setisloading] = useState<boolean>(false);
   const jobType =
     JobMode?.includes("Air") || JobMode?.includes("air")
@@ -102,6 +104,11 @@ function Quotation(props: InquiryAndQuotationProps) {
     //   subheadings: ["Cost Per Unit", "Min", "Max"],
     // },
     { label: "Currency", name: "Currency" },
+    { label: "Vat %", name: "Vat %" },
+    { label: "Vat Amount", name: "Vat Amount" },
+    { label: "Discount", name: "Discount" },
+
+    { label: "Actions", name: "Actions" },
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
@@ -110,23 +117,26 @@ function Quotation(props: InquiryAndQuotationProps) {
     { label: "Description", name: "description" },
     { label: "currency", name: "currency" },
     { label: "total", name: "total" },
+    { label: "Actions", name: "Actions" },
   ];
   return (
     <div className="w-full">
-      <div className={`md:px-5 flex justify-evenly  w-full  `}>
-        <div className="fixed w-full">
+      <div className={`md:px-5 flex justify-evenly  w-full `}>
+        <div className="absolute z-50 w-full top-5 mx-auto overflow-auto">
           {showQuotation && (
             <AddQuotation
               closeQuotation={setshowQuotation}
               quotationType="job"
+              toEdit={toEdit}
             />
           )}
         </div>
-        <div className="fixed w-full">
+        <div className="fixed z-50 w-full">
           {showPrestation && (
             <AddPrestation
-              closeQuotation={setshowPrestation}
+              closePrestation={setshowPrestation}
               quotationType="job"
+              toEdit={toEdit}
             />
           )}
         </div>
@@ -171,7 +181,6 @@ function Quotation(props: InquiryAndQuotationProps) {
                       {i.ChargeDescription}
                     </td>
                     <td className="border border-slate-300 p-4">{i.Units}</td>
-
                     <td className="border border-slate-300 p-4">
                       {/* {i.UnitPerKg} */}
                       {i.RateAmountPerUnit}
@@ -194,6 +203,39 @@ function Quotation(props: InquiryAndQuotationProps) {
                     <td className="border border-slate-300 p-4">
                       {i.Currency}
                     </td>
+                    <td className="border border-slate-300 p-4">
+                      {i.vatpercent}
+                    </td>{" "}
+                    <td className="border border-slate-300 p-4">
+                      {i.vatamount}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      {i.Discount}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      <h1
+                        className="text-yellow-400"
+                        onClick={() => {
+                          console.log(i, "the i");
+                          settoEdit({ ...i, index, isEditing: true });
+                          setshowQuotation(true);
+                          ctx.setToggle();
+                        }}
+                      >
+                        Edit
+                      </h1>
+                      <h1
+                        className="text-red-400"
+                        onClick={() => {
+                          const newquotations = items.filter(
+                            (i, ind) => ind !== index
+                          );
+                          setitemsArray(newquotations);
+                        }}
+                      >
+                        Remove
+                      </h1>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -201,12 +243,14 @@ function Quotation(props: InquiryAndQuotationProps) {
           </table>
         </div>
 
-        <div className="absolute right-20">
+        <div className="relative right-20">
           <button
             className="text-2xl rounded-full text-green-600"
             onClick={(e) => {
               console.log("Here");
               setshowQuotation(true);
+              settoEdit({ isEditing: false });
+
               ctx.setToggle();
             }}
           >
@@ -265,18 +309,43 @@ function Quotation(props: InquiryAndQuotationProps) {
                       {i?.currency}
                     </td>
                     <td className="border border-slate-300 p-4">{i?.total}</td>
+                    <td className="border border-slate-300 p-4">
+                      <h1
+                        className="text-yellow-400"
+                        onClick={() => {
+                          console.log(i, "the i");
+                          settoEdit({ ...i, index, isEditing: true });
+                          setshowPrestation(true);
+                          ctx.setToggle();
+                        }}
+                      >
+                        Edit
+                      </h1>
+                      <h1
+                        className="text-red-400"
+                        onClick={() => {
+                          const newprestations = prestation?.filter(
+                            (i, ind) => ind !== index
+                          );
+                          setPrestationArray(newprestations);
+                        }}
+                      >
+                        Remove
+                      </h1>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             )}
           </table>
         </div>
-        <div className="absolute right-20">
+        <div className="relative right-20 text-right">
           <button
             className="text-2xl rounded-full text-green-600"
             onClick={(e) => {
               console.log("Here");
               setshowPrestation(true);
+              settoEdit({ isEditing: false });
               ctx.setToggle();
             }}
           >

@@ -53,7 +53,7 @@ function Invoice() {
           <InvoiceHeader />
           <CompanyInfo jobInfo={jobInfo} location={companyLocation!} />
           <BillToInfo jobInfo={jobInfo} />
-          <ItemsTableHeader />
+          <ItemsTableHeader jobInfo={jobInfo} />
           <TableRows items={Items} />
           <TableFooter items={Items} jobInfo={jobInfo} />
           <PageFooter companyInfo={companyLocation!} />
@@ -676,7 +676,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
   );
 }
 
-function ItemsTableHeader() {
+function ItemsTableHeader({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
   return (
     <View
       style={{
@@ -781,7 +781,7 @@ function ItemsTableHeader() {
         <Text
           style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
         >
-          VAT Amount AED
+          VAT Amount
         </Text>
       </View>
       <View
@@ -801,118 +801,125 @@ function ItemsTableHeader() {
   );
 }
 function TableRows({ items }: { items: QuotationItem[] }) {
-  const rows = items?.map((i, index) => (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        border: 1,
-      }}
-    >
+  const rows = items?.map((i, index) => {
+    const Total =
+      parseInt(i.RateAmountPerUnit) * (i.quantity ?? 1) +
+      (i.Discount ?? 0) +
+      (i.vatamount ?? 0);
+
+    return (
       <View
         style={{
-          width: "10%",
-
-          borderRight: 1,
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          border: 1,
         }}
       >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+        <View
+          style={{
+            width: "10%",
+
+            borderRight: 1,
+          }}
         >
-          {index}{" "}
-        </Text>
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {index}{" "}
+          </Text>
+        </View>
+        <View
+          style={{
+            width: "30%",
+
+            borderRight: 1,
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {i.ChargeDescription}
+          </Text>
+        </View>
+        <View
+          style={{
+            width: "10%",
+
+            borderRight: 1,
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {i.quantity}
+          </Text>
+        </View>{" "}
+        <View
+          style={{
+            width: "10%",
+
+            borderRight: 1,
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {i.RateAmountPerUnit}
+          </Text>
+        </View>
+        <View
+          style={{
+            width: "10%",
+
+            borderRight: 1,
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {i.Discount}
+          </Text>
+        </View>
+        <View
+          style={{
+            width: "10%",
+
+            borderRight: 1,
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {i.vatpercent}
+          </Text>
+        </View>{" "}
+        <View
+          style={{
+            width: "10%",
+
+            borderRight: 1,
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {i.vatamount}
+          </Text>
+        </View>
+        <View
+          style={{
+            width: "10%",
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
+          >
+            {Total}
+          </Text>
+        </View>
       </View>
-      <View
-        style={{
-          width: "30%",
-
-          borderRight: 1,
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          {i.ChargeDescription}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: "10%",
-
-          borderRight: 1,
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          {i.quantity}
-        </Text>
-      </View>{" "}
-      <View
-        style={{
-          width: "10%",
-
-          borderRight: 1,
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          {i.RateAmountPerUnit}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: "10%",
-
-          borderRight: 1,
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          {i.Discount}
-        </Text>
-      </View>
-      <View
-        style={{
-          width: "10%",
-
-          borderRight: 1,
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          {i.VAT}
-        </Text>
-      </View>{" "}
-      <View
-        style={{
-          width: "10%",
-
-          borderRight: 1,
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          VAT Amount AED
-        </Text>
-      </View>
-      <View
-        style={{
-          width: "10%",
-        }}
-      >
-        <Text
-          style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
-        >
-          {i.RateAmountPerUnit}
-        </Text>
-      </View>
-    </View>
-  ));
+    );
+  });
   return <>{rows}</>;
 }
 function TableFooter({
@@ -959,12 +966,15 @@ function TableFooterCol2({
   jobInfo: cargoInfo & Inquiry;
 }) {
   const Total = items.reduce((acc, i, index) => {
-    acc += parseInt(i.RateAmountPerUnit);
-    acc = acc - (i.Discount ?? 0);
-    acc = acc + (i.VAT ?? 0);
-    return acc;
+    const t =
+      parseInt(i.RateAmountPerUnit) * (i.quantity ?? 1) +
+      (i.Discount ?? 0) +
+      (i.vatamount ?? 0);
+
+    return acc + t;
   }, 0);
-  const TWO = Total + jobInfo.OutstandingDues;
+  const tafterVat = Total + (jobInfo.VATAmount ?? 1);
+  const TWO = tafterVat + jobInfo.OutstandingDues;
   console.log("Titems", items);
   console.log("Total", Total);
   console.log("TWo", TWO);
@@ -1041,38 +1051,20 @@ function TableFooterCol2({
               fontSize: 7,
             }}
           >
-            After VAT
-          </Text>
-        </View>
-        <View style={{ width: "40%" }}></View>
-      </View>
-      <View
-        style={{
-          borderBottomWidth: 1,
-          width: "60%",
-          flexDirection: "row",
-        }}
-      >
-        <View
-          style={{
-            borderRight: 1,
-            width: "40%",
-            padding: 1,
-            borderLeft: 1,
-            backgroundColor: "gainsboro",
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-
-              fontSize: 7,
-            }}
-          >
             VAT Amount
           </Text>
         </View>
-        <View style={{ width: "40%" }}></View>
+        <View style={{ width: "40%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.VATAmount}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -1097,27 +1089,10 @@ function TableFooterCol2({
               fontSize: 7,
             }}
           >
-            Grand TOTAL
+            After VAT
           </Text>
         </View>
-        <View style={{ width: "40%" }}></View>
-      </View>
-      <View
-        style={{
-          borderBottomWidth: 1,
-          width: "60%",
-          flexDirection: "row",
-        }}
-      >
-        <View
-          style={{
-            borderRight: 1,
-            width: "40%",
-            padding: 1,
-            borderLeft: 1,
-            backgroundColor: "gainsboro",
-          }}
-        >
+        <View style={{ width: "40%" }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1125,10 +1100,9 @@ function TableFooterCol2({
               fontSize: 7,
             }}
           >
-            AMOUNT
+            {tafterVat}
           </Text>
         </View>
-        <View style={{ width: "40%" }}></View>
       </View>
       <View
         style={{
@@ -1154,6 +1128,45 @@ function TableFooterCol2({
             }}
           >
             Outstanding Dues
+          </Text>
+        </View>
+        <View style={{ width: "40%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.OutstandingDues}
+          </Text>
+        </View>
+      </View>
+
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "60%",
+          flexDirection: "row",
+        }}
+      >
+        <View
+          style={{
+            borderRight: 1,
+            width: "40%",
+            padding: 1,
+            borderLeft: 1,
+            backgroundColor: "gainsboro",
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Grand Total
           </Text>
         </View>
         <View style={{ width: "40%" }}>
