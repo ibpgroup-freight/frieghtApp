@@ -209,6 +209,11 @@ function AddQuotation({
     AddAirwayItem,
     addPODItem,
     addManifestItem,
+    editAirwayItem,
+    editItem,
+    editLadingItem,
+    editManifestItem,
+    editPodItem,
   } = useItemStore();
   // const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
   const formikobj = useFormik({
@@ -252,6 +257,7 @@ function AddQuotation({
       HeaderAddress: "",
       HAWBNo: "",
       CBM: "",
+      isEditing: false,
       type: quotationType,
       ...(toEdit ?? {}),
     },
@@ -259,28 +265,70 @@ function AddQuotation({
     onSubmit: (values) => {
       try {
         console.log(values);
-        !AddItemToInvoice
-          ? values.type === "BillOfLading"
-            ? AddLadingItem({
+
+        if (values.type === "BillOfLading") {
+          console.log("bol err 2");
+
+          if (values.isEditing) {
+            editLadingItem(
+              {
                 ContainerNo: values.ContainerNo,
                 Dimensions: values.Dimensions,
                 NoOfPackages: values.NoOfPackages,
                 PackageDescription: values.PackageDescription,
                 SealNo: values.SealNo,
                 Weight: values.Weight,
-              })
-            : values.type === "AirwayBill"
-            ? AddAirwayItem(values)
-            : values.type === "CargoManifest"
-            ? addManifestItem(values)
-            : values.type === "ProofOfDelivery"
-            ? addPODItem(values)
-            : AddItem(values)
-          : AddItemToInvoice(values);
+              },
+              values.index
+            );
+          } else {
+            AddLadingItem({
+              ContainerNo: values.ContainerNo,
+              Dimensions: values.Dimensions,
+              NoOfPackages: values.NoOfPackages,
+              PackageDescription: values.PackageDescription,
+              SealNo: values.SealNo,
+              Weight: values.Weight,
+            });
+          }
+        } else if (values.type === "AirwayBill") {
+          console.log("awb edit err 2");
+
+          if (values.isEditing) {
+            editAirwayItem(values, values.index);
+          } else {
+            AddAirwayItem(values);
+          }
+        } else if (values.type === "CargoManifest") {
+          console.log("cam edit err 2");
+
+          if (values.isEditing) {
+            editManifestItem(values, values.index);
+          } else {
+            addManifestItem(values);
+          }
+        } else if (values.type === "ProofOfDelivery") {
+          console.log("pod edit err 2");
+
+          if (values.isEditing) {
+            editPodItem(values, values.index);
+          } else {
+            addPODItem(values);
+          }
+        } else if (values.isEditing) {
+          console.log("editing err");
+          editItem(values, values.index);
+        } else {
+          console.log("editing err 2");
+
+          AddItem(values);
+        }
+        // if (AddItemToInvoice) AddItemToInvoice(values);
         closeQuotation((p) => !p);
         ctx.setToggle();
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        // Handle the error as needed
+        console.error(error);
       }
     },
   });

@@ -126,10 +126,15 @@ type ItemsStore = {
   PODItems: ProofOfDeliveryItems[];
   ManifestItems: CargoManifestItems[];
   AddLadingItem: (item: LadingItems) => void;
+  editLadingItem: (item: LadingItems, index: number) => void;
+  editAirwayItem: (item: AirwayItem, index: number) => void;
+  editManifestItem: (item: CargoManifestItems, index: number) => void;
+  editItem: (item: QuotationItem, index: number) => void;
+  editPodItem: (item: ProofOfDeliveryItems, index: number) => void;
+
   AddAirwayItem: (item: AirwayItem) => void;
   addManifestItem: (item: CargoManifestItems) => void;
   addPODItem: (item: ProofOfDeliveryItems) => void;
-
   AddItem: (item: QuotationItem) => void;
   RemoveItem: (id: string) => void;
   resetItems: () => void;

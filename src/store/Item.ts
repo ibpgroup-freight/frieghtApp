@@ -67,6 +67,36 @@ const useItemStore = create<ItemsStore>((set) => ({
       return { ...state, totalItems: state.totalItems + 1 };
     });
   },
+  editAirwayItem(item, index) {
+    set((state) => {
+      state.AirwayItems[index] = item;
+      return state;
+    });
+  },
+  editItem(item, index) {
+    set((state) => {
+      state.items[index] = item;
+      return state;
+    });
+  },
+  editLadingItem(item, index) {
+    set((state) => {
+      state.ladingItems[index] = item;
+      return state;
+    });
+  },
+  editManifestItem(item, index) {
+    set((state) => {
+      state.ManifestItems[index] = item;
+      return state;
+    });
+  },
+  editPodItem(item, index) {
+    set((state) => {
+      state.PODItems[index] = item;
+      return state;
+    });
+  },
 }));
 
 export default useItemStore;

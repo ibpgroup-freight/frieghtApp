@@ -2103,7 +2103,7 @@ function GenerateInvoice() {
                                 className="text-yellow-400"
                                 onClick={() => {
                                   console.log(i, "the i");
-                                  settoEdit({ ...i, index });
+                                  settoEdit({ ...i, index, isEditing: true });
                                   setshowQuotation(true);
                                   ctx.setToggle();
                                 }}
@@ -2136,6 +2136,7 @@ function GenerateInvoice() {
                         if (!formikObj.values.type) {
                           return toast.error("Select Type Of Bill First");
                         }
+                        settoEdit({ isEditing: false });
                         setshowQuotation(true);
                         ctx.setToggle();
                       }}
