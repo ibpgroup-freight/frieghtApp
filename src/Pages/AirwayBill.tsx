@@ -1015,6 +1015,18 @@ const InvoiceTableHeader = () => (
 );
 
 function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
+  const TotalPPd =
+    parseInt(jobInfo.PPDWeight ?? "0") +
+    parseInt(jobInfo.PPDValuation ?? "0") +
+    parseInt(jobInfo.PPDTax ?? "0") +
+    parseInt(jobInfo.PPDOtherDueAgent ?? "0") +
+    parseInt(jobInfo.PPDOtherDueCarrier ?? "0");
+  const TotalColl =
+    parseInt(jobInfo.CollWeight ?? "0") +
+    parseInt(jobInfo.CollValuation ?? "0") +
+    parseInt(jobInfo.CollTax ?? "0") +
+    parseInt(jobInfo.CollOtherDueAgent ?? "0") +
+    parseInt(jobInfo.CollOtherDueCarrier ?? "0");
   return (
     <View
       style={{
@@ -1277,7 +1289,9 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                       textAlign: "center",
                       fontFamily: "Courier",
                     }}
-                  ></Text>
+                  >
+                    {jobInfo.PPDOtherDueAgent}
+                  </Text>
                 </View>
 
                 <View style={{ width: "50%" }}>
@@ -1288,7 +1302,16 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     }}
                   >
                     Collect
-                  </Text>{" "}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.CollOtherDueAgent}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1322,6 +1345,15 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   >
                     Pre
                   </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.PPDOtherDueCarrier}
+                  </Text>
                 </View>
 
                 <View style={{ width: "50%" }}>
@@ -1332,7 +1364,16 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     }}
                   >
                     Collect
-                  </Text>{" "}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      textAlign: "center",
+                      fontFamily: "Courier",
+                    }}
+                  >
+                    {jobInfo.CollOtherDueCarrier}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -1343,10 +1384,19 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 12,
+                    fontSize: 10,
                   }}
                 >
                   Total Prepaid
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 10,
+                    textAlign: "center",
+                    fontFamily: "Courier",
+                  }}
+                >
+                  {TotalPPd}
                 </Text>
               </View>
               <View style={{ width: "50%" }}>
@@ -1355,10 +1405,19 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 12,
+                    fontSize: 10,
                   }}
                 >
                   Total Collect
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    textAlign: "center",
+                    fontFamily: "Courier",
+                  }}
+                >
+                  {TotalColl}
                 </Text>
               </View>
             </View>
@@ -1374,14 +1433,14 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   style={{
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
-                    fontSize: 12,
+                    fontSize: 10,
                   }}
                 >
                   Currency Conversion Rate
                 </Text>
                 <Text
                   style={{
-                    fontSize: 12,
+                    fontSize: 10,
                     fontFamily: "Courier",
                     textAlign: "center",
                   }}
@@ -1395,14 +1454,14 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 12,
+                    fontSize: 10,
                   }}
                 >
                   CC charges in Dest. Currency
                 </Text>
                 <Text
                   style={{
-                    fontSize: 12,
+                    fontSize: 10,
                     fontFamily: "Courier",
                     textAlign: "center",
                   }}
@@ -1431,7 +1490,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                     fontFamily: "Courier-Bold",
                     textAlign: "center",
 
-                    fontSize: 12,
+                    fontSize: 9,
                   }}
                 >
                   Charges at Destination
@@ -1457,6 +1516,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
+              fontSize: 8,
             }}
           >
             For Carriers Use Only *
@@ -1467,6 +1527,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             <Text
               style={{
                 fontFamily: "Courier-Bold",
+                fontSize: 8,
               }}
             >
               Charges At Destination
@@ -1476,6 +1537,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             <Text
               style={{
                 fontFamily: "Courier-Bold",
+                fontSize: 8,
               }}
             >
               Total Collect Charges

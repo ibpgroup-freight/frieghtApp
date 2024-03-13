@@ -380,11 +380,15 @@ type AirwayBillInquiry = {
   PPDWeight: string;
   PPDValuation: string;
   PPDTax: string;
-  PPDOther: string;
+  PPDOtherDueAgent: string;
+  PPDOtherDueCarrier: string;
+
   CollWeight: string;
   CollValuation: string;
   CollTax: string;
-  CollOther: string;
+  CollOtherDueAgent: string;
+  CollOtherDueCarrier: string;
+
   CurrConv: string;
   CCChargesinDestCurr: string;
   ChargesAtDestination: string;

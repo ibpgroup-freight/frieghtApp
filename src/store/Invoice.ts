@@ -142,7 +142,6 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     CCChargesinDestCurr: "",
     ChargesAtDestination: "",
     ChargesCode: "",
-    CollOther: "",
     CollTax: "",
     CollValuation: "",
     CollWeight: "",
@@ -154,7 +153,6 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     OtherColl: "",
     OtherPPD: "",
     OtherShipperInfo: "",
-    PPDOther: "",
     PPDTax: "",
     PPDValuation: "",
     PPDWeight: "",
@@ -165,6 +163,10 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     ShippersAccount: "",
     WVColl: "",
     WVPPD: "",
+    CollOtherDueAgent: "",
+    CollOtherDueCarrier: "",
+    PPDOtherDueAgent: "",
+    PPDOtherDueCarrier: "",
   },
   setAirwayBillItems(j) {
     set((state) => {
