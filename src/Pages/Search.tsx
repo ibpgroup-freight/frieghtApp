@@ -6,11 +6,14 @@ import {
   Timestamp,
   getDoc,
 } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { db } from "../firebase";
 import { v4 } from "uuid";
 import CustomLoader from "../Components/CustomLoader";
-type searchType = "users" | "contacts" | "jobs";
+import { useNavigate } from "react-router-dom";
+import useItemStore from "../store/Item";
+import useInquiryItem from "../store/Inquiry";
+type searchType = "users" | "contacts" | "jobs" | "quotations";
 type searchBy = "id" | "email" | "phone" | "status";
 function Search() {
   const [searchType, setSearchType] = useState<searchType>("users"); // Default search type
@@ -18,17 +21,27 @@ function Search() {
   const [searchValue, setsearchValue] = useState<string>(""); // Default search type
   const [jobStatus, setjobStatus] = useState<JobStatus>(); // Default search type
 
+  const navigate = useNavigate();
   const [searchAns, setsearchAns] = useState<any>([]);
   const [loading, setisloading] = useState<boolean>(false);
+  const { setitemsArray } = useItemStore();
+  const { inquiry, setPrestationArray, setItemInquiry } = useInquiryItem();
   const submitHandler = async () => {
     try {
       let searchResults: any = [];
       setisloading(true);
+      console.log(jobStatus, searchBy, searchType);
       if (jobStatus && searchType == "jobs" && searchBy == "status") {
         searchResults = await getDocs(
           query(collection(db, searchType), where(searchBy, "==", jobStatus))
         );
+      }
+      if (jobStatus && searchType == "quotations" && searchBy == "status") {
+        searchResults = await getDocs(
+          query(collection(db, searchType), where(searchBy, "==", jobStatus))
+        );
       } else {
+        console.log("in here", searchType, searchBy, searchValue);
         searchResults = await getDocs(
           query(
             collection(db, searchType),
@@ -54,6 +67,9 @@ function Search() {
       setisloading(false);
     }
   };
+  const ViewJob = useCallback(() => {
+    navigate(`/jobDetails`);
+  }, []);
   console.log(searchAns);
   return (
     <div className="w-full bg-white p-6 rounded-md shadow-md">
@@ -75,6 +91,7 @@ function Search() {
             <option value="users">User</option>
             <option value="contacts">Contact</option>
             <option value="jobs">Job</option>
+            <option value="quotations">Quotation</option>
           </select>
         </div>
         <div className="mb-4 w-full">
@@ -97,12 +114,14 @@ function Search() {
                   ? "userId"
                   : searchType == "contacts"
                   ? "contactId"
-                  : "jobid"
+                  : searchType == "jobs"
+                  ? "jobid"
+                  : "quotationId"
               }
             >
               Id
             </option>
-            {searchType !== "jobs" && (
+            {searchType !== "quotations" && searchType !== "jobs" && (
               <>
                 <option value="email">Email</option>
                 <option value="phone">Number</option>
@@ -111,7 +130,7 @@ function Search() {
             {(searchType == "users" || searchType == "contacts") && (
               <option value="name">Name</option>
             )}
-            {searchType == "jobs" && (
+            {(searchType == "jobs" || searchType == "quotations") && (
               <>
                 <option value="status">Status</option>
               </>
@@ -119,7 +138,8 @@ function Search() {
           </select>
         </div>
 
-        {searchType == "jobs" && searchBy == "status" ? (
+        {(searchType == "jobs" && searchBy == "status") ||
+        (searchType == "quotations" && searchBy == "status") ? (
           <div className="mb-4 w-full ">
             <label
               htmlFor="searchType"
@@ -183,6 +203,7 @@ function Search() {
                       {e.toLocaleUpperCase()}
                     </th>
                   ))}
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -199,6 +220,32 @@ function Search() {
                           : e instanceof Timestamp && e.toDate().toDateString()}
                       </td>
                     ))}
+                    <td>
+                      <h5
+                        onClick={() => {
+                          console.log(searchAns);
+                          if (searchType === "jobs") {
+                            setItemInquiry({
+                              ...searchAns[0].inquiry,
+                              quotationId: searchAns[0]?.jobid,
+                            });
+                            setitemsArray(searchAns[0]?.Items || []);
+                            setPrestationArray(searchAns[0]?.prestation || []);
+                            ViewJob();
+                          } else if (searchType === "quotations") {
+                            setItemInquiry({
+                              ...searchAns[0].inquiry,
+                              quotationId: searchAns[0]?.quotationid,
+                            });
+                            setitemsArray(searchAns[0]?.Items || []);
+                            setPrestationArray(searchAns[0]?.prestation || []);
+                            navigate("/quotationDetails");
+                          }
+                        }}
+                      >
+                        View{" "}
+                      </h5>
+                    </td>
                   </tr>
                 ))}
             </tbody>

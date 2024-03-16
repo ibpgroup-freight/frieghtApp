@@ -88,7 +88,7 @@ function Quotation(props: InquiryAndQuotationProps) {
     } finally {
       setisloading((p) => false);
     }
-  }, [items, JobInitials, inquiry, isEditingJob]);
+  }, [items, JobInitials, inquiry, isEditingJob, prestation]);
   const [showQuotation, setshowQuotation] = useState<boolean>(false);
   const [showPrestation, setshowPrestation] = useState<boolean>(false);
 
