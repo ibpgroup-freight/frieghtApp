@@ -16,11 +16,13 @@ type InquiryAndQuotationProps = {
 };
 function GenerateJob(props: InquiryAndQuotationProps) {
   const { setJob, Jobs } = useJob();
-  const { inquiry, resetInquiry } = useInquiryItem();
+  const { inquiry, resetInquiry, prestation } = useInquiryItem();
   const { items, resetItems } = useItemStore();
   const [searchparams, setsearchparams] = useSearchParams();
   const JobMode = searchparams.get("method");
-  const isEditing = searchparams.get("editJob");
+  const isEditingJob = searchparams.get("editJob");
+  const isEditingQuotation = searchparams.get("editQuotation");
+
   const JobInitials = JobMode?.slice(-2);
   const [isloading, setisloading] = useState<boolean>(false);
 
@@ -30,10 +32,18 @@ function GenerateJob(props: InquiryAndQuotationProps) {
   const createJob = useCallback(async () => {
     try {
       setisloading((p) => true);
-      if (isEditing) {
-        await updateDoc(doc(db, "jobs", isEditing), {
+      if (isEditingQuotation) {
+        await updateDoc(doc(db, "quotations", isEditingQuotation), {
+          Items: items,
+          inquiry,
+          prestation,
+          updatedAt: serverTimestamp(),
+        });
+      } else if (isEditingJob) {
+        await updateDoc(doc(db, "jobs", isEditingJob), {
           inquiry,
           Items: items,
+          prestation,
           updatedAt: serverTimestamp(),
         });
       } else {
@@ -41,8 +51,10 @@ function GenerateJob(props: InquiryAndQuotationProps) {
           status: "pending",
           inquiry,
           Items: items,
+          prestation,
           jobid:
             JobInitials + `-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+          method: inquiry.method,
         });
       }
 
@@ -55,7 +67,7 @@ function GenerateJob(props: InquiryAndQuotationProps) {
     } finally {
       setisloading((p) => false);
     }
-  }, [items, JobInitials, inquiry, isEditing]);
+  }, [items, JobInitials, inquiry, isEditingJob]);
   return (
     <div className="w-full h-5/6 relative -top-10 flex justify-evenly py-2">
       <JobPDF />

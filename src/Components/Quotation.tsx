@@ -25,7 +25,9 @@ function Quotation(props: InquiryAndQuotationProps) {
   const { items, resetItems, setitemsArray } = useItemStore();
   const [searchparams, setsearchparams] = useSearchParams();
   const JobMode = searchparams.get("method");
-  const isEditing = searchparams.get("editJob");
+  const isEditingJob = searchparams.get("editJob");
+  const isEditingQuotation = searchparams.get("editQuotation");
+
   const JobInitials = JobMode?.slice(-2);
   const [toEdit, settoEdit] = useState<any>();
   const [isloading, setisloading] = useState<boolean>(false);
@@ -42,8 +44,15 @@ function Quotation(props: InquiryAndQuotationProps) {
     try {
       if (items.length <= 0) return toast.info("Add Some Items First");
       setisloading((p) => true);
-      if (isEditing) {
-        await updateDoc(doc(db, "quotations", isEditing), {
+      if (isEditingJob) {
+        await updateDoc(doc(db, "jobs", isEditingJob), {
+          inquiry,
+          Items: items,
+          prestation,
+          updatedAt: serverTimestamp(),
+        });
+      } else if (isEditingQuotation) {
+        await updateDoc(doc(db, "quotations", isEditingQuotation), {
           inquiry,
           Items: items,
           prestation,
@@ -60,6 +69,7 @@ function Quotation(props: InquiryAndQuotationProps) {
           jobInitials: JobInitials,
           method: JobMode,
           prestation,
+          createdAt: serverTimestamp(),
         });
         // setJob({
         //   status: "pending",
@@ -78,7 +88,7 @@ function Quotation(props: InquiryAndQuotationProps) {
     } finally {
       setisloading((p) => false);
     }
-  }, [items, JobInitials, inquiry, isEditing]);
+  }, [items, JobInitials, inquiry, isEditingJob]);
   const [showQuotation, setshowQuotation] = useState<boolean>(false);
   const [showPrestation, setshowPrestation] = useState<boolean>(false);
 
@@ -217,7 +227,7 @@ function Quotation(props: InquiryAndQuotationProps) {
                         className="text-yellow-400"
                         onClick={() => {
                           console.log(i, "the i");
-                          settoEdit({ ...i, index, isEditing: true });
+                          settoEdit({ ...i, index, isEditingJob: true });
                           setshowQuotation(true);
                           ctx.setToggle();
                         }}
@@ -249,7 +259,7 @@ function Quotation(props: InquiryAndQuotationProps) {
             onClick={(e) => {
               console.log("Here");
               setshowQuotation(true);
-              settoEdit({ isEditing: false });
+              settoEdit({ isEditingJob: false });
 
               ctx.setToggle();
             }}
@@ -314,7 +324,7 @@ function Quotation(props: InquiryAndQuotationProps) {
                         className="text-yellow-400"
                         onClick={() => {
                           console.log(i, "the i");
-                          settoEdit({ ...i, index, isEditing: true });
+                          settoEdit({ ...i, index, isEditingJob: true });
                           setshowPrestation(true);
                           ctx.setToggle();
                         }}
@@ -345,7 +355,7 @@ function Quotation(props: InquiryAndQuotationProps) {
             onClick={(e) => {
               console.log("Here");
               setshowPrestation(true);
-              settoEdit({ isEditing: false });
+              settoEdit({ isEditingJob: false });
               ctx.setToggle();
             }}
           >
@@ -385,6 +395,12 @@ function Quotation(props: InquiryAndQuotationProps) {
         >
           {isloading ? (
             <LoaderIcon className="mx-auto p-4" />
+          ) : isEditingJob || isEditingQuotation ? (
+            isEditingQuotation ? (
+              "Update Quotation"
+            ) : (
+              "Update Job"
+            )
           ) : (
             "Create Quotation"
           )}

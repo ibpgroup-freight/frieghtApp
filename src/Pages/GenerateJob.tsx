@@ -236,6 +236,7 @@ function GenerateJob() {
           Items: quotationItemsStore,
           jobid: values.quotationId!,
           status: "pending",
+          method: inquiry.method,
         });
         toast.success("Job Generated Successfully");
         navigate("/analytics");

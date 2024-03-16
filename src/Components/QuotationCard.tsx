@@ -46,7 +46,10 @@ function QuotationCard({
   const editJob = useCallback(() => {
     setItemInquiry(quotation.inquiry);
     setitemsArray(quotation.Items);
-    navigate(`/home?editJob=${quotation.id}`, { state: { job: quotation } });
+    setPrestationArray(quotation.prestation);
+    navigate(`/home?method=${quotation.method}&editQuotation=${quotation.id}`, {
+      state: { job: quotation },
+    });
   }, []);
   const ViewJob = useCallback(() => {
     setItemInquiry({
@@ -94,11 +97,11 @@ function QuotationCard({
             </td> */}
         <td className=" flex flex-col  space-y-2 px-2 justify-center self-center my-2 items-start">
           <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
-          {/* <ButtonBlue
+          <ButtonBlue
             text="Edit"
             onclick={editJob}
             customStyle={"text-green-900 hover:text-green-500 "}
-          /> */}
+          />
           <ButtonBlue
             text="Delete"
             onclick={deleteJob.bind(null, quotation.id!)}

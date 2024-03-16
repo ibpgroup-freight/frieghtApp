@@ -22,6 +22,7 @@ const useJob = create<JobStore>((set, get) => ({
         type: j.inquiry.type,
         jobInitials: j.inquiry.jobInitials,
         method: j.inquiry.method,
+        prestation: j.prestation,
       });
       set((state) => {
         state.Jobs.push(j);

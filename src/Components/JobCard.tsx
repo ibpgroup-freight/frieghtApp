@@ -39,7 +39,9 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
   const editJob = useCallback(() => {
     setItemInquiry(job.inquiry);
     setitemsArray(job.Items);
-    navigate(`/home?editJob=${job.id}`, { state: { job: job } });
+    navigate(`/home?method=${job.method}&editJob=${job.id}`, {
+      state: { job: job },
+    });
   }, []);
   const ViewJob = useCallback(() => {
     setItemInquiry(job.inquiry);
@@ -80,11 +82,11 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
             </td> */}
         <td className=" flex flex-col   px-2 justify-center self-center my-1 items-start">
           <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
-          {/* <ButtonBlue
+          <ButtonBlue
             text="Edit"
             onclick={editJob}
             customStyle={"text-green-900 hover:text-green-500 "}
-          /> */}
+          />
           <ButtonBlue
             text="Delete"
             onclick={deleteJob.bind(null, job.id!)}
