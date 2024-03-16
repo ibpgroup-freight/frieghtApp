@@ -128,7 +128,9 @@ function Search() {
               </>
             )}
             {(searchType == "users" || searchType == "contacts") && (
-              <option value="name">Name</option>
+              <option value={searchType === "users" ? "username" : "name"}>
+                Name
+              </option>
             )}
             {(searchType == "jobs" || searchType == "quotations") && (
               <>
