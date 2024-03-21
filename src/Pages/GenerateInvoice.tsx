@@ -1404,14 +1404,14 @@ function GenerateInvoice() {
         return toast.error("Job Id is Required");
       let jobtype;
       let mydoc;
-      if (formikObj.values.type === "Quotation") {
+      if (formikObj.values.type === "quotation") {
         const docs = await getDocs(
           query(
             collection(db, "quotations"),
             where("quotationId", "==", jobidRef.current?.value!)
           )
         );
-        if (docs.empty) return toast.error("No Such Job Exists");
+        if (docs.empty) return toast.error("No Such Quotation Exists");
         mydoc = docs.docs[0];
         console.log("Data", docs.docs[0]?.data());
         jobtype = mydoc?.data()?.type;
@@ -1509,10 +1509,20 @@ function GenerateInvoice() {
           <h1 className="text-5xl text-center text-blue-600 font-serif">
             Generate Invoice
           </h1>
+          <select
+            className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+            onChange={(e) => {
+              formikObj.setFieldValue("type", e.target.value);
+            }}
+          >
+            <option>Search By</option>
+            <option value={"quotation"}>Quotation</option>
+            <option value={"job"}>Job</option>
+          </select>
           <div className="flex items-center w-3/5 justify-between">
             <label className="text-xl" htmlFor="jobid">
               Enter{" "}
-              {formikObj.values.type === "Quotation"
+              {formikObj.values.type === "quotation"
                 ? "Quotation Id"
                 : "Job Id"}
             </label>
@@ -1520,7 +1530,7 @@ function GenerateInvoice() {
               type={"text"}
               name={"Jobid"}
               placeholder={
-                formikObj.values.type === "Quotation"
+                formikObj.values.type === "quotation"
                   ? "Quotation Id"
                   : "Job Id"
               }
