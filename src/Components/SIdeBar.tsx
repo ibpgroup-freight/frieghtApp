@@ -12,6 +12,7 @@ import {
   faMagnifyingGlass,
   faBookBookmark,
   faBriefcase,
+  faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -51,9 +52,16 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
       reload: true,
     },
     {
+      path: "/documents",
+      name: "Documents",
+      icon: faBook,
+      reload: true,
+    },
+    {
       path: "/search",
       name: "Search",
       icon: faMagnifyingGlass,
+      reload: true,
     },
     {
       path: "/generateJob",
@@ -65,11 +73,13 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
       path: "/manageUsers",
       name: "Users",
       icon: faUser,
+      reload: true,
     },
     {
       path: "/manageContacts",
       name: "Contacts",
       icon: faAddressBook,
+      reload: true,
     },
   ];
   const [showDropDown, setShowDropDown] = useState("");

@@ -20,6 +20,7 @@ import { collection, getDocs } from "firebase/firestore";
 import useCompanyInfo from "./store/CompanyInfo";
 import ProofOfDelivery from "./Pages/ProofOfDelivery";
 import Invoice from "./Pages/Invoice";
+import Documents from "./Pages/Documents";
 const CargoManifest = React.lazy(() => import("./Pages/CargoManifest"));
 const GenerateJob = React.lazy(() => import("./Pages/GenerateJob"));
 const BillOfLaddle = React.lazy(() => import("./Pages/BillOfLaddle"));
@@ -105,6 +106,7 @@ function App() {
                 <Route path="/ProofOfDelivery" Component={ProofOfDelivery} />
                 <Route path="/quotationDetails" Component={QuotationDetails} />
                 <Route path="/jobDetails" Component={JobDetails} />
+                <Route path="/documents" Component={Documents} />
 
                 <Route path="*" Component={NotFound} />
               </Routes>
