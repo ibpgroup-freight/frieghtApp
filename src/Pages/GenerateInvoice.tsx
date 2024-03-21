@@ -14,6 +14,8 @@ import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
 import { LoaderIcon } from "react-hot-toast";
 import useCompanyInfo from "../store/CompanyInfo";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import Invoice from "./Invoice";
 // const init = {
 //   CustomerName: "",
 //   CustomerAddress: "",
@@ -2294,8 +2296,9 @@ function GenerateInvoice() {
                 type="submit"
                 className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-center"
               >
-                Save
+                Preview
               </button>
+            
             </form>
           </div>
         </div>

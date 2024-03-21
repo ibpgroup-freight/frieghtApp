@@ -6,11 +6,15 @@ import {
   View,
   Text,
   Image,
+  pdf,
 } from "@react-pdf/renderer";
-import React from "react";
+import React, { useState } from "react";
 import useinvoiceStore from "../store/Invoice";
 import useCompanyInfo from "../store/CompanyInfo";
 import logo from "../assets/images/Logo.png";
+import { storage } from "../firebase";
+import { ref, uploadBytes } from "firebase/storage";
+import { toast } from "react-toastify";
 
 const styles = StyleSheet.create({
   page: {
@@ -52,61 +56,138 @@ function BillOfLaddle() {
   console.log("loca", Location);
   const companyLocation = Location.find((l) => l.key === ladleInfo.address);
   console.log("loca2", jobInfo);
+  const [isSaving, setisSaving] = useState<boolean>(false);
 
+  const handleSavePdf = async () => {
+    try {
+      const myDoc = (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <View
+              style={{
+                fontSize: 10,
+                alignSelf: "flex-end",
+                paddingHorizontal: 20,
+              }}
+            >
+              <Text>
+                Date:{" "}
+                {new Date().getFullYear() +
+                  "-" +
+                  (new Date().getMonth() + 1) +
+                  "-" +
+                  new Date().getDate()}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column1 jobInfo={ladleInfo} companyInfo={companyLocation!} />
+              <Column2 jobInfo={ladleInfo} />
+            </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                marginVertical: 5,
+              }}
+            >
+              <InvoiceTableHeader />
+              <InvoiceTableRow items={ladingItems} />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column3 jobInfo={ladleInfo} />
+              <Column4 jobInfo={ladleInfo} />
+            </View>
+          </Page>
+        </Document>
+      );
+      setisSaving(true);
+      const doc = pdf(myDoc);
+      const blob = await doc.toBlob();
+      const jref = ref(storage, `${jobInfo.Jobid || "Test"}/BOL.pdf`);
+      await uploadBytes(jref, blob!);
+      toast.success("Successfully Uploaded");
+    } catch (e) {
+      console.log(e);
+      toast.error("Couldnt Upload Document");
+    } finally {
+      setisSaving(false);
+    }
+  };
   return (
-    <PDFViewer className="w-full h-screen">
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <View
-            style={{
-              fontSize: 10,
-              alignSelf: "flex-end",
-              paddingHorizontal: 20,
-            }}
-          >
-            <Text>
-              Date:{" "}
-              {new Date().getFullYear() +
-                "-" +
-                (new Date().getMonth() + 1) +
-                "-" +
-                new Date().getDate()}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <Column1 jobInfo={ladleInfo} companyInfo={companyLocation!} />
-            <Column2 jobInfo={ladleInfo} />
-          </View>
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              marginVertical: 5,
-            }}
-          >
-            <InvoiceTableHeader />
-            <InvoiceTableRow items={ladingItems} />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <Column3 jobInfo={ladleInfo} />
-            <Column4 jobInfo={ladleInfo} />
-          </View>
-        </Page>
-      </Document>
-    </PDFViewer>
+    <div className="w-full h-screen flex flex-col lg:flex-row lg:items-start">
+      <PDFViewer className="w-full h-screen">
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <View
+              style={{
+                fontSize: 10,
+                alignSelf: "flex-end",
+                paddingHorizontal: 20,
+              }}
+            >
+              <Text>
+                Date:{" "}
+                {new Date().getFullYear() +
+                  "-" +
+                  (new Date().getMonth() + 1) +
+                  "-" +
+                  new Date().getDate()}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column1 jobInfo={ladleInfo} companyInfo={companyLocation!} />
+              <Column2 jobInfo={ladleInfo} />
+            </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                marginVertical: 5,
+              }}
+            >
+              <InvoiceTableHeader />
+              <InvoiceTableRow items={ladingItems} />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column3 jobInfo={ladleInfo} />
+              <Column4 jobInfo={ladleInfo} />
+            </View>
+          </Page>
+        </Document>
+      </PDFViewer>
+      <button
+        className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-start my-4 gap-4"
+        onClick={handleSavePdf}
+      >
+        {isSaving ? "..." : "Save"}
+      </button>
+    </div>
   );
 }
 

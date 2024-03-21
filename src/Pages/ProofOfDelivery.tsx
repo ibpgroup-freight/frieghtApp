@@ -6,11 +6,15 @@ import {
   View,
   Text,
   Image,
+  pdf,
 } from "@react-pdf/renderer";
-import React from "react";
+import React, { useState } from "react";
 import useinvoiceStore from "../store/Invoice";
 import useCompanyInfo from "../store/CompanyInfo";
 import logo from "../assets/images/Logo.png";
+import { ref, uploadBytes } from "firebase/storage";
+import { toast } from "react-toastify";
+import { storage } from "../firebase";
 
 function ProofOfDelivery() {
   const styles = StyleSheet.create({
@@ -35,21 +39,58 @@ function ProofOfDelivery() {
   const { PODInfo, PODItems } = useinvoiceStore();
   const { Location } = useCompanyInfo();
   const companyLocation = Location.find((l) => l.key === PODInfo.officeAddress);
+  const [isSaving, setisSaving] = useState<boolean>(false);
 
+  const handleSavePdf = async () => {
+    try {
+      const myDoc = (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <PageHeader />
+            <PresentationHeader />
+            <Table />
+            <TableRows podItems={PODItems} />
+
+            <TableHeader podInfo={PODInfo} />
+            <PageFooter companyInfo={companyLocation!} />
+          </Page>
+        </Document>
+      );
+      setisSaving(true);
+      const doc = pdf(myDoc);
+      const blob = await doc.toBlob();
+      const jref = ref(storage, `${PODInfo.Jobid || "Test"}/POD.pdf`);
+      await uploadBytes(jref, blob!);
+      toast.success("Successfully Uploaded");
+    } catch (e) {
+      console.log(e);
+      toast.error("Couldnt Upload Document");
+    } finally {
+      setisSaving(false);
+    }
+  };
   return (
-    <PDFViewer className="w-full h-screen">
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <PageHeader />
-          <PresentationHeader />
-          <Table />
-          <TableRows podItems={PODItems} />
+    <div className="w-full h-screen flex flex-col lg:flex-row lg:items-start">
+      <PDFViewer className="w-full h-screen">
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <PageHeader />
+            <PresentationHeader />
+            <Table />
+            <TableRows podItems={PODItems} />
 
-          <TableHeader podInfo={PODInfo} />
-          <PageFooter companyInfo={companyLocation!} />
-        </Page>
-      </Document>
-    </PDFViewer>
+            <TableHeader podInfo={PODInfo} />
+            <PageFooter companyInfo={companyLocation!} />
+          </Page>
+        </Document>
+      </PDFViewer>
+      <button
+        className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-start my-4 gap-4"
+        onClick={handleSavePdf}
+      >
+        {isSaving ? "..." : "Save"}
+      </button>
+    </div>
   );
 }
 

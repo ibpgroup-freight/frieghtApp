@@ -6,13 +6,17 @@ import {
   View,
   Text,
   Image,
+  pdf,
 } from "@react-pdf/renderer";
-import React from "react";
+import React, { useState } from "react";
 import useinvoiceStore from "../store/Invoice";
 import useCompanyInfo from "../store/CompanyInfo";
 import logo from "../assets/images/Logo.png";
 import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
+import { toast } from "react-toastify";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase";
 
 function QuotationDoc() {
   const styles = StyleSheet.create({
@@ -37,42 +41,44 @@ function QuotationDoc() {
   const { items } = useItemStore();
   const { Location } = useCompanyInfo();
   const companyLocation = Location.find((l) => l.key === address);
+  const [isSaving, setisSaving] = useState<boolean>(false);
 
-  return (
-    <PDFViewer className="w-full h-screen">
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <Text
-            render={({ pageNumber, totalPages }) => (
-              <Text>
-                Page. {pageNumber} / {totalPages}
+  const handleSavePdf = async () => {
+    try {
+      const myDoc = (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <Text
+              render={({ pageNumber, totalPages }) => (
+                <Text>
+                  Page. {pageNumber} / {totalPages}
+                </Text>
+              )}
+              fixed
+            />
+            <InvoiceHeader jobinfo={inquiry} />
+            <CompanyInfo jobInfo={inquiry} location={companyLocation!} />
+            <BillToInfo jobInfo={inquiry} />
+            <AdditionalInformation jobInfo={inquiry} />
+            <View style={{ width: "100%", alignItems: "center", marginTop: 8 }}>
+              <Text style={{ fontSize: 12, fontFamily: "Courier" }}>
+                Details Of Prestation{" "}
               </Text>
-            )}
-            fixed
-          />
-          <InvoiceHeader jobinfo={inquiry} />
-          <CompanyInfo jobInfo={inquiry} location={companyLocation!} />
-          <BillToInfo jobInfo={inquiry} />
-          <AdditionalInformation jobInfo={inquiry} />
-          <View style={{ width: "100%", alignItems: "center", marginTop: 8 }}>
-            <Text style={{ fontSize: 12, fontFamily: "Courier" }}>
-              Details Of Prestation{" "}
-            </Text>
-          </View>
-          <PrestationItemsTableHeader />
-          <PrestationTableRows items={prestation} />
-          <PrestationTableFooter items={items} jobInfo={inquiry} />
-          <CustomerInformation jobinfo={inquiry} />
-          <View style={{ width: "100%", alignItems: "center" }}>
-            <Text style={{ fontSize: 12, fontFamily: "Courier" }}>
-              Goods Details
-            </Text>
-          </View>
-          <GoodsTableHeader />
-          <GoodsTableRows items={items} />
-          {/* <PageFooter companyInfo={companyLocation!} /> */}
-          <SalesTerms jobinfo={inquiry} />
-          {/* <View>
+            </View>
+            <PrestationItemsTableHeader />
+            <PrestationTableRows items={prestation} />
+            <PrestationTableFooter items={items} jobInfo={inquiry} />
+            <CustomerInformation jobinfo={inquiry} />
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <Text style={{ fontSize: 12, fontFamily: "Courier" }}>
+                Goods Details
+              </Text>
+            </View>
+            <GoodsTableHeader />
+            <GoodsTableRows items={items} />
+            {/* <PageFooter companyInfo={companyLocation!} /> */}
+            <SalesTerms jobinfo={inquiry} />
+            {/* <View>
             <View
               style={{
                 border: 1,
@@ -139,9 +145,134 @@ function QuotationDoc() {
               />
             </View>
           </View> */}
-        </Page>
-      </Document>
-    </PDFViewer>
+          </Page>
+        </Document>
+      );
+      setisSaving(true);
+      const doc = pdf(myDoc);
+      const blob = await doc.toBlob();
+      const jref = ref(storage, `${inquiry.quotationId}/Quotation.pdf`);
+      await uploadBytes(jref, blob!);
+      toast.success("Successfully Uploaded");
+    } catch (e) {
+      console.log(e);
+      toast.error("Couldnt Upload Document");
+    } finally {
+      setisSaving(false);
+    }
+  };
+  return (
+    <div className="w-full h-screen flex flex-col lg:flex-row lg:items-start">
+      <PDFViewer className="w-full h-screen">
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <Text
+              render={({ pageNumber, totalPages }) => (
+                <Text>
+                  Page. {pageNumber} / {totalPages}
+                </Text>
+              )}
+              fixed
+            />
+            <InvoiceHeader jobinfo={inquiry} />
+            <CompanyInfo jobInfo={inquiry} location={companyLocation!} />
+            <BillToInfo jobInfo={inquiry} />
+            <AdditionalInformation jobInfo={inquiry} />
+            <View style={{ width: "100%", alignItems: "center", marginTop: 8 }}>
+              <Text style={{ fontSize: 12, fontFamily: "Courier" }}>
+                Details Of Prestation{" "}
+              </Text>
+            </View>
+            <PrestationItemsTableHeader />
+            <PrestationTableRows items={prestation} />
+            <PrestationTableFooter items={items} jobInfo={inquiry} />
+            <CustomerInformation jobinfo={inquiry} />
+            <View style={{ width: "100%", alignItems: "center" }}>
+              <Text style={{ fontSize: 12, fontFamily: "Courier" }}>
+                Goods Details
+              </Text>
+            </View>
+            <GoodsTableHeader />
+            <GoodsTableRows items={items} />
+            {/* <PageFooter companyInfo={companyLocation!} /> */}
+            <SalesTerms jobinfo={inquiry} />
+            {/* <View>
+            <View
+              style={{
+                border: 1,
+                position: "relative",
+                bottom: 0,
+                width: "80%",
+                alignSelf: "center",
+                minHeight: 80,
+                flexDirection: "row",
+                justifyContent: "space-between",
+                padding: 10,
+              }}
+            >
+              <Text
+                render={({ totalPages, pageNumber }) =>
+                  pageNumber == totalPages ? (
+                    <Text
+                      style={{
+                        fontFamily: "Courier",
+                        textAlign: "center",
+                        width: "30%",
+                        fontSize: 10,
+                      }}
+                    >
+                      Check For Agreement
+                    </Text>
+                  ) : null
+                }
+                style={{ width: "100%", textAlign: "justify" }}
+              />
+              <Text
+                render={({ totalPages, pageNumber }) =>
+                  pageNumber == totalPages ? (
+                    <Text
+                      style={{
+                        fontFamily: "Courier",
+                        textAlign: "center",
+                        width: "30%",
+                        fontSize: 10,
+                      }}
+                    >
+                      Date
+                    </Text>
+                  ) : null
+                }
+                style={{ width: "100%", textAlign: "justify" }}
+              />
+              <Text
+                render={({ totalPages, pageNumber }) =>
+                  pageNumber == totalPages ? (
+                    <Text
+                      style={{
+                        fontFamily: "Courier",
+                        textAlign: "center",
+                        width: "30%",
+                        fontSize: 10,
+                      }}
+                    >
+                      Company Stamp
+                    </Text>
+                  ) : null
+                }
+                style={{ width: "100%", textAlign: "justify" }}
+              />
+            </View>
+          </View> */}
+          </Page>
+        </Document>
+      </PDFViewer>
+      <button
+        className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-start my-4 gap-4"
+        onClick={handleSavePdf}
+      >
+        {isSaving ? "..." : "Save"}
+      </button>
+    </div>
   );
 }
 function AdditionalInformation({ jobInfo }: { jobInfo: Inquiry }) {

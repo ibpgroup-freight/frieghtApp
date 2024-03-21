@@ -6,11 +6,15 @@ import {
   View,
   Text,
   Image,
+  pdf,
 } from "@react-pdf/renderer";
-import React from "react";
+import React, { useState } from "react";
 import useinvoiceStore from "../store/Invoice";
 import useCompanyInfo from "../store/CompanyInfo";
 import logo from "../assets/images/Logo.png";
+import { ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase";
+import { toast } from "react-toastify";
 
 const styles = StyleSheet.create({
   page: {
@@ -56,73 +60,162 @@ function AirwayBill() {
     (l) => l.key === AirwayInfo.officeAddress
   );
   console.log("loca2", AirwayItems);
+  const [isSaving, setisSaving] = useState<boolean>(false);
 
-  return (
-    <PDFViewer className="w-full h-screen">
-      <Document>
-        <Page size="A4" style={styles.page}>
-          <Text
-            render={({ pageNumber, totalPages }) => (
+  const handleSavePdf = async () => {
+    try {
+      const myDoc = (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <Text
+              render={({ pageNumber, totalPages }) => (
+                <Text>
+                  Page. {pageNumber} / {totalPages}
+                </Text>
+              )}
+              fixed
+              wrap={false}
+              style={{
+                fontFamily: "Courier-Bold",
+              }}
+            />
+            <View
+              style={{
+                fontSize: 10,
+                alignSelf: "flex-end",
+                paddingHorizontal: 20,
+              }}
+            >
               <Text>
-                Page. {pageNumber} / {totalPages}
+                Date:{" "}
+                {new Date().getFullYear() +
+                  "-" +
+                  new Date().getMonth() +
+                  "-" +
+                  new Date().getDate()}
               </Text>
-            )}
-            fixed
-            wrap={false}
-            style={{
-              fontFamily: "Courier-Bold",
-            }}
-          />
-          <View
-            style={{
-              fontSize: 10,
-              alignSelf: "flex-end",
-              paddingHorizontal: 20,
-            }}
-          >
-            <Text>
-              Date:{" "}
-              {new Date().getFullYear() +
-                "-" +
-                new Date().getMonth() +
-                "-" +
-                new Date().getDate()}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <Column1 jobInfo={AirwayInfo} companyInfo={companyLocation!} />
-            <Column2 jobInfo={AirwayInfo} />
-          </View>
-          <View
-            style={{
-              width: "100%",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              marginVertical: 5,
-            }}
-          >
-            <InvoiceTableHeader />
-            <InvoiceTableRow items={AirwayItems} />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
-            <Column3 jobInfo={AirwayInfo} />
-            <Column4 jobInfo={AirwayInfo} />
-          </View>
-        </Page>
-      </Document>
-    </PDFViewer>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column1 jobInfo={AirwayInfo} companyInfo={companyLocation!} />
+              <Column2 jobInfo={AirwayInfo} />
+            </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                marginVertical: 5,
+              }}
+            >
+              <InvoiceTableHeader />
+              <InvoiceTableRow items={AirwayItems} />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column3 jobInfo={AirwayInfo} />
+              <Column4 jobInfo={AirwayInfo} />
+            </View>
+          </Page>
+        </Document>
+      );
+      setisSaving(true);
+      const doc = pdf(myDoc);
+      const blob = await doc.toBlob();
+      const jref = ref(storage, `${AirwayInfo.Jobid || "Test"}/AWB.pdf`);
+      await uploadBytes(jref, blob!);
+      toast.success("Successfully Uploaded");
+    } catch (e) {
+      console.log(e);
+      toast.error("Couldnt Upload Document");
+    } finally {
+      setisSaving(false);
+    }
+  };
+  return (
+    <div className="w-full h-screen flex flex-col lg:flex-row lg:items-start">
+      <PDFViewer className="w-full h-screen">
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <Text
+              render={({ pageNumber, totalPages }) => (
+                <Text>
+                  Page. {pageNumber} / {totalPages}
+                </Text>
+              )}
+              fixed
+              wrap={false}
+              style={{
+                fontFamily: "Courier-Bold",
+              }}
+            />
+            <View
+              style={{
+                fontSize: 10,
+                alignSelf: "flex-end",
+                paddingHorizontal: 20,
+              }}
+            >
+              <Text>
+                Date:{" "}
+                {new Date().getFullYear() +
+                  "-" +
+                  new Date().getMonth() +
+                  "-" +
+                  new Date().getDate()}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column1 jobInfo={AirwayInfo} companyInfo={companyLocation!} />
+              <Column2 jobInfo={AirwayInfo} />
+            </View>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                marginVertical: 5,
+              }}
+            >
+              <InvoiceTableHeader />
+              <InvoiceTableRow items={AirwayItems} />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Column3 jobInfo={AirwayInfo} />
+              <Column4 jobInfo={AirwayInfo} />
+            </View>
+          </Page>
+        </Document>
+      </PDFViewer>
+      <button
+        className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-start my-4 gap-4"
+        onClick={handleSavePdf}
+      >
+        {isSaving ? "..." : "Save"}
+      </button>
+    </div>
   );
 }
 
