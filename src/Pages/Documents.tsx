@@ -55,38 +55,20 @@ function Documents() {
   console.log(SearchResults);
   return (
     <div className="w-full bg-white p-6 rounded-md shadow-md">
-      <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-8 items-center px-5  justify-between">
+      <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-8 items-center px-5  justify-start gap-5">
         <h2 className="text-2xl font-semibold mb-4">Search</h2>
-        <div className="mb-4 w-full ">
-          <label
-            htmlFor="searchType"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Search Type
-          </label>
-          <select
-            id="searchType"
-            className="border p-2 w-full rounded-md"
-            value={searchType}
-            onChange={(e) => setSearchType(e.target.value as searchType)}
-          >
-            <option value="jobs">Job</option>
-            <option value="quotations">Quotation</option>
-          </select>
-        </div>
-
-        <div className="mb-4 w-full">
+        <div className="mb-4 w-3/5">
           <label
             htmlFor="searchInput"
             className="block text-sm font-medium text-gray-600 mb-1"
           >
-            Search {searchType}
+            Search By Quotation Or Job Id
           </label>
           <input
             type="text"
             id="searchInput"
             className="border p-2 w-full rounded-md"
-            placeholder={`Enter ${searchType} Id`}
+            placeholder={`Enter Id`}
             onChange={(e) => setsearchValue(e.target.value)}
           />
         </div>
