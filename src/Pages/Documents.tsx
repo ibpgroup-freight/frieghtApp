@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import useItemStore from "../store/Item";
 import useInquiryItem from "../store/Inquiry";
 import { getDownloadURL, list, ref } from "firebase/storage";
+import { toast } from "react-toastify";
 type searchType = "jobs" | "quotations";
 
 function Documents() {
@@ -27,7 +28,10 @@ function Documents() {
       setisloading(true);
       const storageRef = ref(storage, searchValue);
       const listResult = await list(storageRef);
-
+      if (listResult.items.length == 0) {
+        toast.info("No Documents For This Id Exists.");
+        return;
+      }
       const files = await Promise.all(
         listResult.items.map(async (item: any) => {
           console.log(item);
@@ -48,6 +52,7 @@ function Documents() {
       setSearchResults(files);
     } catch (error) {
       console.error("Error searching files:", error);
+      toast.error("Couldnt Fetch Your Documents.Please Try Again.");
     } finally {
       setisloading(false);
     }
