@@ -236,8 +236,8 @@ type ladleInquiry = {
   ExportReference: string;
   ForwardingAgent: string;
   ConsigneeReference: string;
-  address: string;
-  BLNo: string;
+  officeAddress: string;
+  blNo: string;
   CarrierReference: string;
   VoyageNo: string;
   Carrier: string;

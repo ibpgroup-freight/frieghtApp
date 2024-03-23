@@ -93,7 +93,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     specialInstructions: "",
     termsAndConditions: "",
     officeAddress: "",
-    BLNo: "",
+    blNo: "",
     Carrier: "",
     CarrierReference: "",
     ContainersReceived: "",
@@ -193,6 +193,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     });
   },
   setladleInfo(j) {
+    console.log("Jbn ,", j);
     set((state) => ({ ...state, ladleInfo: j }));
   },
   manifestInfo: {

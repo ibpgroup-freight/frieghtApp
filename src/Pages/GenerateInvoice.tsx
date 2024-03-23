@@ -212,6 +212,7 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Shipment Terms are required"),
+
     TypeOfCargo: yup
       .string()
       .when("type", {
@@ -495,16 +496,7 @@ const validationSchema = yup.object().shape(
       otherwise: (schema) => schema.notRequired(),
     }),
     HAWB: yup.string(),
-    address: yup.string().when("type", {
-      is: (type: string) => type === "BillOfLading",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-    BLNo: yup.string().when("type", {
-      is: (type: string) => type === "BillOfLading",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+
     CarrierReference: yup.string().when("type", {
       is: (type: string) => type === "BillOfLading",
       then: (schema) => schema.required(),
@@ -810,7 +802,7 @@ function GenerateInvoice() {
       ...inquiry,
     },
     onSubmit(values) {
-      console.log("Here");
+      console.log("Here", values);
       // if (quotationItemsStore.length === 0) {
       //   toast.error("Add Some Items First");
       //   return;
@@ -1198,6 +1190,51 @@ function GenerateInvoice() {
             label: "PayableAt",
             name: "PayableAt",
             type: "textarea",
+          },
+          {
+            label: "Total Containers Received By Carrier",
+            name: "ContainersReceived",
+            type: "text",
+          },
+          {
+            label: "Carrier",
+            name: "Carrier",
+            type: "text",
+          },
+          {
+            label: "Carrier Reference",
+            name: "CarrierReference",
+            type: "text",
+          },
+          {
+            label: "Total Packages Received By Carrier",
+            name: "PackagesReceived",
+            type: "text",
+          },
+          {
+            label: "Freight Collected",
+            name: "FreightCollected",
+            type: "number",
+          },
+          {
+            label: "Freight Prepaid",
+            name: "FreightPrepaid",
+            type: "number",
+          },
+          {
+            label: "Total Freight",
+            name: "TotalFreight",
+            type: "number",
+          },
+          {
+            label: "Voyage Number",
+            name: "VoyageNo",
+            type: "text",
+          },
+          {
+            label: "Original BSL",
+            name: "OriginalBSL",
+            type: "text",
           },
         ]
       : []),
@@ -2298,7 +2335,6 @@ function GenerateInvoice() {
               >
                 Preview
               </button>
-            
             </form>
           </div>
         </div>

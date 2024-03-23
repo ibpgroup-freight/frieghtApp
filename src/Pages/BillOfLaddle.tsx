@@ -51,11 +51,12 @@ function BillOfLaddle() {
       height: 66,
     },
   });
-  const { Items, jobInfo, ladingItems, ladleInfo } = useinvoiceStore();
+  const { Items, ladingItems, ladleInfo } = useinvoiceStore();
   const { Location } = useCompanyInfo();
-  console.log("loca", Location);
-  const companyLocation = Location.find((l) => l.key === ladleInfo.address);
-  console.log("loca2", jobInfo);
+  console.log("laddleInfo", ladleInfo);
+  const companyLocation = Location.find(
+    (l) => l.key === ladleInfo.officeAddress
+  );
   const [isSaving, setisSaving] = useState<boolean>(false);
 
   const handleSavePdf = async () => {
@@ -116,7 +117,7 @@ function BillOfLaddle() {
       setisSaving(true);
       const doc = pdf(myDoc);
       const blob = await doc.toBlob();
-      const jref = ref(storage, `${jobInfo.Jobid || "Test"}/BOL.pdf`);
+      const jref = ref(storage, `${ladleInfo.Jobid || "Test"}/BOL.pdf`);
       await uploadBytes(jref, blob!);
       toast.success("Successfully Uploaded");
     } catch (e) {
@@ -224,12 +225,11 @@ function Column1({
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Shipper Details
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 12 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 12 }}>
           {companyInfo?.name} {"\n"}
           {companyInfo?.office} {"\n"}
           {companyInfo?.location} {"\n"}
@@ -259,12 +259,11 @@ function Column1({
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Consignee
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 12 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 12 }}>
           {jobInfo.CustomerName}
           {"\n"}
           {jobInfo.CustomerEmail}
@@ -290,12 +289,11 @@ function Column1({
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Notify Address
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.NotifyAddress}
         </Text>
       </View>
@@ -316,12 +314,11 @@ function Column1({
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
             }}
           >
             Vessel
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
             {jobInfo.VesselName}
           </Text>
         </View>
@@ -329,12 +326,11 @@ function Column1({
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
             }}
           >
             Voyage Number
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
             {jobInfo.VesselName}
           </Text>
         </View>
@@ -353,12 +349,11 @@ function Column1({
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Port Of Loading
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.PortOfLoading}
         </Text>
       </View>
@@ -376,12 +371,11 @@ function Column1({
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Port Of Discharge
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.PortOfDischarge}
         </Text>
       </View>
@@ -435,13 +429,12 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
             }}
           >
             Carriers Reference
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
-            {jobInfo.ExportReference}
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
+            {jobInfo.CarrierReference}
           </Text>
         </View>
         <View
@@ -453,13 +446,12 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
             }}
           >
             B/L No
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
-            {jobInfo.ExportReference}
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
+            {jobInfo.blNo}
           </Text>
         </View>
       </View>
@@ -479,12 +471,11 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Export Reference
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.ExportReference}
         </Text>
       </View>
@@ -504,12 +495,11 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Forwarding Agent
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.ForwardingAgent}
         </Text>
       </View>
@@ -529,12 +519,11 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Consignee Reference
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.ConsigneeReference}
         </Text>
       </View>
@@ -553,12 +542,11 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Place Of Receipt
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.PlaceOfReceipt}
         </Text>
       </View>
@@ -577,12 +565,11 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Place Of Delivery
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.PlaceOfDelivery}
         </Text>
       </View>
@@ -682,11 +669,11 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
+              fontFamily: "Courier",
               fontSize: 12,
             }}
           >
-            {jobInfo.Movement}
+            {jobInfo.TotalContainers}
           </Text>
         </View>
         <View style={{ flexDirection: "column", width: "50%" }}>
@@ -700,11 +687,11 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
+              fontFamily: "Courier",
               fontSize: 12,
             }}
           >
-            {jobInfo.Currency}
+            {jobInfo.PackagesReceived}
           </Text>
         </View>
       </View>
@@ -725,7 +712,6 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
             }}
           >
             Movement
@@ -733,7 +719,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
+              fontFamily: "Courier",
               fontSize: 12,
             }}
           >
@@ -744,7 +730,6 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
             }}
           >
             Currency
@@ -752,7 +737,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
+              fontFamily: "Courier",
               fontSize: 12,
             }}
           >
@@ -784,7 +769,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
@@ -802,7 +787,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
@@ -820,7 +805,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
@@ -838,7 +823,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
@@ -856,7 +841,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
@@ -872,7 +857,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
@@ -910,12 +895,11 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Payable At
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.PayableAt}
         </Text>
       </View>
@@ -976,12 +960,11 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Text
           style={{
             fontFamily: "Courier-BoldOblique",
-            textDecoration: "underline",
           }}
         >
           Place And Date Of Issue
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           {jobInfo.PlaceOfIssue}
         </Text>
       </View>
@@ -1001,13 +984,13 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
             Freight Payable At
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
             {jobInfo.PlaceOfIssue}
           </Text>
         </View>
@@ -1015,13 +998,13 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-BoldOblique",
-              textDecoration: "underline",
+
               fontSize: 8,
             }}
           >
             Number Of Original Bs/L
           </Text>
-          <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+          <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
             {jobInfo.PlaceOfIssue}
           </Text>
         </View>
