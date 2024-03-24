@@ -1434,7 +1434,6 @@ function GenerateInvoice() {
     },
   ];
 
-  console.log(temp_Items, "   ", jobInfo);
   const filljobDetailsbyId = async () => {
     try {
       setloadingdetails(true);
@@ -1494,10 +1493,7 @@ function GenerateInvoice() {
       setloadingdetails(false);
     }
   };
-  console.log("Type value", formikObj.values.type);
-  console.log("QuotationLadingItems", quotationLadingItemsStore);
-  console.log("airwayItems", AirwayItems);
-  console.log("items", quotationItemsStore);
+
 
   return (
     <div className="w-full ">
