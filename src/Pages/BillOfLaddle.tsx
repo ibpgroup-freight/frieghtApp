@@ -331,7 +331,7 @@ function Column1({
             Voyage Number
           </Text>
           <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-            {jobInfo.VesselName}
+            {jobInfo.VoyageNo}
           </Text>
         </View>
       </View>
@@ -965,7 +965,7 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           Place And Date Of Issue
         </Text>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          {jobInfo.PlaceOfIssue}
+          {jobInfo.PlaceOfIssue}   {jobInfo.DateOfIssue}
         </Text>
       </View>
       <View
@@ -991,7 +991,7 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
             Freight Payable At
           </Text>
           <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-            {jobInfo.PlaceOfIssue}
+            {jobInfo.PayableAt}
           </Text>
         </View>
         <View style={{ width: "50%", padding: 1 }}>
@@ -1005,7 +1005,7 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
             Number Of Original Bs/L
           </Text>
           <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-            {jobInfo.PlaceOfIssue}
+            {jobInfo.OriginalBSL}
           </Text>
         </View>
       </View>
