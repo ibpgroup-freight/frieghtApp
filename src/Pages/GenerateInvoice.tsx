@@ -178,7 +178,9 @@ const validationSchema = yup.object().shape(
       .string()
       .when("type", {
         is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery" &&
+          type !== "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -188,7 +190,9 @@ const validationSchema = yup.object().shape(
       .string()
       .when("type", {
         is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery" &&
+          type !== "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -197,30 +201,17 @@ const validationSchema = yup.object().shape(
       .string()
       .when("type", {
         is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery" &&
+          type !== "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Customer TRN is required"),
     Weight: yup.string(),
     Dimensions: yup.string(),
-    ShipmentTerms: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type === "BillOfLading",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Shipment Terms are required"),
-
-    TypeOfCargo: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type === "BillOfLading",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Type of Cargo is required"),
+    ShipmentTerms: yup.string(),
+    TypeOfCargo: yup.string(),
     FlightInformation: yup
       .string()
       .when("type", {
@@ -310,7 +301,9 @@ const validationSchema = yup.object().shape(
       .string()
       .when("type", {
         is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery" &&
+          type !== "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -319,7 +312,9 @@ const validationSchema = yup.object().shape(
       .string()
       .when("type", {
         is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery" &&
+          type !== "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -856,7 +851,7 @@ function GenerateInvoice() {
     validationSchema,
   });
   console.log("qi", formikObj.errors);
-  console.log("valuies", formikObj.values);
+  console.log("valuies", formikObj.values.type);
 
   const CargoManifestTable = [
     { label: "Index", name: "Sr no" },
@@ -945,7 +940,20 @@ function GenerateInvoice() {
     ...(formikObj.values.type !== "Quotation"
       ? [
           { label: "Enter Customer Name", name: "CustomerName", type: "text" },
-          { label: "HAWB", name: "HAWB", type: "text" },
+          { label: "blNo", name: "blNo", type: "text" },
+
+          {
+            label: "Enter Customer Address",
+            name: "CustomerAddress",
+            type: "text",
+          },
+        ]
+      : []),
+    ...(formikObj.values.type !== "BillOfLading"
+      ? [{ label: "HAWB", name: "HAWB", type: "text" }]
+      : []),
+    ...(formikObj.values.type == "BillOfLading"
+      ? [
           { label: "blNo", name: "blNo", type: "text" },
 
           {
@@ -1005,7 +1013,7 @@ function GenerateInvoice() {
           {
             label: "Forwarding Agent",
             name: "ForwardingAgent",
-            type: "textarea",
+            type: "text",
           },
           {
             label: "Export Reference",
@@ -1017,11 +1025,11 @@ function GenerateInvoice() {
             name: "Movement",
             type: "textarea",
           },
-          {
-            label: "Notify Address",
-            name: "Notify Address",
-            type: "textarea",
-          },
+          // {
+          //   label: "Notify Address",
+          //   name: "Notify Address",
+          //   type: "textarea",
+          // },
           {
             label: "Vessel Name",
             name: "VesselName",
@@ -1094,7 +1102,6 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
     ...(!formikObj.values.type?.includes("Lading")
       ? [
           {
@@ -1102,6 +1109,7 @@ function GenerateInvoice() {
             name: "OutstandingDues",
             type: "number",
           },
+          { label: "Enter Carrier Name", name: "CarrierName", type: "text" },
         ]
       : []),
   ];
@@ -1166,30 +1174,30 @@ function GenerateInvoice() {
             name: "Currency",
             type: "text",
           },
-          {
-            label: "Weight",
-            name: "Weight",
-            type: "number",
-          },
-          {
-            label: "Shipment Terms",
-            name: "ShipmentTerms",
-            type: "text",
-          },
-          {
-            label: "Type Of Cargo",
-            name: "TypeOfCargo",
-            type: "text",
-          },
+          // {
+          //   label: "Weight",
+          //   name: "Weight",
+          //   type: "number",
+          // },
+          // {
+          //   label: "Shipment Terms",
+          //   name: "ShipmentTerms",
+          //   type: "text",
+          // },
+          // {
+          //   label: "Type Of Cargo",
+          //   name: "TypeOfCargo",
+          //   type: "text",
+          // },
           {
             label: "Place Of Issue",
             name: "PlaceOfIssue",
-            type: "textarea",
+            type: "text",
           },
           {
             label: "PayableAt",
             name: "PayableAt",
-            type: "textarea",
+            type: "text",
           },
           {
             label: "Total Containers Received By Carrier",
@@ -1268,13 +1276,6 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
-    {
-      label: "Enter Transit Time",
-      name: "TransitTime",
-      type: "text",
-    },
-    { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
 
     ...(!formikObj.values.type?.includes("Lading")
       ? [
@@ -1283,6 +1284,13 @@ function GenerateInvoice() {
             name: "Discount",
             type: "number",
           },
+          { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
+          {
+            label: "Enter Transit Time",
+            name: "TransitTime",
+            type: "text",
+          },
+          { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
         ]
       : []),
     ...(formikObj.values.type?.includes("Airway")
@@ -1315,25 +1323,27 @@ function GenerateInvoice() {
         ]
       : []),
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
-    ...(formikObj.values.type !== "Quotation"
+    ...(formikObj.values.type !== "Quotation" &&
+    formikObj.values.type !== "BillOfLading"
       ? [
           {
             label: "Special Instructions",
             name: "specialInstructions",
             type: "textarea",
           },
+          {
+            label: "Estimated Arrival",
+            name: "EstimatedArrival",
+            type: "datetime-local",
+          },
+          {
+            label: "Departure",
+            name: "Departure",
+            type: "datetime-local",
+          },
         ]
       : []),
-    {
-      label: "Departure",
-      name: "Departure",
-      type: "datetime-local",
-    },
-    {
-      label: "Estimated Arrival",
-      name: "EstimatedArrival",
-      type: "datetime-local",
-    },
+
     {
       label: "Address",
       name: "officeAddress",
@@ -1493,7 +1503,6 @@ function GenerateInvoice() {
       setloadingdetails(false);
     }
   };
-
 
   return (
     <div className="w-full ">

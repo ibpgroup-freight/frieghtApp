@@ -878,9 +878,24 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           padding: 5,
         }}
       >
-        <Text style={{ fontSize: 8 }}>Total Freight Prepaid</Text>
-        <Text style={{ fontSize: 8 }}>Total Freight Collected</Text>
-        <Text style={{ fontSize: 8 }}>Total Freight</Text>
+        <View>
+          <Text style={{ fontSize: 8 }}>Total Freight Prepaid</Text>
+          <Text style={{ fontSize: 8 }}>
+            {jobInfo.FreightPrepaid}
+          </Text>
+        </View>
+        <View>
+          <Text style={{ fontSize: 8 }}>Total Freight Collected</Text>
+          <Text style={{ fontSize: 8 }}>
+            {jobInfo.FreightCollected}
+          </Text>
+        </View>
+        <View>
+          <Text style={{ fontSize: 8 }}>Total Freight</Text>
+          <Text style={{ fontSize: 8 }}>
+            {jobInfo.TotalFreight}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -965,7 +980,7 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
           Place And Date Of Issue
         </Text>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          {jobInfo.PlaceOfIssue}   {jobInfo.DateOfIssue}
+          {jobInfo.PlaceOfIssue} {jobInfo.DateOfIssue}
         </Text>
       </View>
       <View
