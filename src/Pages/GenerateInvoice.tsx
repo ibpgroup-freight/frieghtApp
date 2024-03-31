@@ -802,7 +802,6 @@ function GenerateInvoice() {
       //   toast.error("Add Some Items First");
       //   return;
       // }
-      console.log(values.type, "all cvalues");
       if (!values.type) {
         toast.error("Select Bill Type First");
         return;
@@ -814,7 +813,6 @@ function GenerateInvoice() {
         setBillOfLadingItems([...quotationLadingItemsStore]);
       } else if (values.type === "AirwayBill") {
         setAirwayInfo(values);
-        console.log("Airwat items", AirwayItems);
         setAirwayItems([...AirwayItems]);
 
         setAirwayBillItems(AirwayItems);

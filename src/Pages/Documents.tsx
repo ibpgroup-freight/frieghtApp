@@ -57,7 +57,6 @@ function Documents() {
       setisloading(false);
     }
   };
-  console.log(SearchResults);
   return (
     <div className="w-full bg-white p-6 rounded-md shadow-md">
       <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-8 items-center px-5  justify-start gap-5">
