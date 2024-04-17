@@ -13,6 +13,7 @@ const useJob = create<JobStore>((set, get) => ({
   },
   setJob: async (j) => {
     try {
+      console.log(j, "job in j");
       await addDoc(collection(db, "jobs"), {
         inquiry: j.inquiry,
         Items: j.Items,
@@ -22,7 +23,7 @@ const useJob = create<JobStore>((set, get) => ({
         type: j.inquiry.type,
         jobInitials: j.inquiry.jobInitials,
         method: j.inquiry.method,
-        prestation: j.prestation,
+        prestation: j.prestation || [],
       });
       set((state) => {
         state.Jobs.push(j);

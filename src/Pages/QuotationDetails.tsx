@@ -75,8 +75,32 @@ const QuotationDetails = () => {
             <p className="mb-2">
               <strong>Transit Time:</strong> {inquiry.TransitTime}
             </p>
+            <p className="mb-2">
+              <strong>Origin:</strong>{" "}
+              {inquiry.type.includes("sea") || inquiry.type.includes("Sea")
+                ? inquiry.PortOfOrigin
+                : inquiry.type.includes("road") || inquiry.type.includes("Road")
+                ? inquiry.PlaceOfOrigin
+                : inquiry.type.includes("air") || inquiry.type.includes("Air")
+                ? inquiry.AirportOfOrigin
+                : ""}
+            </p>{" "}
+            <p className="mb-2">
+              <strong>Destination:</strong>{" "}
+              {inquiry.type.includes("sea") || inquiry.type.includes("Sea")
+                ? inquiry.PortOfDestination
+                : inquiry.type.includes("road") || inquiry.type.includes("Road")
+                ? inquiry.PlaceOfDestination
+                : inquiry.type.includes("air") || inquiry.type.includes("Air")
+                ? inquiry.AirportOfDestination
+                : ""}
+            </p>
           </div>
+
           <div>
+            <p className="mb-2">
+              <strong>Departure:</strong> {inquiry.Departure}
+            </p>
             <p className="mb-2">
               <strong>Shipment Terms:</strong> {inquiry.ShipmentTerms}
             </p>
@@ -112,12 +136,22 @@ const QuotationDetails = () => {
         </div>
         <div>
           <p className="mb-2">
-            <strong>Incoterm:</strong> {inquiry.IncoTerm}
+            <strong>Details:</strong>{" "}
+            {inquiry.type.includes("sea") || inquiry.type.includes("Sea")
+              ? inquiry.ShippingLaneDetails +
+                " , Vessel: " +
+                inquiry.VesselDetails +
+                inquiry.othershippingDetails
+              : inquiry.type.includes("road") || inquiry.type.includes("Road")
+              ? inquiry.RouteDetails + " , Driver: " + inquiry.DriverDetails
+              : inquiry.type.includes("air") || inquiry.type.includes("Air")
+              ? inquiry.FlightInformation
+              : ""}
           </p>
           <p className="mb-2">
             <strong>Inchage:</strong> {inquiry.Incharge}
           </p>
-
+         
           {/* Add other shipment details fields as needed */}
         </div>
       </div>

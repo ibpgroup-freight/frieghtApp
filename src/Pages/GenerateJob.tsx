@@ -31,7 +31,6 @@ import { LoaderIcon } from "react-hot-toast";
 // };
 const validationSchema = yup.object().shape(
   {
-    Jobid: yup.string().required("Job Id is required"),
     CustomerName: yup.string().required("Customer Name is required"),
     CustomerAddress: yup.string().required("Customer Address is required"),
     CustomerEmail: yup.string().required("Customer Email is required"),
@@ -173,7 +172,7 @@ function GenerateJob() {
     setInfo,
     setItems: setInvoiceItems,
   } = useinvoiceStore();
-  const { setItemInquiry, inquiry } = useInquiryItem();
+  const { setItemInquiry, inquiry, prestation } = useInquiryItem();
   const { setitemsArray, items: quotationItemsStore } = useItemStore();
   const { setJob } = useJob();
   const navigate = useNavigate();
@@ -195,6 +194,9 @@ function GenerateJob() {
         )
       );
       if (docs.empty) return toast.error("No Such Job Exists");
+      if (docs.docs[0]?.data().status !== "approved") {
+        return toast.error("Quotation is Unapproved");
+      }
       console.log("Data", docs.docs[0]?.data());
       setItemInquiry({
         ...(docs.docs[0]?.data()?.inquiry as Inquiry),
@@ -218,13 +220,16 @@ function GenerateJob() {
     enableReinitialize: true,
     initialValues: {
       ...inquiry,
-      Jobid: quotationidRef.current?.value || "",
       Discount: 0,
       OutstandingDues: 0,
       VATAmount: 0,
     },
     async onSubmit(values) {
       try {
+        if (!quotationidRef.current?.value) {
+          toast.error("Please Enter A Quotation Id");
+          return;
+        }
         setisloading(true);
         console.log(inquiry, "inquieru");
         await setJob({
@@ -234,9 +239,12 @@ function GenerateJob() {
             jobInitials: inquiry.jobInitials,
           },
           Items: quotationItemsStore,
-          jobid: values.quotationId!,
+          jobid:
+            quotationidRef.current?.value!.slice(0, 2) +
+            `-J-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
           status: "pending",
           method: inquiry.method,
+          prestation: prestation,
         });
         toast.success("Job Generated Successfully");
         navigate("/analytics");
