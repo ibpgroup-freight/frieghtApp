@@ -50,24 +50,9 @@ const validationSchema = Yup.object().shape({
     then: (schema) => schema.required("Currency is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  RateAmountPerUnit: Yup.string().when("type", {
-    is: (type: string) =>
-      !type?.includes("BillOfLading") &&
-      !type.includes("AirwayBill") &&
-      !type.includes("CargoManifest") &&
-      !type.includes("ProofOfDelivery"),
-    then: (schema) => schema.required("Rate Amount Per Unit is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
-  MinRateAmountPerUnit: Yup.string().when("type", {
-    is: (type: string) =>
-      !type?.includes("BillOfLading") &&
-      !type.includes("AirwayBill") &&
-      !type.includes("CargoManifest") &&
-      !type.includes("ProofOfDelivery"),
-    then: (schema) => schema.required("Min Rate Amount Per Unit is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  RateAmountPerUnit: Yup.string(),
+  MinRateAmountPerUnit: Yup.string(),
+  MaxRateAmountPerUnit: Yup.string(),
   NoOfPackages: Yup.string().when("type", {
     is: (type: string) =>
       type?.includes("BillOfLading") || type === "ProofOfDelivery",
@@ -352,6 +337,7 @@ function AddQuotation({
     },
     { label: "Amount Per Unit", name: "RateAmountPerUnit" },
     { label: "Min Amount Per Unit", name: "MinRateAmountPerUnit" },
+    { label: "Max Amount Per Unit", name: "MaxRateAmountPerUnit" },
   ];
   const Column3 = [
     {
@@ -364,7 +350,6 @@ function AddQuotation({
 
     { label: "Vat Amount", name: "vatamount", type: "number" },
     { label: "Discount", name: "Discount", type: "number" },
-
   ];
   const laddingBillColumns = [
     {

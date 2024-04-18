@@ -1556,6 +1556,7 @@ function GenerateInvoice() {
             onChange={(e) => {
               formikObj.setFieldValue("type", e.target.value);
             }}
+            defaultValue={"quotation"}
           >
             <option>Search By</option>
             <option value={"quotation"}>Quotation</option>

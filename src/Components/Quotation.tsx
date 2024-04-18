@@ -117,6 +117,7 @@ function Quotation(props: InquiryAndQuotationProps) {
     { label: "Vat %", name: "Vat %" },
     { label: "Vat Amount", name: "Vat Amount" },
     { label: "Discount", name: "Discount" },
+    { label: "Total (exclusive of VAT)", name: "total" },
 
     { label: "Actions", name: "Actions" },
     // { label: "Amount Per Unit", name: "AmountPerUnit" },
@@ -129,6 +130,7 @@ function Quotation(props: InquiryAndQuotationProps) {
     { label: "total", name: "total" },
     { label: "Actions", name: "Actions" },
   ];
+  console.log("items", items);
   return (
     <div className="w-full">
       <div className={`md:px-5 flex justify-evenly  w-full `}>
@@ -181,7 +183,7 @@ function Quotation(props: InquiryAndQuotationProps) {
             {items && (
               <tbody>
                 {items.map((i, index) => (
-                  <tr>
+                  <tr key={index}>
                     <td className="border border-slate-300 p-4">{index + 1}</td>
                     <td className="border border-slate-300 p-4">
                       {i.QuoteValidity}
@@ -199,7 +201,7 @@ function Quotation(props: InquiryAndQuotationProps) {
                       {i.MinRateAmountPerUnit}
                     </td>
                     <td className="border border-slate-300 p-4">
-                      {i.MinRateAmountPerUnit}
+                      {i.MaxRateAmountPerUnit}
                     </td>
                     {/* <td className="border border-slate-300 p-4"> */}
                     {/* {i.CostAmountPerUnit}
@@ -223,8 +225,11 @@ function Quotation(props: InquiryAndQuotationProps) {
                       {i.Discount}
                     </td>
                     <td className="border border-slate-300 p-4">
-                      <h1
-                        className="text-yellow-400"
+                      {parseInt(i.Units) * parseInt(i.Charges)}
+                    </td>
+                    <td className="border border-slate-300 p-4">
+                      <button
+                        className="text-yellow-400 cursor-pointer w-full"
                         onClick={() => {
                           console.log(i, "the i");
                           settoEdit({ ...i, index, isEditingJob: true });
@@ -233,18 +238,20 @@ function Quotation(props: InquiryAndQuotationProps) {
                         }}
                       >
                         Edit
-                      </h1>
-                      <h1
-                        className="text-red-400"
+                      </button>
+                      <button
+                        className="text-red-400 cursor-pointer w-full"
                         onClick={() => {
                           const newquotations = items.filter(
                             (i, ind) => ind !== index
                           );
+                          console.log("Clicked", newquotations);
+
                           setitemsArray(newquotations);
                         }}
                       >
                         Remove
-                      </h1>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -253,7 +260,7 @@ function Quotation(props: InquiryAndQuotationProps) {
           </table>
         </div>
 
-        <div className="relative right-20">
+        <div className="relative right-20 h-24">
           <button
             className="text-2xl rounded-full text-green-600"
             onClick={(e) => {
@@ -294,7 +301,9 @@ function Quotation(props: InquiryAndQuotationProps) {
       </div>
       <div>
         <div className=" w-full overflow-auto mt-20">
-          <h1>Prestation Details</h1>
+          <h1 className="text-center text-3xl text-blue-700 text-underline my-4">
+            Prestation Details
+          </h1>
           <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
             <thead>
               <tr>
@@ -310,7 +319,7 @@ function Quotation(props: InquiryAndQuotationProps) {
             {items && (
               <tbody>
                 {prestation?.map((i, index) => (
-                  <tr>
+                  <tr key={index}>
                     <td className="border border-slate-300 p-4">{index + 1}</td>
                     <td className="border border-slate-300 p-4">
                       {i?.description}
@@ -320,8 +329,8 @@ function Quotation(props: InquiryAndQuotationProps) {
                     </td>
                     <td className="border border-slate-300 p-4">{i?.total}</td>
                     <td className="border border-slate-300 p-4">
-                      <h1
-                        className="text-yellow-400"
+                      <button
+                        className="w-full text-yellow-400"
                         onClick={() => {
                           console.log(i, "the i");
                           settoEdit({ ...i, index, isEditingJob: true });
@@ -330,9 +339,9 @@ function Quotation(props: InquiryAndQuotationProps) {
                         }}
                       >
                         Edit
-                      </h1>
-                      <h1
-                        className="text-red-400"
+                      </button>
+                      <button
+                        className="w-full text-red-400"
                         onClick={() => {
                           const newprestations = prestation?.filter(
                             (i, ind) => ind !== index
@@ -341,7 +350,7 @@ function Quotation(props: InquiryAndQuotationProps) {
                         }}
                       >
                         Remove
-                      </h1>
+                      </button>
                     </td>
                   </tr>
                 ))}

@@ -21,6 +21,8 @@ type QuotationItem = {
   Currency: string;
   RateAmountPerUnit: string;
   MinRateAmountPerUnit: string;
+  MaxRateAmountPerUnit: string;
+
   MinCostAmountPerUnit?: string;
   CostAmountPerUnit?: string;
   // minUnits: string;
