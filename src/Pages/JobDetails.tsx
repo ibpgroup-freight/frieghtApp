@@ -1,11 +1,13 @@
 import React from "react";
 import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
+import { useSearchParams } from "react-router-dom";
 
 const JobDetails = () => {
   const { inquiry } = useInquiryItem();
   const { items } = useItemStore();
   console.log(inquiry);
+  const jobId = useSearchParams()[0].get("jobId");
   const Column1 = [
     { label: "Index", name: "Sr no" },
     { label: "Quote Validity", name: "QuoteValidity" },
@@ -53,6 +55,9 @@ const JobDetails = () => {
             </p>
             <p className="mb-2">
               <strong>Customer Phone No:</strong> {inquiry.CustomerPhoneNo}
+            </p>
+            <p className="mb-2">
+              <strong>Customer TRN: </strong> {inquiry.CustomerTRN}
             </p>
           </div>
           <div>{/* Add other customer information fields as needed */}</div>
@@ -116,7 +121,10 @@ const JobDetails = () => {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="mb-2">
-              <strong>Job ID:</strong> {inquiry.quotationId}
+              <strong>Quotation ID:</strong> {inquiry.quotationId}
+            </p>
+            <p className="mb-2">
+              <strong>Job ID:</strong> {jobId}
             </p>
             <p className="mb-2">
               <strong>Estimated Arrival:</strong> {inquiry.EstimatedArrival}

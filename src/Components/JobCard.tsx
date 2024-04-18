@@ -42,12 +42,12 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
     navigate(`/home?method=${job.method}&editJob=${job.id}`, {
       state: { job: job },
     });
-  }, []);
+  }, [job]);
   const ViewJob = useCallback(() => {
     setItemInquiry(job.inquiry);
     setitemsArray(job.Items);
-    navigate(`/jobDetails`);
-  }, []);
+    navigate(`/jobDetails?jobId=${job.jobid}`);
+  }, [job]);
 
   const changeJob = async (id: string, status: JobStatus) => {
     try {

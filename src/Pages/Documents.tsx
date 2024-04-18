@@ -6,7 +6,7 @@ import {
   Timestamp,
   getDoc,
 } from "firebase/firestore";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { db, storage } from "../firebase";
 import { v4 } from "uuid";
 import CustomLoader from "../Components/CustomLoader";
@@ -15,14 +15,18 @@ import useItemStore from "../store/Item";
 import useInquiryItem from "../store/Inquiry";
 import { getDownloadURL, list, ref } from "firebase/storage";
 import { toast } from "react-toastify";
+import { LoaderIcon } from "react-hot-toast";
+import AddDocument from "../Components/AddDocument";
 type searchType = "jobs" | "quotations";
 
 function Documents() {
   const [searchType, setSearchType] = useState<searchType>("jobs"); // Default search type
   const [searchValue, setsearchValue] = useState<string>(""); // Default search type
-
+  const [mode, setmode] = useState<boolean>(false);
   const [loading, setisloading] = useState<boolean>(false);
   const [SearchResults, setSearchResults] = useState<any>([]);
+  const [searchby, setsearchby] = useState<string>("");
+  const idref = useRef<any>();
   const submitHandler = async () => {
     try {
       setisloading(true);
@@ -59,64 +63,78 @@ function Documents() {
   };
   return (
     <div className="w-full bg-white p-6 rounded-md shadow-md">
-      <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-8 items-center px-5  justify-start gap-5">
-        <h2 className="text-2xl font-semibold mb-4">Search</h2>
-        <div className="mb-4 w-3/5">
-          <label
-            htmlFor="searchInput"
-            className="block text-sm font-medium text-gray-600 mb-1"
-          >
-            Search By Quotation Or Job Id
-          </label>
-          <input
-            type="text"
-            id="searchInput"
-            className="border p-2 w-full rounded-md"
-            placeholder={`Enter Id`}
-            onChange={(e) => setsearchValue(e.target.value)}
-          />
-        </div>
+      <div>
         <button
-          className="bg-blue-500 rounded-md text-white px-3 py-2 my-4 lg:my-0"
-          onClick={submitHandler}
-          disabled={loading}
+          onClick={() => {
+            setmode((p) => !p);
+          }}
         >
-          {loading ? (
-            <CustomLoader customStyle="!h-12" height={50} />
-          ) : (
-            "Search"
-          )}
+          Switch To {mode ? "Add Document" : "Download Document"}
         </button>
       </div>
-      <div className="w-full  lg:mx-auto overflow-auto ">
-        {loading ? (
-          <CustomLoader customStyle="!h-32 sm:h-auto" />
-        ) : (
-          <table className="w-full mx-auto border border-collapse border-slate-400">
-            <thead className="bg-slate-200">
-              <tr className="border border-slate-300 p-4">
-                <th>Name</th>
-                <th>Download</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SearchResults.length > 0 &&
-                SearchResults.map((ans: any, index: number) => (
-                  <tr key={index} className="bg-white">
-                    <td className="border border-slate-300 p-4 text-left">
-                      {ans.name}
-                    </td>
-                    <td className="border border-slate-300 p-4 text-left">
-                      <a className="pointer-cursor" href={ans.downloadUrl}>
-                        Download
-                      </a>
-                    </td>
+      {mode ? (
+        <AddDocument />
+      ) : (
+        <>
+          <div className="w-full flex flex-col lg:flex-row space-x-0 lg:space-x-8 items-center px-5  justify-start gap-5">
+            <div className="mb-4 w-3/5">
+              <label
+                htmlFor="searchInput"
+                className="block text-sm font-medium text-gray-600 mb-1"
+              >
+                Enter Id
+              </label>
+              <input
+                type="text"
+                id="searchInput"
+                className="border p-2 w-full rounded-md"
+                placeholder={`Enter Id`}
+                onChange={(e) => setsearchValue(e.target.value)}
+              />
+            </div>
+            <button
+              className="bg-blue-500 rounded-md text-white px-3 py-2 my-4 lg:my-0"
+              onClick={submitHandler}
+              disabled={loading}
+            >
+              {loading ? (
+                <CustomLoader customStyle="!h-12" height={50} />
+              ) : (
+                "Search"
+              )}
+            </button>
+          </div>
+          <div className="w-full  lg:mx-auto overflow-auto ">
+            {loading ? (
+              <CustomLoader customStyle="!h-32 sm:h-auto" />
+            ) : (
+              <table className="w-full mx-auto border border-collapse border-slate-400">
+                <thead className="bg-slate-200">
+                  <tr className="border border-slate-300 p-4">
+                    <th>Name</th>
+                    <th>Download</th>
                   </tr>
-                ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+                </thead>
+                <tbody>
+                  {SearchResults.length > 0 &&
+                    SearchResults.map((ans: any, index: number) => (
+                      <tr key={index} className="bg-white">
+                        <td className="border border-slate-300 p-4 text-left">
+                          {ans.name}
+                        </td>
+                        <td className="border border-slate-300 p-4 text-left">
+                          <a className="pointer-cursor" href={ans.downloadUrl}>
+                            Download
+                          </a>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
