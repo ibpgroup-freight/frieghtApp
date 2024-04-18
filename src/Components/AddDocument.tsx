@@ -1,14 +1,29 @@
+import { ref } from "firebase/storage";
 import React, { useCallback, useState } from "react";
 import { toast } from "react-toastify";
-
+import { storage } from "../firebase";
+import { uploadBytes } from "firebase/storage";
+import { LoaderIcon } from "react-hot-toast";
 function AddDocument() {
   const [searchby, setsearchby] = useState<string>("quotation");
   const [searchValue, setsearchValue] = useState<string>(""); // Default search type
-  const [file, setfile] = useState<any>();
-  const UploadDOcument = useCallback(() => {
-    if (!searchValue || !searchby)
-      return toast.error("Please Fill The Required Fields");
-  }, []);
+  const [file, setfile] = useState<File>();
+  const [downloading, setisdownloading] = useState<boolean>(false);
+  const UploadDOcument = useCallback(async () => {
+    try {
+      if (!searchValue || !searchby)
+        return toast.error("Please Fill The Required Fields");
+      setisdownloading(true);
+      const docRef = ref(storage, `/${searchValue}/${file?.name}`);
+      await uploadBytes(docRef, file as File);
+      toast.success("Document Uploaded Successfully");
+    } catch (e) {
+      console.log(e);
+      toast.error("Couldnt Upload File");
+    } finally {
+      setisdownloading(false);
+    }
+  }, [file, searchValue]);
   return (
     <div className="flex flex-col">
       <div className="mb-4 w-3/5">
@@ -44,7 +59,12 @@ function AddDocument() {
           if (e.target.files) setfile(e.target.files[0]);
         }}
       />
-      <button onClick={UploadDOcument}>Upload document</button>
+      <button
+        className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-start my-4 gap-4"
+        onClick={UploadDOcument}
+      >
+        {downloading ? <LoaderIcon /> : "Upload document"}
+      </button>
     </div>
   );
 }

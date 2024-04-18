@@ -68,8 +68,9 @@ function Documents() {
           onClick={() => {
             setmode((p) => !p);
           }}
+          className="bg-blue-700  !mx-auto   text-white rounded-lg px-5 py-3 text-lg self-start my-4 gap-4"
         >
-          Switch To {mode ? "Add Document" : "Download Document"}
+          Switch To {!mode ? "Add Document" : "Download Document"}
         </button>
       </div>
       {mode ? (
