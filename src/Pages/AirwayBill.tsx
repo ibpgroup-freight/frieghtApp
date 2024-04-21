@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   logo: {
-    width: "50%",
+    width: "30%",
     height: "100%",
     objectFit: "contain",
   },
@@ -241,7 +241,7 @@ function Column1({
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 20,
+          minHeight: 10,
           borderBottom: 1,
           borderBottomColor: "black",
           paddingBottom: 5,
@@ -304,7 +304,7 @@ function Column1({
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 30,
+          minHeight: 18,
           borderBottom: 1,
           borderBottomColor: "black",
         }}
@@ -313,7 +313,7 @@ function Column1({
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            minHeight: 30,
+            minHeight: 18,
           }}
         >
           <Text
@@ -436,7 +436,7 @@ function Column1({
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 80,
+          minHeight: 40,
           borderBottom: 1,
           borderBottomColor: "black",
           padding: 5,
@@ -524,52 +524,6 @@ function Column1({
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 40,
-          borderBottom: 1,
-          borderBottomColor: "black",
-          padding: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "Courier-Bold",
-            textDecoration: "underline",
-          }}
-        >
-          Flight Details
-        </Text>
-        <Text style={{ fontFamily: "Courier", fontSize: 9 }}>
-          {jobInfo.FlightDetails}
-        </Text>
-      </View>
-      <View
-        style={{
-          borderRight: 1,
-          borderRightColor: "black",
-          width: "100%",
-          minHeight: 50,
-          borderBottom: 1,
-          borderBottomColor: "black",
-          padding: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "Courier-Bold",
-            textDecoration: "underline",
-          }}
-        >
-          Handling Information
-        </Text>
-        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          {jobInfo.HandlingInformation}
-        </Text>
-      </View>
-      <View
-        style={{
-          borderRight: 1,
-          borderRightColor: "black",
-          width: "100%",
           minHeight: 50,
           borderBottom: 1,
           borderBottomColor: "black",
@@ -610,19 +564,21 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          height: 80,
+          height: 60,
           borderBottom: 1,
           borderBottomColor: "black",
           borderTop: 1,
           borderTopColor: "black",
           flexDirection: "row",
           justifyContent: "flex-start",
-          alignItems: "center",
+          alignItems: "flex-start",
         }}
       >
         <Image style={styles.logo} src={logo} />
         <Text style={{ fontFamily: "Courier-Bold", fontSize: 9 }}>
-          Not Negotiable
+          Not Negotiable .{`\n`}
+          Issued By IBP CARGO SERVICES LLC.{"\n"} Copies1,2 and 3 of this
+          AirWaybill{`\n`} are originals and have the same{"\n"} validity
         </Text>
       </View>
       <View
@@ -631,30 +587,12 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRightColor: "black",
           width: "100%",
           padding: 4,
-          height: 60,
-
-          borderBottom: 1,
-
-          borderBottomColor: "black",
-        }}
-      >
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 9 }}>
-          Issued By IBP CARGO SERVICES LLC.{"\n"} Copies1,2 and 3 of this Air
-          Waybill are originals and have the same validity
-        </Text>
-      </View>
-      <View
-        style={{
-          borderRight: 1,
-          borderRightColor: "black",
-          width: "100%",
-          padding: 4,
-          height: 145,
+          height: 118,
           borderBottom: 1,
           borderBottomColor: "black",
         }}
       >
-        <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+        <Text style={{ fontSize: 8, fontFamily: "Courier-Bold" }}>
           It is agreed that the goods described herein are accepted in apparent
           good order and condition (except as noted) for carriage SUBJECT TO THE
           CONDITIONS OF CONTRACT ON THE REVERSE HEREOF. ALL GOODS MAY BE CARRIED
@@ -675,8 +613,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          padding: 4,
-          height: 50,
+          height: 40,
 
           borderBottom: 1,
           flexDirection: "row",
@@ -705,6 +642,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           <Text
             style={{
               fontSize: 9,
+              fontFamily: "Courier-Bold",
             }}
           >
             Chgs Code
@@ -722,6 +660,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             <Text
               style={{
                 fontSize: 9,
+                fontFamily: "Courier-Bold",
               }}
             >
               Wt/Val
@@ -732,6 +671,8 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   fontSize: 7,
                   borderRightColor: "black",
                   borderRightWidth: 1,
+                  paddingRight: 2,
+                  fontFamily: "Courier-Bold",
                 }}
               >
                 PPD
@@ -739,6 +680,8 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
               <Text
                 style={{
                   fontSize: 7,
+                  paddingLeft: 1,
+                  fontFamily: "Courier-Bold",
                 }}
               >
                 COLL
@@ -775,6 +718,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             <Text
               style={{
                 fontSize: 9,
+                fontFamily: "Courier-Bold",
               }}
             >
               Other
@@ -785,6 +729,8 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                   fontSize: 7,
                   borderRightColor: "black",
                   borderRightWidth: 1,
+                  fontFamily: "Courier-Bold",
+                  paddingRight: 2,
                 }}
               >
                 PPD
@@ -792,6 +738,8 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
               <Text
                 style={{
                   fontSize: 7,
+                  fontFamily: "Courier-Bold",
+                  paddingLeft: 1,
                 }}
               >
                 COLL
@@ -823,7 +771,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             </View>
           </View>
         </View>
-        <View style={{ width: "15%", height: 30, borderRight: 1 }}>
+        <View style={{ width: "15%", borderRight: 1 }}>
           <Text
             style={{
               fontSize: 8,
@@ -841,7 +789,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             {jobInfo.DeclaredValCarriage}
           </Text>
         </View>
-        <View style={{ width: "15%", height: 30 }}>
+        <View style={{ width: "15%" }}>
           <Text
             style={{
               fontSize: 8,
@@ -866,7 +814,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRightColor: "black",
           width: "100%",
           padding: 4,
-          height: 80,
+          height: 45,
           borderBottom: 1,
           flexDirection: "row",
           justifyContent: "space-between",
@@ -906,7 +854,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           borderRightColor: "black",
           width: "100%",
           padding: 4,
-          height: 80,
+          height: 60,
           borderBottom: 1,
           justifyContent: "space-between",
           borderBottomColor: "black",
@@ -929,7 +877,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           </Text>
         </View>
 
-        <Text style={{ fontSize: 8 }}>
+        <Text style={{ fontSize: 6 }}>
           INSURANCE - If Carrier offers insurance, and such insurance is
           requested in accordance with the conditions thereof, indicate amount
           to be insured in figures in box marked 'Amount of Insurance'
@@ -1037,6 +985,52 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             By
           </Text>
         </View>
+      </View>
+      <View
+        style={{
+          borderRight: 1,
+          borderRightColor: "black",
+          width: "100%",
+          minHeight: 40,
+          borderBottom: 1,
+          borderBottomColor: "black",
+          padding: 5,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textDecoration: "underline",
+          }}
+        >
+          Flight Details
+        </Text>
+        <Text style={{ fontFamily: "Courier", fontSize: 9 }}>
+          {jobInfo.FlightDetails}
+        </Text>
+      </View>
+      <View
+        style={{
+          borderRight: 1,
+          borderRightColor: "black",
+          width: "100%",
+          minHeight: 50,
+          borderBottom: 1,
+          borderBottomColor: "black",
+          padding: 5,
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textDecoration: "underline",
+          }}
+        >
+          Handling Information
+        </Text>
+        <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
+          {jobInfo.HandlingInformation}
+        </Text>
       </View>
     </View>
   );
