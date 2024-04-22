@@ -101,6 +101,7 @@ function AirwayBill() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 width: "100%",
+                border: 1,
               }}
             >
               <Column1 jobInfo={AirwayInfo} companyInfo={companyLocation!} />
@@ -122,6 +123,11 @@ function AirwayBill() {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 width: "100%",
+                position: "absolute",
+                bottom: 3,
+                left: 10,
+                right: 0,
+                border: 1,
               }}
             >
               <Column3 jobInfo={AirwayInfo} />
@@ -240,11 +246,11 @@ function Column1({
       style={{
         width: "50%",
         borderLeftColor: "black",
+        borderRight: 1,
       }}
     >
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           borderBottom: 1,
@@ -319,7 +325,6 @@ function Column1({
       </View>
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           minHeight: 18,
@@ -382,7 +387,6 @@ function Column1({
       </View>
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           minHeight: 15,
@@ -417,7 +421,6 @@ function Column1({
       </View>
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           minHeight: 30,
@@ -463,7 +466,6 @@ function Column1({
       </View>
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           minHeight: 40,
@@ -495,7 +497,6 @@ function Column1({
 
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           minHeight: 35,
@@ -539,40 +540,64 @@ function Column1({
 
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
           minHeight: 38,
           borderBottom: 1,
           borderBottomColor: "black",
           padding: 5,
+          flexDirection: "row",
+          justifyContent: "flex-start",
         }}
       >
-        <Text
-          style={{
-            fontFamily: "Courier-Bold",
-            fontSize: 9,
-          }}
-        >
-          Mode Of Payment
-        </Text>
-        <Text
-          style={{
-            textDecoration: "none",
-            marginLeft: 5,
-            fontFamily: "Courier-Bold",
-            fontSize: 9,
-          }}
-        >
-          {jobInfo.PaymentMethod}
-        </Text>
+        <View style={{ width: "50%" }}>
+          <View
+            style={{
+              borderRightColor: "black",
+              width: "100%",
+
+              borderBottomColor: "black",
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Courier-Bold",
+                fontSize: 8,
+              }}
+            >
+              Flight Details
+            </Text>
+            <Text style={{ fontFamily: "Courier-Bold", fontSize: 6 }}>
+              {jobInfo.FlightDetails}
+            </Text>
+          </View>
+        </View>
+        <View style={{ width: "50%", paddingLeft: 2, borderLeft: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 8,
+            }}
+          >
+            Mode Of Payment
+          </Text>
+          <Text
+            style={{
+              textDecoration: "none",
+
+              fontFamily: "Courier-Bold",
+              fontSize: 9,
+            }}
+          >
+            {jobInfo.PaymentMethod}
+          </Text>
+        </View>
       </View>
       <View
         style={{
-          borderRight: 1,
           borderRightColor: "black",
           width: "100%",
-          minHeight: 50,
+          minHeight: 35,
           borderBottomColor: "black",
           padding: 5,
         }}
@@ -954,9 +979,9 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
         style={{
           borderRightColor: "black",
           width: "100%",
-          padding: 4,
+          padding: 2,
           height: 30,
-          borderBottom: 1,
+
           flexDirection: "row",
           justifyContent: "space-between",
           borderBottomColor: "black",
@@ -1023,27 +1048,6 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           </Text>
         </View>
       </View>
-      <View
-        style={{
-          borderRightColor: "black",
-          width: "100%",
-          minHeight: 40,
-          borderBottomColor: "black",
-          padding: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "Courier-Bold",
-            fontSize: 7,
-          }}
-        >
-          Flight Details
-        </Text>
-        <Text style={{ fontFamily: "Courier-Bold", fontSize: 7 }}>
-          {jobInfo.FlightDetails}
-        </Text>
-      </View>
     </View>
   );
 }
@@ -1059,13 +1063,13 @@ const styles2 = StyleSheet.create({
     flexGrow: 1,
     flexWrap: "nowrap",
     fontWeight: "heavy",
-    minHeight: 20,
+    height: 20,
     width: "100%",
     fontFamily: "Courier-Bold",
-    fontSize: 12,
+    fontSize: 9,
   },
   description: {
-    width: "25%",
+    width: "20%",
     borderRightColor: "navy",
     borderRightWidth: 1,
     fontSize: 8,
@@ -1076,7 +1080,7 @@ const styles2 = StyleSheet.create({
     width: "15%",
     borderRightColor: "navy",
     borderRightWidth: 1,
-    fontSize: 8,
+    fontSize: 6,
     fontWeight: "heavy",
     fontFamily: "Courier-Bold",
   },
@@ -1106,7 +1110,7 @@ const InvoiceTableHeader = () => (
     <Text style={styles2.amount}>Rate Class</Text>
     <Text style={styles2.qty}>Chargeable Weight</Text>
     <Text style={styles2.qty}>Rate/Charge</Text>
-    <Text style={[styles2.qty, { borderRight: 0, padding: 3 }]}>
+    <Text style={[styles2.qty, { borderRight: 0, padding: 0, width: "20%" }]}>
       Nature Of Goods
       <Text style={{ fontSize: 6 }}>(Including Dimensions Or Volume)</Text>
     </Text>
@@ -1174,7 +1178,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                 </Text>
               </View>
             </View>
-            <View style={{ height: 25, borderBottom: 1 }}>
+            <View style={{ height: 20, borderBottom: 1 }}>
               <Text
                 style={{
                   fontFamily: "Courier-Bold",
@@ -1218,7 +1222,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                 </View>
               </View>
             </View>
-            <View style={{ height: 25, borderBottom: 1 }}>
+            <View style={{ height: 20, borderBottom: 1 }}>
               <Text
                 style={{
                   fontFamily: "Courier-Bold",
@@ -1263,7 +1267,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                 </View>
               </View>
             </View>
-            <View style={{ height: 25, borderBottom: 1 }}>
+            <View style={{ height: 20, borderBottom: 1 }}>
               <Text
                 style={{
                   fontFamily: "Courier-Bold",
@@ -1310,7 +1314,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                 </View>
               </View>
             </View>
-            <View style={{ height: 25, borderBottom: 1 }}>
+            <View style={{ height: 20, borderBottom: 1 }}>
               <Text
                 style={{
                   fontFamily: "Courier-Bold",
@@ -1403,7 +1407,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
                 </View>
               </View>
             </View>
-            <View style={{ height: 25, borderBottom: 1, flexDirection: "row" }}>
+            <View style={{ height: 20, borderBottom: 1, flexDirection: "row" }}>
               <View style={{ width: "50%", borderRight: 1 }}>
                 <Text
                   style={{
@@ -1449,7 +1453,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             </View>
             <View
               style={{
-                height: 25,
+                height: 20,
                 borderBottom: 1,
                 flexDirection: "row",
               }}
@@ -1497,7 +1501,7 @@ function Column3({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
               </View>
             </View>
 
-            <View style={{ height: 25, borderBottom: 1, flexDirection: "row" }}>
+            <View style={{ height: 20, borderBottom: 1, flexDirection: "row" }}>
               <View style={{ width: "50%", borderRight: 1 }}>
                 <Text
                   style={{
