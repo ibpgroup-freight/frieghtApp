@@ -246,18 +246,18 @@ function Column1({
             fontWeight: 1000,
           }}
         >
-          {companyInfo?.name} {"\n"}
-          {companyInfo?.office} {"\n"}
-          {companyInfo?.location} {"\n"}
-          {companyInfo?.country}
+          {jobInfo?.ShipperName} {"\n"}
+          {jobInfo?.ShipperAddress} {"\n"}
+          {jobInfo?.ShipperPhone} {"\n"}
+          {jobInfo?.ShippersAccount}
           {"\n"}
-          {companyInfo?.office}
+          {jobInfo?.OtherShipperInfo}
           {"\n"}
-          TRN {companyInfo?.TRN}
+          TRN {jobInfo?.ShippersTRN}
           {"\n"}
-          {companyInfo?.telephone}
+          {jobInfo?.ShipperPhone}
           {"\n"}
-          PO Box {companyInfo?.pobox}
+          PO Box {jobInfo?.ShippersPO}
           {"\n"}
         </Text>
       </View>

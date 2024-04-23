@@ -938,7 +938,12 @@ function GenerateInvoice() {
     { label: "Actions", name: "Actions" },
   ];
   const Column1Items = [
-    ...(formikObj.values.type !== "Quotation"
+    { name: "ShipperName", label: "ShipperName", type: "text" },
+    { name: "ShipperTRN", label: "ShipperTRN", type: "number" },
+    { name: "ShipperAddress", label: "ShipperAddress", type: "textarea" },
+    { name: "OtherShipperInfo", label: "OtherShipperInfo", type: "textarea" },
+    ...(formikObj.values.type !== "Quotation" &&
+    formikObj.values.type !== "AirwayBill"
       ? [
           { label: "Enter Customer Name", name: "CustomerName", type: "text" },
           { label: "blNo", name: "blNo", type: "text" },
@@ -950,12 +955,25 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(formikObj.values.type !== "BillOfLading"
+    ...(formikObj.values.type === "AirwayBill"
+      ? [
+          { label: "Enter Customer Name", name: "CustomerName", type: "text" },
+
+          {
+            label: "Enter Consignee Address",
+            name: "CustomerAddress",
+            type: "text",
+          },
+          { label: "Enter Consignee TRN", name: "CustomerTRN", type: "number" },
+        ]
+      : []),
+    ...(formikObj.values.type !== "BillOfLading" &&
+    formikObj.values.type !== "AirwayBill"
       ? [{ label: "HAWB", name: "HAWB", type: "text" }]
       : []),
     ...(formikObj.values.type == "BillOfLading"
       ? [
-          { label: "blNo", name: "blNo", type: "text" },
+          { label: "blNo", name: "blNo" },
 
           {
             label: "Enter Customer Address",
@@ -980,15 +998,15 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(formikObj.values.type?.includes("Airway")
-      ? [
-          {
-            label: "Flight Information",
-            name: "FlightInformation",
-            type: "textarea",
-          },
-        ]
-      : []),
+    // ...(formikObj.values.type?.includes("Airway")
+    //   ? [
+    //       {
+    //         label: "Flight Information",
+    //         name: "FlightInformation",
+    //         type: "textarea",
+    //       },
+    //     ]
+    //   : []),
     ...(formikObj.values.type?.includes("Lading")
       ? [
           {
@@ -1103,7 +1121,8 @@ function GenerateInvoice() {
           },
         ]
       : []),
-    ...(!formikObj.values.type?.includes("Lading")
+    ...(!formikObj.values.type?.includes("Lading") &&
+    formikObj.values.type !== "AirwayBill"
       ? [
           {
             label: "Enter Any Outstanding Dues",
@@ -1115,8 +1134,19 @@ function GenerateInvoice() {
       : []),
   ];
   const AWBCol1 = [
+    { name: "Reference Number", label: "ReferenceNumber", type: "text" },
+
     { name: "AgentsIATA", label: "AgentsIATA", type: "text" },
-    { name: "ModeOfPayment", label: "ModeOfPayment", type: "text" },
+    {
+      name: "IssuingCarriersName",
+      label: "Issuing Carriers Name",
+      type: "text",
+    },
+    {
+      name: "IssuingCarriersCity",
+      label: "Issuing Carriers City",
+      type: "text",
+    },
     { name: "ChargesCode", label: "ChargesCode", type: "text" },
     { name: "WVPPD", label: "WVPPD", type: "text" },
     { name: "WVColl", label: "WVColl", type: "text" },
@@ -1124,11 +1154,11 @@ function GenerateInvoice() {
     { name: "OtherColl", label: "OtherColl", type: "text" },
     { name: "DeclaredValCarriage", label: "DeclaredValCarriage", type: "text" },
     { name: "DeclaredValCustoms", label: "DeclaredValCustoms", type: "text" },
-    { name: "AmountInsurance", label: "AmountInsurance", type: "text" },
-    { name: "ShipperName", label: "ShipperName", type: "text" },
-    { name: "ShipperPhone", label: "ShipperPhone", type: "text" },
-    { name: "ShipperAddress", label: "ShipperAddress", type: "text" },
-    { name: "OtherShipperInfo", label: "OtherShipperInfo", type: "text" },
+    {
+      name: "Insurance Information",
+      label: "AmountInsurance",
+      type: "textarea",
+    },
   ];
   const AWBCol2 = [
     { name: "ShippersAccount", label: "ShippersAccount", type: "text" },
@@ -1148,6 +1178,21 @@ function GenerateInvoice() {
       name: "ChargesAtDestination",
       label: "ChargesAtDestination",
       type: "text",
+    },
+    {
+      name: "Optional Shipping Information",
+      label: "otherShippingDetails",
+      type: "textarea",
+    },
+    {
+      label: "Payment Method",
+      name: "PaymentMethod",
+      type: "text",
+    },
+    {
+      label: "Accounting Information",
+      name: "AccountingInformation",
+      type: "textarea",
     },
   ];
   const Column2Items = [
@@ -1278,7 +1323,8 @@ function GenerateInvoice() {
         ]
       : []),
 
-    ...(!formikObj.values.type?.includes("Lading")
+    ...(!formikObj.values.type?.includes("Lading") &&
+    formikObj.values.type !== "AirwayBill"
       ? [
           {
             label: "Enter Discount If Applicable",
@@ -1292,40 +1338,18 @@ function GenerateInvoice() {
             type: "text",
           },
           { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
-        ]
-      : []),
-    ...(formikObj.values.type?.includes("Airway")
-      ? [
           {
-            label: "Flight Details",
-            name: "FlightDetails",
-            type: "textarea",
-          },
-          {
-            label: "Customer Account",
+            label: "Customer Account Number",
             name: "CustomerAccount",
-            type: "textarea",
-          },
-          {
-            label: "Requested Flight",
-            name: "RequestedFlight",
             type: "text",
-          },
-          {
-            label: "Payment Method",
-            name: "PaymentMethod",
-            type: "text",
-          },
-          {
-            label: "Accounting Information",
-            name: "AccountingInformation",
-            type: "textarea",
           },
         ]
       : []),
+    ,
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
     ...(formikObj.values.type !== "Quotation" &&
-    formikObj.values.type !== "BillOfLading"
+    formikObj.values.type !== "BillOfLading" &&
+    formikObj.values.type !== "AirwayBill"
       ? [
           {
             label: "Special Instructions",
@@ -1350,6 +1374,49 @@ function GenerateInvoice() {
       name: "officeAddress",
       type: "select",
       options: ["Dubai", "Bahrain"],
+    },
+  ];
+  const AWBflightInfo = [
+    {
+      label: "Flight Details",
+      name: "FlightDetails",
+      type: "textarea",
+    },
+
+    {
+      label: "Requested Flight",
+      name: "RequestedFlight",
+      type: "text",
+    },
+    {
+      label: "To",
+      name: "firstTo",
+      type: "text",
+    },
+    {
+      label: "By First Carrier",
+      name: "Byfirstcarrier",
+      type: "text",
+    },
+    {
+      label: "To",
+      name: "secondTo",
+      type: "text",
+    },
+    {
+      label: "By",
+      name: "secondBy",
+      type: "text",
+    },
+    {
+      label: "To",
+      name: "thirdTo",
+      type: "text",
+    },
+    {
+      label: "To",
+      name: "thirdBy",
+      type: "text",
     },
   ];
   const quotationNewCol = [
@@ -1793,7 +1860,7 @@ function GenerateInvoice() {
                         )
                       )
                     : Column2Items.map((i) =>
-                        i.type === "select" ? (
+                        i && i.type === "select" ? (
                           <div key={i.name} className="px-4 w-2/5">
                             <label className="text-xl" key={i.name}>
                               {i.label}
@@ -1819,27 +1886,32 @@ function GenerateInvoice() {
                             />
                           </div>
                         ) : (
-                          <div key={i.name} className="px-4 w-2/5">
-                            <label className="text-xl" key={i.name}>
-                              {i.label}
-                            </label>
+                          i && (
+                            <div key={i.name} className="px-4 w-2/5">
+                              <label className="text-xl" key={i.name}>
+                                {i.label}
+                              </label>
 
-                            <Field
-                              as={i.type === "textarea" ? "textarea" : "input"}
-                              type={i.type}
-                              name={i.name}
-                              className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                            />
-                            <ErrorMessage
-                              name={i.name}
-                              component="div"
-                              className="text-red-500"
-                            />
-                          </div>
+                              <Field
+                                as={
+                                  i.type === "textarea" ? "textarea" : "input"
+                                }
+                                type={i.type}
+                                name={i.name}
+                                className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                              />
+                              <ErrorMessage
+                                name={i.name}
+                                component="div"
+                                className="text-red-500"
+                              />
+                            </div>
+                          )
                         )
                       )}
                 </div>
               </div>
+
               <div className="flex  flex-col space-y-2">
                 <div className="w-4/5 flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3">
                   {formikObj.values.type === "AirwayBill" &&
@@ -1907,23 +1979,52 @@ function GenerateInvoice() {
                     ))}
                 </div>
               </div>
-              <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
-                <div className="px-4 w-4/5">
-                  <label className="text-xl">
-                    Other Terms And Conditions (If Any)
-                  </label>
+              {formikObj.values.type === "Quotation" && (
+                <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
+                  <div className="px-4 w-4/5">
+                    <label className="text-xl">
+                      Other Terms And Conditions (If Any)
+                    </label>
 
-                  <Field
-                    as="textarea"
-                    name="termsAndConditions"
-                    className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name={"termsaAndConditions"}
-                    component="div"
-                    className="text-red-500"
-                  />
+                    <Field
+                      as="textarea"
+                      name="termsAndConditions"
+                      className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name={"termsaAndConditions"}
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
                 </div>
+              )}
+              {formikObj.values.type === "AirwayBill" && (
+                <h1 className="text-xl text-center text-blue-900 font-serif">
+                  Flight Information
+                </h1>
+              )}
+              <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
+                {formikObj.values.type === "AirwayBill" &&
+                  AWBflightInfo?.map((i) => (
+                    <div key={i.name} className="px-4 w-2/5">
+                      <label className="text-xl" key={i.name}>
+                        {i.label}
+                      </label>
+
+                      <Field
+                        as={i.type === "textarea" ? "textarea" : "input"}
+                        type={i.type}
+                        name={i.name}
+                        className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                      />
+                      <ErrorMessage
+                        name={i.name}
+                        component="div"
+                        className="text-red-500"
+                      />
+                    </div>
+                  ))}
               </div>
               <div className="w-full space-y-2 w-5/5">
                 <h1 className="text-xl text-center text-blue-900 font-serif">

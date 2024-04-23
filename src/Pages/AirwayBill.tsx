@@ -307,18 +307,18 @@ function Column1({
         </View>
         <View style={{ height: "100%" }}>
           <Text style={{ fontFamily: "Courier-Bold", fontSize: 8 }}>
-            {companyInfo?.name} {"\n"}
-            {companyInfo?.office} {"\n"}
-            {companyInfo?.location} {"\n"}
-            {companyInfo?.country}
+            {jobInfo?.ShipperName} {"\n"}
+            {jobInfo?.ShipperAddress} {"\n"}
+            {jobInfo?.ShipperPhone} {"\n"}
+            {jobInfo?.ShippersAccount}
             {"\n"}
-            {companyInfo?.office}
+            {jobInfo?.OtherShipperInfo}
             {"\n"}
-            TRN {companyInfo?.TRN}
+            TRN {jobInfo?.ShippersTRN}
             {"\n"}
-            {companyInfo?.telephone}
+            {jobInfo?.ShipperPhone}
             {"\n"}
-            PO Box {companyInfo?.pobox}
+            PO Box {jobInfo?.ShippersPO}
             {"\n"}
           </Text>
         </View>
@@ -370,7 +370,7 @@ function Column1({
                 fontSize: 9,
               }}
             >
-              {jobInfo.CustomerAccount || ""}
+              {jobInfo.ConsigneesAccount || ""}
             </Text>
           </View>
         </View>
@@ -414,9 +414,11 @@ function Column1({
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              width: "100%",
+              fontSize: 9,
             }}
-          ></Text>
+          >
+            {jobInfo.IssuingCarriersName} {jobInfo.IssuingCarriersCity}
+          </Text>
         </View>
       </View>
       <View
@@ -999,6 +1001,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             To
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.firstTo}
+          </Text>
         </View>
         <View style={{ borderRight: 1, width: "15%" }}>
           <Text
@@ -1009,6 +1019,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             By First Carrier
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.Byfirstcarrier}
+          </Text>
         </View>
         <View style={{ borderRight: 1, width: "15%" }}>
           <Text
@@ -1019,7 +1037,15 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             To
           </Text>
-        </View>{" "}
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.secondTo}
+          </Text>
+        </View>
         <View style={{ borderRight: 1, width: "15%" }}>
           <Text
             style={{
@@ -1029,6 +1055,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
           >
             By
           </Text>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.secondBy}
+          </Text>
         </View>
         <View style={{ borderRight: 1, width: "15%" }}>
           <Text
@@ -1038,6 +1072,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             }}
           >
             To
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.thirdTo}
           </Text>
         </View>{" "}
         <View style={{ width: "15%" }}>
@@ -1048,6 +1090,14 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             }}
           >
             By
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.thirdBy}
           </Text>
         </View>
       </View>
@@ -1617,7 +1667,6 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             borderTopWidth: 1,
             borderStyle: "dashed",
             paddingVertical: 1,
-    
           }}
         >
           Signature Of Shipper Or Agent
@@ -1642,7 +1691,6 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             borderTopWidth: 1,
             borderStyle: "dashed",
             paddingVertical: 1,
-         
           }}
         >
           Executed On Date
@@ -1652,7 +1700,6 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             borderTopWidth: 1,
             borderStyle: "dashed",
             paddingVertical: 1,
-         
           }}
         >
           at Place
@@ -1662,7 +1709,6 @@ function Column4({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
             borderTopWidth: 1,
             borderStyle: "dashed",
             paddingVertical: 1,
-            
           }}
         >
           Signature Of Issuing Carrier or its Agent

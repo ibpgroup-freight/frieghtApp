@@ -283,6 +283,13 @@ type cargoInfo = {
   officeAddress: string;
   specialInstructions?: string;
   termsAndConditions?: string;
+  ShipperName: string;
+  ShipperPhone: number;
+  ShipperAddress: string;
+  OtherShipperInfo: string;
+  ShippersAccount: string;
+  ShippersTRN: number;
+  ShippersPO: number;
 };
 
 type Contact = {
@@ -377,11 +384,6 @@ type AirwayBillInquiry = {
   DeclaredValCarriage: string;
   DeclaredValCustoms: string;
   AmountInsurance: string;
-  ShipperName: string;
-  ShipperPhone: string;
-  ShipperAddress: string;
-  OtherShipperInfo: string;
-  ShippersAccount: string;
   ConsigneesAccount: string;
   SCI: string;
   PPDWeight: string;
@@ -389,16 +391,22 @@ type AirwayBillInquiry = {
   PPDTax: string;
   PPDOtherDueAgent: string;
   PPDOtherDueCarrier: string;
-
   CollWeight: string;
   CollValuation: string;
   CollTax: string;
   CollOtherDueAgent: string;
   CollOtherDueCarrier: string;
-
   CurrConv: string;
   CCChargesinDestCurr: string;
   ChargesAtDestination: string;
+  IssuingCarriersName: string;
+  IssuingCarriersCity: string;
+  firstTo: string;
+  Byfirstcarrier: string;
+  secondTo: string;
+  secondBy: string;
+  thirdTo: string;
+  thirdBy: string;
 };
 
 type AirwayItem = {
