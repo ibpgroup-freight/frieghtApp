@@ -196,8 +196,10 @@ type UserStore = {
   isloggedIn: boolean;
   name: string;
   email: string;
+  billType: string;
   AuthStateLogIn: () => void;
   AuthStateLogOut: () => void;
+  setbillType: (bill: string) => void;
 };
 interface registrationTypes {
   displayName: string;

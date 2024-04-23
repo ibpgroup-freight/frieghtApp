@@ -16,6 +16,7 @@ import { LoaderIcon } from "react-hot-toast";
 import useCompanyInfo from "../store/CompanyInfo";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Invoice from "./Invoice";
+import useUser from "../store/User";
 // const init = {
 //   CustomerName: "",
 //   CustomerAddress: "",
@@ -759,7 +760,7 @@ function GenerateInvoice() {
     setPrestationArray,
     prestation,
   } = useInquiryItem();
-
+  const { setbillType, billType } = useUser();
   const {
     setitemsArray,
     items: quotationItemsStore,
@@ -795,7 +796,9 @@ function GenerateInvoice() {
       ...manifestInfo,
       Jobid: jobidRef.current?.value || "",
       ...inquiry,
+      type: billType || "",
     },
+
     onSubmit(values) {
       console.log("Here", values);
       // if (quotationItemsStore.length === 0) {
@@ -1482,12 +1485,6 @@ function GenerateInvoice() {
         method: mydoc?.data()?.method,
         quotationId: mydoc?.data()?.quotationId,
         jobInitials: mydoc?.data()?.jobInitials,
-        type:
-          jobtype === "road"
-            ? "RoadFreight"
-            : jobtype === "sea"
-            ? "SeaFreight"
-            : "AirFreight",
       });
       setPrestationArray(mydoc?.data().prestation as PrestationItem[]);
       setitemsArray(mydoc?.data()?.Items as QuotationItem[]);
@@ -1616,6 +1613,10 @@ function GenerateInvoice() {
                   name="type"
                   className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
                   defaultValue={formikObj.values.type}
+                  onChange={(e: any) => {
+                    setbillType(e.target.value);
+                    formikObj.setFieldValue("type", e.target.value);
+                  }}
                 >
                   <option value={""}>Select Type</option>
                   <option value={"Quotation"}>Quotation</option>
