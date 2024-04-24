@@ -85,7 +85,9 @@ const validationSchema = yup.object().shape(
       .string()
       .when("type", {
         is: (type: string) =>
-          type !== "CargoManifest" && type !== "ProofOfDelivery",
+          type !== "CargoManifest" &&
+          type !== "ProofOfDelivery" &&
+          type !== "AirwayBill",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -181,7 +183,8 @@ const validationSchema = yup.object().shape(
         is: (type: string) =>
           type !== "CargoManifest" &&
           type !== "ProofOfDelivery" &&
-          type !== "BillOfLading",
+          type !== "BillOfLading" &&
+          type !== "AirwayBill",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -193,7 +196,8 @@ const validationSchema = yup.object().shape(
         is: (type: string) =>
           type !== "CargoManifest" &&
           type !== "ProofOfDelivery" &&
-          type !== "BillOfLading",
+          type !== "BillOfLading" &&
+          type !== "AirwayBill",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -213,14 +217,7 @@ const validationSchema = yup.object().shape(
     Dimensions: yup.string(),
     ShipmentTerms: yup.string(),
     TypeOfCargo: yup.string(),
-    FlightInformation: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type?.includes("Airway"),
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .notRequired(),
+    FlightInformation: yup.string(),
     VesselName: yup
       .string()
       .when("type", {
@@ -304,7 +301,8 @@ const validationSchema = yup.object().shape(
         is: (type: string) =>
           type !== "CargoManifest" &&
           type !== "ProofOfDelivery" &&
-          type !== "BillOfLading",
+          type !== "BillOfLading" &&
+          type !== "AirwayBill",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -315,7 +313,8 @@ const validationSchema = yup.object().shape(
         is: (type: string) =>
           type !== "CargoManifest" &&
           type !== "ProofOfDelivery" &&
-          type !== "BillOfLading",
+          type !== "BillOfLading" &&
+          type !== "AirwayBill",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -548,11 +547,7 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    ModeOfPayment: yup.string().when("type", {
-      is: (type: string) => type === "AirwayBill",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+
     ChargesCode: yup.string().when("type", {
       is: (type: string) => type === "AirwayBill",
       then: (schema) => schema.required(),
@@ -1150,8 +1145,8 @@ function GenerateInvoice() {
     { name: "DeclaredValCarriage", label: "DeclaredValCarriage", type: "text" },
     { name: "DeclaredValCustoms", label: "DeclaredValCustoms", type: "text" },
     {
-      name: "Insurance Information",
-      label: "AmountInsurance",
+      name: "AmountInsurance",
+      label: "Insurance Information",
       type: "textarea",
     },
   ];
@@ -1163,6 +1158,12 @@ function GenerateInvoice() {
     { name: "PPDValuation", label: "PPDValuation", type: "text" },
     { name: "PPDTax", label: "PPDTax", type: "text" },
     { name: "PPDOther", label: "PPDOther", type: "text" },
+    { name: "PPDOtherDueAgent", label: "PPDOther Due Agent", type: "text" },
+    { name: "PPDOtherDueCarrier", label: "PPDOther Due Carrier", type: "text" },
+
+    { name: "CollOtherDueAgent", label: "CollOther Due Agent", type: "text" },
+    { name: "CollOtherDueCarrier", label: "CollOther Due Agent", type: "text" },
+
     { name: "CollWeight", label: "CollWeight", type: "text" },
     { name: "CollValuation", label: "CollValuation", type: "text" },
     { name: "CollTax", label: "CollTax", type: "text" },
@@ -1175,8 +1176,8 @@ function GenerateInvoice() {
       type: "text",
     },
     {
-      name: "Optional Shipping Information",
-      label: "otherShippingDetails",
+      name: "othershippingDetails",
+      label: "Optional Shipping Information",
       type: "textarea",
     },
     {
@@ -1191,8 +1192,39 @@ function GenerateInvoice() {
     },
   ];
   const Column2Items = [
+    ...(formikObj.values.type === "AirwayBill"
+      ? [
+          {
+            label: "Enter Consignee Email",
+            name: "CustomerEmail",
+            type: "text",
+          },
+
+          {
+            label: "Enter Consignee Phone Number",
+            name: "CustomerPhoneNo",
+            type: "text",
+          },
+          {
+            label: "Enter Handling Information",
+            name: "HandlingInformation",
+            type: "text",
+          },
+          {
+            label: "Reference Number",
+            name: "ReferenceNumber",
+            type: "text",
+          },
+          {
+            label: "Currency",
+            name: "Currency",
+            type: "text",
+          },
+        ]
+      : []),
     ...(formikObj.values.type !== "Quotation" &&
-    formikObj.values.type !== "BillOfLading"
+    formikObj.values.type !== "BillOfLading" &&
+    formikObj.values.type !== "AirwayBill"
       ? [
           {
             label: "Enter Consignee Email",
