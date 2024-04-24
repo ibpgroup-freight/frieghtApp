@@ -66,7 +66,7 @@ function Invoice() {
         </Document>
       );
       setisSaving(true);
-   
+
       const doc = pdf(myDoc);
       const blob = await doc.toBlob();
       const jref = ref(
@@ -218,7 +218,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {companyLocation?.name}
+            {jobInfo?.ShipperName}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -228,7 +228,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {companyLocation?.location}
+            {jobInfo?.ShipperAddress}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -238,7 +238,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {companyLocation?.office}
+            {jobInfo?.ShippersAccount}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -248,7 +248,7 @@ function About({
               fontSize: 7,
             }}
           >
-            Phone {"   "} {companyLocation?.telephone}
+            Phone {"   "} {jobInfo?.ShipperPhone}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -258,7 +258,7 @@ function About({
               fontSize: 7,
             }}
           >
-            P.O Box {"   "} {companyLocation?.pobox}
+            P.O Box {"   "} {jobInfo.ShippersPO}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -268,7 +268,7 @@ function About({
               fontSize: 7,
             }}
           >
-            TRN {"   "} {companyLocation?.TRN}
+            TRN {"   "} {jobInfo?.ShippersTRN}
           </Text>
         </View>
         <View style={{ width: "100%", padding: 1 }}>
@@ -278,7 +278,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {companyLocation?.country}
+            {jobInfo?.OtherShipperInfo}
           </Text>
         </View>
       </View>
@@ -564,6 +564,66 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             }}
           >
             {jobInfo?.CustomerAddress}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "100%",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ borderRight: 1, width: "30%", padding: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Phone
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerPhoneNo}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "100%",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ borderRight: 1, width: "30%", padding: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Email
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerEmail}
           </Text>
         </View>
       </View>

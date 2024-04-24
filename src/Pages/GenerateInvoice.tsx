@@ -943,46 +943,41 @@ function GenerateInvoice() {
     { name: "ShipperAddress", label: "ShipperAddress", type: "textarea" },
     { name: "OtherShipperInfo", label: "OtherShipperInfo", type: "textarea" },
     ...(formikObj.values.type !== "Quotation" &&
-    formikObj.values.type !== "AirwayBill"
+    formikObj.values.type !== "AirwayBill" &&
+    formikObj.values.type !== "BillOfLading"
       ? [
-          { label: "Enter Customer Name", name: "CustomerName", type: "text" },
+          { label: "Enter Consignee Name", name: "CustomerName", type: "text" },
           { label: "blNo", name: "blNo", type: "text" },
-
           {
-            label: "Enter Customer Address",
+            label: "Enter Consignee Address",
             name: "CustomerAddress",
-            type: "text",
+            type: "textarea",
           },
         ]
       : []),
-    ...(formikObj.values.type === "AirwayBill"
+    ...(formikObj.values.type === "AirwayBill" ||
+    formikObj.values.type === "BillOfLading"
       ? [
-          { label: "Enter Customer Name", name: "CustomerName", type: "text" },
+          { label: "Enter Consignee Name", name: "CustomerName", type: "text" },
 
           {
             label: "Enter Consignee Address",
             name: "CustomerAddress",
-            type: "text",
+            type: "textarea",
           },
           { label: "Enter Consignee TRN", name: "CustomerTRN", type: "number" },
         ]
       : []),
     ...(formikObj.values.type !== "BillOfLading" &&
     formikObj.values.type !== "AirwayBill"
-      ? [{ label: "HAWB", name: "HAWB", type: "text" }]
-      : []),
-    ...(formikObj.values.type == "BillOfLading"
       ? [
-          { label: "blNo", name: "blNo" },
-
-          {
-            label: "Enter Customer Address",
-            name: "CustomerAddress",
-            type: "text",
-          },
+          { label: "HAWB", name: "HAWB", type: "text" },
+          { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
         ]
       : []),
-    { label: "Enter Sales Person", name: "SalesPerson", type: "text" },
+    // ...(formikObj.values.type == "BillOfLading"
+    //   ? [{ label: "blNo", name: "blNo", type: "text" }]
+    //   : []),
     ...(formikObj.values.type?.includes("Air")
       ? [
           {
@@ -1042,7 +1037,7 @@ function GenerateInvoice() {
           {
             label: "Movement",
             name: "Movement",
-            type: "textarea",
+            type: "text",
           },
           // {
           //   label: "Notify Address",
@@ -1196,10 +1191,11 @@ function GenerateInvoice() {
     },
   ];
   const Column2Items = [
-    ...(formikObj.values.type !== "Quotation"
+    ...(formikObj.values.type !== "Quotation" &&
+    formikObj.values.type !== "BillOfLading"
       ? [
           {
-            label: "Enter Customer Email",
+            label: "Enter Consignee Email",
             name: "CustomerEmail",
             type: "text",
           },
@@ -1207,7 +1203,7 @@ function GenerateInvoice() {
           { label: "Enter Posting Date", name: "PostingDate", type: "date" },
 
           {
-            label: "Enter Customer Phone Number",
+            label: "Enter Consignee Phone Number",
             name: "CustomerPhoneNo",
             type: "text",
           },
@@ -1250,11 +1246,7 @@ function GenerateInvoice() {
             name: "ContainersReceived",
             type: "text",
           },
-          {
-            label: "Carrier",
-            name: "Carrier",
-            type: "text",
-          },
+
           {
             label: "Carrier Reference",
             name: "CarrierReference",
@@ -1324,14 +1316,15 @@ function GenerateInvoice() {
       : []),
 
     ...(!formikObj.values.type?.includes("Lading") &&
-    formikObj.values.type !== "AirwayBill"
+    formikObj.values.type !== "AirwayBill" &&
+    !formikObj.values.type?.includes("Freight")
       ? [
           {
             label: "Enter Discount If Applicable",
             name: "Discount",
             type: "number",
           },
-          { label: "Enter Customer TRN", name: "CustomerTRN", type: "number" },
+          { label: "Enter Consignee TRN", name: "CustomerTRN", type: "number" },
           {
             label: "Enter Transit Time",
             name: "TransitTime",
@@ -1339,7 +1332,7 @@ function GenerateInvoice() {
           },
           { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
           {
-            label: "Customer Account Number",
+            label: "Consignee Account Number",
             name: "CustomerAccount",
             type: "text",
           },
@@ -1349,7 +1342,8 @@ function GenerateInvoice() {
     // { label: "Enter VAT Amount", name: "VATAmount", type: "number" },
     ...(formikObj.values.type !== "Quotation" &&
     formikObj.values.type !== "BillOfLading" &&
-    formikObj.values.type !== "AirwayBill"
+    formikObj.values.type !== "AirwayBill" &&
+    !formikObj.values.type?.includes("Freight")
       ? [
           {
             label: "Special Instructions",
