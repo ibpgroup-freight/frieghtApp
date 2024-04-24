@@ -91,6 +91,7 @@ type Inquiry = {
   termsAndConditions?: string;
   From?: string;
   To?: string;
+  Destination?: string;
 };
 type PrestationItem = {
   description: string;

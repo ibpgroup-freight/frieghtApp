@@ -796,11 +796,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry }) {
               fontSize: 7,
             }}
           >
-            {jobInfo.type.includes("road") || jobInfo.type.includes("Road")
-              ? jobInfo.PlaceOfDestination
-              : jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
-              ? jobInfo.PortOfDestination
-              : jobInfo.AirportOfDestination}
+            {jobInfo.Destination}
           </Text>
         </View>
       </View>

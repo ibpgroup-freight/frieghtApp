@@ -965,6 +965,11 @@ function GenerateInvoice() {
             name: "To",
             type: "text",
           },
+          {
+            label: "Enter Destination",
+            name: "Destination",
+            type: "text",
+          },
         ]
       : []),
     ...(formikObj.values.type !== "Quotation" &&
