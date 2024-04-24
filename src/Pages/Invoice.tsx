@@ -218,7 +218,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {jobInfo?.ShipperName}
+            {companyLocation?.name}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -228,7 +228,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {jobInfo?.ShipperAddress}
+            {companyLocation?.location}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -238,7 +238,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {jobInfo?.ShippersAccount}
+            {companyLocation?.office}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -248,7 +248,7 @@ function About({
               fontSize: 7,
             }}
           >
-            Phone {"   "} {jobInfo?.ShipperPhone}
+            Phone {"   "} {companyLocation?.telephone}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -258,7 +258,7 @@ function About({
               fontSize: 7,
             }}
           >
-            P.O Box {"   "} {jobInfo.ShippersPO}
+            P.O Box {"   "} {companyLocation?.pobox}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -268,7 +268,7 @@ function About({
               fontSize: 7,
             }}
           >
-            TRN {"   "} {jobInfo?.ShippersTRN}
+            TRN {"   "} {companyLocation?.TRN}
           </Text>
         </View>
         <View style={{ width: "100%", padding: 1 }}>
@@ -278,7 +278,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {jobInfo?.OtherShipperInfo}
+            {companyLocation?.country}
           </Text>
         </View>
       </View>

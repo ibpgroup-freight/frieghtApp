@@ -934,13 +934,71 @@ function GenerateInvoice() {
     { label: "Actions", name: "Actions" },
   ];
   const Column1Items = [
-    { name: "ShipperName", label: "Shipper Name", type: "text" },
-    { name: "ShippersTRN", label: "Shipper TRN", type: "number" },
-    { name: "ShipperAddress", label: "Shipper Address", type: "textarea" },
-    { name: "ShippersPO", label: "Shippers PO", type: "number" },
-    { name: "ShipperPhone", label: "Shippers Phone", type: "number" },
-    { name: "ShipperEmail", label: "Shippers Email", type: "text" },
-    { name: "OtherShipperInfo", label: "OtherShipperInfo", type: "textarea" },
+    ...(!formikObj.values.type.includes("Freight")
+      ? [
+          { name: "ShipperName", label: "Shipper Name", type: "text" },
+          { name: "ShippersTRN", label: "Shipper TRN", type: "number" },
+          {
+            name: "ShipperAddress",
+            label: "Shipper Address",
+            type: "textarea",
+          },
+          { name: "ShippersPO", label: "Shippers PO", type: "number" },
+          { name: "ShipperPhone", label: "Shippers Phone", type: "number" },
+          { name: "ShipperEmail", label: "Shippers Email", type: "text" },
+          {
+            name: "OtherShipperInfo",
+            label: "OtherShipperInfo",
+            type: "textarea",
+          },
+        ]
+      : []),
+    ...(formikObj.values.type === "Quotation"
+      ? [
+          { label: "Enter Customer Name", name: "CustomerName", type: "text" },
+
+          {
+            label: "Enter Customer Email",
+            name: "CustomerEmail",
+            type: "email",
+          },
+          {
+            label: "Enter Customer Phone",
+            name: "CustomerPhoneNo",
+            type: "number",
+          },
+          {
+            label: "Enter Customer TRN",
+            name: "CustomerTRN",
+            type: "number",
+          },
+          {
+            label: "Enter Customer Address",
+            name: "CustomerAddress",
+            type: "textarea",
+          },
+          {
+            label: "Enter Departure",
+            name: "Departure",
+            type: "text",
+          },
+          {
+            label: "Enter EstimatedArrival",
+            name: "EstimatedArrival",
+            type: "text",
+          },
+          {
+            label: "Enter From",
+            name: "From",
+            type: "text",
+          },
+          {
+            label: "Enter To",
+            name: "To",
+            type: "text",
+          },
+        ]
+      : []),
     ...(formikObj.values.type !== "Quotation" &&
     formikObj.values.type !== "AirwayBill" &&
     formikObj.values.type !== "BillOfLading"

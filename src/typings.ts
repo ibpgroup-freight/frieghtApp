@@ -89,6 +89,8 @@ type Inquiry = {
   validFrom?: string;
   validTo?: string;
   termsAndConditions?: string;
+  From?: string;
+  To?: string;
 };
 type PrestationItem = {
   description: string;

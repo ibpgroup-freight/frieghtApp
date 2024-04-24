@@ -381,13 +381,7 @@ function CustomerInformation({ jobinfo }: { jobinfo: Inquiry }) {
                 fontSize: 7,
               }}
             >
-              {jobinfo?.type?.includes("road") ||
-              jobinfo?.type?.includes("Road")
-                ? jobinfo?.PlaceOfOrigin
-                : jobinfo?.type?.includes("sea") ||
-                  jobinfo?.type?.includes("Sea")
-                ? jobinfo?.PortOfOrigin
-                : jobinfo?.AirportOfOrigin}
+              {jobinfo?.From}
             </Text>
           </View>
         </View>
@@ -417,12 +411,7 @@ function CustomerInformation({ jobinfo }: { jobinfo: Inquiry }) {
                 fontSize: 7,
               }}
             >
-              {jobinfo?.type?.includes("road") ||
-              jobinfo?.type?.includes("Road")
-                ? jobinfo?.PlaceOfDestination
-                : jobinfo?.type.includes("sea") || jobinfo?.type.includes("Sea")
-                ? jobinfo?.PortOfDestination
-                : jobinfo?.AirportOfDestination}
+              {jobinfo?.To}
             </Text>
           </View>
         </View>
@@ -890,11 +879,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: Inquiry }) {
               fontSize: 7,
             }}
           >
-            {jobInfo.type.includes("road") || jobInfo.type.includes("Road")
-              ? jobInfo.PlaceOfOrigin
-              : jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
-              ? jobInfo.PortOfOrigin
-              : jobInfo.AirportOfOrigin}
+            {jobInfo.From}
           </Text>
         </View>
       </View>
@@ -954,11 +939,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: Inquiry }) {
               fontSize: 7,
             }}
           >
-            {jobInfo.type.includes("road") || jobInfo.type.includes("Road")
-              ? jobInfo.PlaceOfDestination
-              : jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
-              ? jobInfo.PortOfDestination
-              : jobInfo.AirportOfDestination}
+            {jobInfo?.To}
           </Text>
         </View>
       </View>
