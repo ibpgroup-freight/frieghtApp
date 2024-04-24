@@ -106,30 +106,9 @@ const validationSchema = yup.object().shape(
     specialInstructions: yup.string().notRequired(),
     ConsigneeReference: yup.string().notRequired(),
     type: yup.string().required("Type of bill is Required"),
-    VehicleDetails: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type?.includes("Road"),
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Vehicle Details required"),
-    DriverDetails: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type?.includes("Road"),
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Driver Details required"),
-    RouteDetails: yup
-      .string()
-      .when("type", {
-        is: (type: string) => type?.includes("Road"),
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Route Details required"),
+    VehicleDetails: yup.string(),
+    DriverDetails: yup.string(),
+    RouteDetails: yup.string(),
     PlaceOfOrigin: yup
       .string()
       .when("type", {
@@ -191,18 +170,7 @@ const validationSchema = yup.object().shape(
       })
       .required("Carrier Name is required"),
     // TodaysDate: yup.string().required("Carrier Name is required"),
-    TransitTime: yup
-      .string()
-      .when("type", {
-        is: (type: string) =>
-          type !== "CargoManifest" &&
-          type !== "ProofOfDelivery" &&
-          type !== "BillOfLading" &&
-          type !== "AirwayBill",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Transit Time is required"),
+    TransitTime: yup.string(),
     CustomerTRN: yup
       .string()
       .when("type", {
@@ -1003,12 +971,17 @@ function GenerateInvoice() {
     formikObj.values.type !== "AirwayBill" &&
     formikObj.values.type !== "BillOfLading"
       ? [
-          { label: "Enter Consignee Name", name: "CustomerName", type: "text" },
+          { label: "Enter Customer Name", name: "CustomerName", type: "text" },
           { label: "blNo", name: "blNo", type: "text" },
           {
-            label: "Enter Consignee Address",
+            label: "Enter Customer Address",
             name: "CustomerAddress",
             type: "textarea",
+          },
+          {
+            label: "Enter Customer TRN",
+            name: "CustomerTRN",
+            type: "text",
           },
         ]
       : []),
@@ -1048,6 +1021,20 @@ function GenerateInvoice() {
             label: "Enter Airport Of Destination",
             name: "AirportOfDestination",
             type: "text",
+          },
+        ]
+      : []),
+    ...(formikObj.values.type?.includes("Freight")
+      ? [
+          {
+            label: "Estimated Arrival",
+            name: "EstimatedArrival",
+            type: "datetime-local",
+          },
+          {
+            label: "Departure",
+            name: "Departure",
+            type: "datetime-local",
           },
         ]
       : []),
@@ -1130,22 +1117,6 @@ function GenerateInvoice() {
             label: "Enter Place Of Destination",
             name: "PlaceOfDestination",
             type: "text",
-          },
-
-          {
-            label: "Enter Vehicle Details",
-            name: "VehicleDetails",
-            type: "textarea",
-          },
-          {
-            label: "Enter Driver Details",
-            name: "DriverDetails",
-            type: "textarea",
-          },
-          {
-            label: "Enter Route Details",
-            name: "RouteDetails",
-            type: "textarea",
           },
         ]
       : []),

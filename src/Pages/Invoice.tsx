@@ -657,7 +657,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            Invoice Number
+            Invoice No
           </Text>
         </View>
         <View style={{ width: "70%" }}></View>
