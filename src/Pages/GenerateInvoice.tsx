@@ -87,7 +87,8 @@ const validationSchema = yup.object().shape(
         is: (type: string) =>
           type !== "CargoManifest" &&
           type !== "ProofOfDelivery" &&
-          type !== "AirwayBill",
+          type !== "AirwayBill" &&
+          type !== "BillOfLading",
         then: (schema) => schema.required(),
         otherwise: (schema) => schema.notRequired(),
       })
@@ -502,11 +503,11 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    Carrier: yup.string().when("type", {
-      is: (type: string) => type === "BillOfLading",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    // Carrier: yup.string().when("type", {
+    //   is: (type: string) => type === "BillOfLading",
+    //   then: (schema) => schema.required(),
+    //   otherwise: (schema) => schema.notRequired(),
+    // }),
     ContainersReceived: yup.string().when("type", {
       is: (type: string) => type === "BillOfLading",
       then: (schema) => schema.required(),
@@ -933,9 +934,12 @@ function GenerateInvoice() {
     { label: "Actions", name: "Actions" },
   ];
   const Column1Items = [
-    { name: "ShipperName", label: "ShipperName", type: "text" },
-    { name: "ShipperTRN", label: "ShipperTRN", type: "number" },
-    { name: "ShipperAddress", label: "ShipperAddress", type: "textarea" },
+    { name: "ShipperName", label: "Shipper Name", type: "text" },
+    { name: "ShippersTRN", label: "Shipper TRN", type: "number" },
+    { name: "ShipperAddress", label: "Shipper Address", type: "textarea" },
+    { name: "ShippersPO", label: "Shippers PO", type: "number" },
+    { name: "ShipperPhone", label: "Shippers Phone", type: "number" },
+    { name: "ShipperEmail", label: "Shippers Email", type: "text" },
     { name: "OtherShipperInfo", label: "OtherShipperInfo", type: "textarea" },
     ...(formikObj.values.type !== "Quotation" &&
     formikObj.values.type !== "AirwayBill" &&
@@ -961,6 +965,7 @@ function GenerateInvoice() {
             type: "textarea",
           },
           { label: "Enter Consignee TRN", name: "CustomerTRN", type: "number" },
+          { label: "blNo", name: "blNo", type: "text" },
         ]
       : []),
     ...(formikObj.values.type !== "BillOfLading" &&
@@ -1243,6 +1248,17 @@ function GenerateInvoice() {
       : []),
     ...(formikObj.values.type?.includes("Lading")
       ? [
+          {
+            label: "Enter Consignee Email",
+            name: "CustomerEmail",
+            type: "text",
+          },
+
+          {
+            label: "Enter Consignee Phone Number",
+            name: "CustomerPhoneNo",
+            type: "text",
+          },
           {
             label: "Currency",
             name: "Currency",

@@ -59,6 +59,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     OtherShipperInfo: "",
     ShippersPO: 0,
     ShippersTRN: 0,
+    ShipperEmail: "",
   },
   ladleInfo: {
     ConsigneeReference: "",
@@ -117,6 +118,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     OtherShipperInfo: "",
     ShippersPO: 0,
     ShippersTRN: 0,
+    ShipperEmail: "",
   },
   AirwayInfo: {
     CustomerName: "",
@@ -190,6 +192,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     secondTo: "",
     thirdBy: "",
     thirdTo: "",
+    ShipperEmail: "",
   },
   setAirwayBillItems(j) {
     set((state) => {
@@ -242,6 +245,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     OtherShipperInfo: "",
     ShippersPO: 0,
     ShippersTRN: 0,
+    ShipperEmail: "",
   },
   PODInfo: {
     JobNo: "",
@@ -270,6 +274,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     OtherShipperInfo: "",
     ShippersPO: 0,
     ShippersTRN: 0,
+    ShipperEmail: "",
   },
   ManifestItems: [],
   PODItems: [],

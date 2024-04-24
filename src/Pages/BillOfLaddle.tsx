@@ -248,14 +248,12 @@ function Column1({
         >
           {jobInfo?.ShipperName} {"\n"}
           {jobInfo?.ShipperAddress} {"\n"}
+          {jobInfo?.ShipperEmail} {"\n"}
           {jobInfo?.ShipperPhone} {"\n"}
-          {jobInfo?.ShippersAccount}
-          {"\n"}
+     
           {jobInfo?.OtherShipperInfo}
           {"\n"}
           TRN {jobInfo?.ShippersTRN}
-          {"\n"}
-          {jobInfo?.ShipperPhone}
           {"\n"}
           PO Box {jobInfo?.ShippersPO}
           {"\n"}

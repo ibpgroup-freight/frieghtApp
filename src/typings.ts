@@ -284,6 +284,7 @@ type cargoInfo = {
   specialInstructions?: string;
   termsAndConditions?: string;
   ShipperName: string;
+  ShipperEmail: string;
   ShipperPhone: number;
   ShipperAddress: string;
   OtherShipperInfo: string;
