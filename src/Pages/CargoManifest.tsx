@@ -325,24 +325,61 @@ function TableRows({ manifestItems }: { manifestItems: CargoManifestItems[] }) {
           flexDirection: "row",
           justifyContent: "space-between",
           gap: 5,
+          width: "100%",
         }}
       >
-        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            width: "10%",
+          }}
+        >
           {i.HAWB}
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            width: "10%",
+          }}
+        >
           {i.ParcelsWeight}
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            width: "25%",
+          }}
+        >
           {i.Description}
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            width: "10%",
+          }}
+        >
           {i.Shipper}
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            width: "10%",
+          }}
+        >
           {i.Charges}
         </Text>
-        <Text style={{ fontFamily: "Courier-Bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Courier-Bold",
+            textAlign: "center",
+            width: "10%",
+          }}
+        >
           {i.Collect}
         </Text>
       </View>

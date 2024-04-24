@@ -17,6 +17,8 @@ import useCompanyInfo from "../store/CompanyInfo";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Invoice from "./Invoice";
 import useUser from "../store/User";
+import AddPrestation from "../Components/AddPrestation";
+
 // const init = {
 //   CustomerName: "",
 //   CustomerAddress: "",
@@ -738,6 +740,8 @@ function GenerateInvoice() {
     setManifestItems: manifestItem,
     setPODItems: PodItem,
   } = useItemStore();
+  const [showPrestation, setshowPrestation] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const [loadingdetails, setloadingdetails] = useState<boolean>(false);
   const jobidRef = useRef<HTMLInputElement | null>(null);
@@ -923,6 +927,8 @@ function GenerateInvoice() {
       : []),
     ...(formikObj.values.type === "Quotation"
       ? [
+        { label: "Enter Quotation Id", name: "quotationId", type: "text" },
+
           { label: "Enter Customer Name", name: "CustomerName", type: "text" },
 
           {
@@ -1687,7 +1693,15 @@ function GenerateInvoice() {
               />
             )}
           </div>
-
+          <div className="fixed z-50 w-full">
+            {showPrestation && (
+              <AddPrestation
+                closePrestation={setshowPrestation}
+                quotationType="job"
+                toEdit={toEdit}
+              />
+            )}
+          </div>
           <h1 className="text-5xl text-center text-blue-600 font-serif">
             Generate Invoice
           </h1>
@@ -1696,7 +1710,7 @@ function GenerateInvoice() {
             onChange={(e) => {
               formikObj.setFieldValue("type", e.target.value);
             }}
-            defaultValue={"quotation"}
+            defaultValue={"job"}
           >
             <option>Search By</option>
             <option value={"quotation"}>Quotation</option>
@@ -2476,7 +2490,7 @@ function GenerateInvoice() {
                         className="text-2xl rounded-full text-green-600"
                         onClick={(e) => {
                           console.log("Here");
-                          setshowQuotation(true);
+                          setshowPrestation(true);
                           ctx.setToggle();
                         }}
                         type="button"

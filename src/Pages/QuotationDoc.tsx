@@ -287,7 +287,14 @@ function AdditionalInformation({ jobInfo }: { jobInfo: Inquiry }) {
         marginVertical: 15,
       }}
     >
-      <View style={{ width: "100%", height: "100%" }}>
+      <View
+        style={{
+          width: "100%",
+          height: "100%",
+          paddingVertical: 3,
+          paddingHorizontal: 4,
+        }}
+      >
         <Text
           style={{
             fontFamily: "Courier-Bold",
@@ -1474,47 +1481,54 @@ function PageFooter({ companyInfo }: { companyInfo: CompanyLocationInfo }) {
 
 function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
   return (
-    <View style={{ width: "100%" }}>
+    <View style={{ width: "100%", marginVertical: 15 }}>
+      <View>
+        <Text
+          style={{
+            width: "100%",
+            fontFamily: "Courier-Bold",
+          }}
+        >
+          Sales Conditions:
+        </Text>
+      </View>
       <View
         style={{
           flexDirection: "row",
           marginVertical: 5,
           alignItems: "flex-start",
           borderTopColor: "navy",
+          width: "100%",
+          paddingHorizontal: 25,
         }}
       >
-        <Text
-          style={{
-            width: "20%",
-            fontFamily: "Courier",
-          }}
-        >
-          Sales Conditions:
-        </Text>
-        <Text
-          style={{
-            width: "80%",
-            flexWrap: "wrap",
-            justifyContent: "flex-start",
-            lineHeight: 1,
-            fontFamily: "Courier",
-          }}
-        >
-          {jobinfo?.type?.includes("sea") || jobinfo?.type?.includes("Sea")
-            ? SeaFreightTerms
-            : jobinfo?.type?.includes("air") || jobinfo?.type?.includes("Air")
-            ? AirFreightTerms
-            : RoadFreightTerms}
-          {jobinfo?.termsAndConditions?.includes(".") ? (
-            jobinfo?.termsAndConditions.split(".").map((s: string, index) => (
-              <Text key={index} wrap={false}>
-                {s + `${"\n"}`}
-              </Text>
-            ))
-          ) : (
-            <Text>{jobinfo?.termsAndConditions}</Text>
-          )}
-        </Text>
+        <View style={{ width: "100%" }}>
+          <Text
+            style={{
+              flexWrap: "nowrap",
+              justifyContent: "flex-start",
+              lineHeight: 1,
+              fontFamily: "Courier",
+              width: "100%",
+              alignSelf: "flex-end",
+            }}
+          >
+            {jobinfo?.type?.includes("sea") || jobinfo?.type?.includes("Sea")
+              ? SeaFreightTerms
+              : jobinfo?.type?.includes("air") || jobinfo?.type?.includes("Air")
+              ? AirFreightTerms
+              : RoadFreightTerms}
+            {jobinfo?.termsAndConditions?.includes(".") ? (
+              jobinfo?.termsAndConditions.split(".").map((s: string, index) => (
+                <Text key={index} wrap={false}>
+                  {s + `${"\n"}`}
+                </Text>
+              ))
+            ) : (
+              <Text>{jobinfo?.termsAndConditions}</Text>
+            )}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -1527,7 +1541,7 @@ function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
         <Text
           style={{
             width: "20%",
-            fontFamily: "Courier",
+            fontFamily: "Courier-Bold",
           }}
         >
           Payment Terms
@@ -1538,7 +1552,7 @@ function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
             flexWrap: "wrap",
             justifyContent: "flex-start",
             lineHeight: 1,
-            fontFamily: "Courier",
+            fontFamily: "Courier-Bold",
           }}
         >
           30 DAYS AFTER DATE OF INVOICE

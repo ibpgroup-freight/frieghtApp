@@ -198,7 +198,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
               fontWeight: "ultralight",
@@ -215,7 +215,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -231,7 +231,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -247,7 +247,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -263,7 +263,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -279,7 +279,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -299,7 +299,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -315,7 +315,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -331,7 +331,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -349,7 +349,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -365,7 +365,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
@@ -381,7 +381,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              textDecoration: "underline",
+              
               textAlign: "center",
               fontSize: 13,
             }}
