@@ -84,6 +84,13 @@ const useInquiryItem = create<InquiryStore>((set) => ({
   setPrestationArray(i) {
     set((state) => ({ ...state, prestation: i }));
   },
+  ladingbasisItems: [],
+  setladingbasisItems(i) {
+    set((state) => ({
+      ...state,
+      ladingbasisItems: [...state.ladingbasisItems, i],
+    }));
+  },
   resetInquiry: () => {
     set((state) => {
       return {

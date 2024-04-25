@@ -98,9 +98,18 @@ type PrestationItem = {
   currency: string;
   total: number;
 };
+type basisItems = {
+  charge: string;
+  rate: string;
+  basis: string;
+  wtvolval: string;
+  pc: string;
+  amount: number;
+};
 type InquiryStore = {
   inquiry: Inquiry;
   address: string;
+  ladingbasisItems: basisItems[];
   setItemInquiry: (i: Inquiry) => void;
   resetInquiry: () => void;
   setPrestation: (i: PrestationItem) => void;
@@ -109,6 +118,7 @@ type InquiryStore = {
   setaddress: (address: string) => void;
   setPrestationArray: (i: PrestationItem[]) => void;
   editPrestation: (i: PrestationItem, index: number) => void;
+  setladingbasisItems: (i: basisItems) => void;
 };
 type actionType = keyof Inquiry;
 type action = {

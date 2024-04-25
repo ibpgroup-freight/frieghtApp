@@ -18,6 +18,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import Invoice from "./Invoice";
 import useUser from "../store/User";
 import AddPrestation from "../Components/AddPrestation";
+import AddLadingBasis from "../Components/AddLadingBasis";
 
 // const init = {
 //   CustomerName: "",
@@ -725,6 +726,7 @@ function GenerateInvoice() {
     setaddress,
     setPrestationArray,
     prestation,
+    ladingbasisItems,
   } = useInquiryItem();
   const { setbillType, billType } = useUser();
   const {
@@ -741,6 +743,7 @@ function GenerateInvoice() {
     setPODItems: PodItem,
   } = useItemStore();
   const [showPrestation, setshowPrestation] = useState<boolean>(false);
+  const [showladingBasis, setshowladingBasis] = useState<boolean>(false);
 
   const navigate = useNavigate();
   const [loadingdetails, setloadingdetails] = useState<boolean>(false);
@@ -927,7 +930,7 @@ function GenerateInvoice() {
       : []),
     ...(formikObj.values.type === "Quotation"
       ? [
-        { label: "Enter Quotation Id", name: "quotationId", type: "text" },
+          { label: "Enter Quotation Id", name: "quotationId", type: "text" },
 
           { label: "Enter Customer Name", name: "CustomerName", type: "text" },
 
@@ -1700,6 +1703,11 @@ function GenerateInvoice() {
                 quotationType="job"
                 toEdit={toEdit}
               />
+            )}
+          </div>
+          <div className="fixed z-50 w-full">
+            {showladingBasis && (
+              <AddLadingBasis closeLadingBasis={setshowladingBasis} />
             )}
           </div>
           <h1 className="text-5xl text-center text-blue-600 font-serif">
@@ -2491,6 +2499,108 @@ function GenerateInvoice() {
                         onClick={(e) => {
                           console.log("Here");
                           setshowPrestation(true);
+                          ctx.setToggle();
+                        }}
+                        type="button"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                          height={70}
+                          width={70}
+                        >
+                          <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+                          <g
+                            id="SVGRepo_tracerCarrier"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          ></g>
+                          <g id="SVGRepo_iconCarrier">
+                            <path
+                              opacity="0.5"
+                              d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22Z"
+                              fill="#054d00"
+                            ></path>{" "}
+                            <path
+                              d="M12 8.25C12.4142 8.25 12.75 8.58579 12.75 9V11.25H15C15.4142 11.25 15.75 11.5858 15.75 12C15.75 12.4142 15.4142 12.75 15 12.75H12.75L12.75 15C12.75 15.4142 12.4142 15.75 12 15.75C11.5858 15.75 11.25 15.4142 11.25 15V12.75H9C8.58579 12.75 8.25 12.4142 8.25 12C8.25 11.5858 8.58579 11.25 9 11.25H11.25L11.25 9C11.25 8.58579 11.5858 8.25 12 8.25Z"
+                              fill="#054d00"
+                            ></path>{" "}
+                          </g>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {formikObj.values.type === "BillOfLading" && (
+                <div className="w-full space-y-2 w-5/5">
+                  <h1 className="text-xl text-center text-blue-900 font-serif">
+                    Bill Of Lading
+                  </h1>
+                  <div className="mx-auto w-[90%] overflow-auto mt-20">
+                    <table className="border overflow-x-auto w-full ml-30 border-slate-400 md:border-spacing-x-10 md:border-spacing-y-2">
+                      <thead>
+                        <tr>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            index
+                          </th>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            Charge
+                          </th>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            Rate
+                          </th>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            Basis
+                          </th>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            Wt/Vol/Val
+                          </th>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            P/C
+                          </th>
+                          <th className="border border-slate-300 p-4 bg-blue-50 w-auto">
+                            Amount
+                          </th>
+                        </tr>
+                      </thead>
+                      {
+                        <tbody>
+                          {ladingbasisItems?.map((i, index) => (
+                            <tr key={index}>
+                              <td className="border border-slate-300 p-4">
+                                {index + 1}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.charge}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.rate}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.basis}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.wtvolval}
+                              </td>{" "}
+                              <td className="border border-slate-300 p-4">
+                                {i.pc}
+                              </td>
+                              <td className="border border-slate-300 p-4">
+                                {i.amount}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      }
+                    </table>
+                    <div className="absolute right-20">
+                      <button
+                        className="text-2xl rounded-full text-green-600"
+                        onClick={(e) => {
+                          console.log("Here");
+                          setshowladingBasis(true);
                           ctx.setToggle();
                         }}
                         type="button"

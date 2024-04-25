@@ -13,6 +13,7 @@ import CustomLoader from "../Components/CustomLoader";
 import { useNavigate } from "react-router-dom";
 import useItemStore from "../store/Item";
 import useInquiryItem from "../store/Inquiry";
+import { toast } from "react-toastify";
 type searchType = "users" | "contacts" | "jobs" | "quotations";
 type searchBy = "id" | "email" | "phone" | "status";
 function Search() {
@@ -35,8 +36,11 @@ function Search() {
         searchResults = await getDocs(
           query(collection(db, searchType), where(searchBy, "==", jobStatus))
         );
-      }
-      if (jobStatus && searchType == "quotations" && searchBy == "status") {
+      } else if (
+        jobStatus &&
+        searchType == "quotations" &&
+        searchBy == "status"
+      ) {
         searchResults = await getDocs(
           query(collection(db, searchType), where(searchBy, "==", jobStatus))
         );
@@ -57,12 +61,14 @@ function Search() {
       const res: any = [];
       if (searchResults.empty) {
         setsearchAns([]);
+        toast.info("No Result");
         return console.log("empty");
       }
       searchResults.forEach((s: any) => res.push(s.data()));
       setsearchAns(res);
     } catch (e) {
       console.log(e);
+      toast.error("An Error Occured , Please Try Later");
     } finally {
       setisloading(false);
     }
@@ -155,8 +161,18 @@ function Search() {
               value={jobStatus}
               onChange={(e) => setjobStatus(e.target.value as JobStatus)}
             >
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              {searchType == "jobs" && searchBy == "status" && (
+                <>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </>
+              )}
+              {searchType == "quotations" && searchBy == "status" && (
+                <>
+                  <option value="approved">Approved</option>
+                  <option value="disapproved">Disapproved</option>
+                </>
+              )}
               <option value="pending">Pending</option>
             </select>
           </div>
@@ -205,7 +221,9 @@ function Search() {
                       {e.toLocaleUpperCase()}
                     </th>
                   ))}
-                <th>Actions</th>
+                {(searchType === "quotations" || searchType === "jobs") && (
+                  <th>Actions</th>
+                )}
               </tr>
             </thead>
             <tbody>
@@ -222,32 +240,38 @@ function Search() {
                           : e instanceof Timestamp && e.toDate().toDateString()}
                       </td>
                     ))}
-                    <td>
-                      <h5
-                        onClick={() => {
-                          console.log(searchAns);
-                          if (searchType === "jobs") {
-                            setItemInquiry({
-                              ...searchAns[0].inquiry,
-                              quotationId: searchAns[0]?.jobid,
-                            });
-                            setitemsArray(searchAns[0]?.Items || []);
-                            setPrestationArray(searchAns[0]?.prestation || []);
-                            ViewJob();
-                          } else if (searchType === "quotations") {
-                            setItemInquiry({
-                              ...searchAns[0].inquiry,
-                              quotationId: searchAns[0]?.quotationid,
-                            });
-                            setitemsArray(searchAns[0]?.Items || []);
-                            setPrestationArray(searchAns[0]?.prestation || []);
-                            navigate("/quotationDetails");
-                          }
-                        }}
-                      >
-                        View{" "}
-                      </h5>
-                    </td>
+                    {(searchType === "quotations" || searchType === "jobs") && (
+                      <td>
+                        <h5
+                          onClick={() => {
+                            console.log(searchAns);
+                            if (searchType === "jobs") {
+                              setItemInquiry({
+                                ...searchAns[0].inquiry,
+                                quotationId: searchAns[0]?.jobid,
+                              });
+                              setitemsArray(searchAns[0]?.Items || []);
+                              setPrestationArray(
+                                searchAns[0]?.prestation || []
+                              );
+                              ViewJob();
+                            } else if (searchType === "quotations") {
+                              setItemInquiry({
+                                ...searchAns[0].inquiry,
+                                quotationId: searchAns[0]?.quotationid,
+                              });
+                              setitemsArray(searchAns[0]?.Items || []);
+                              setPrestationArray(
+                                searchAns[0]?.prestation || []
+                              );
+                              navigate("/quotationDetails");
+                            }
+                          }}
+                        >
+                          View{" "}
+                        </h5>
+                      </td>
+                    )}
                   </tr>
                 ))}
             </tbody>
