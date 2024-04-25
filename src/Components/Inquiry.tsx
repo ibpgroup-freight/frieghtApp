@@ -74,17 +74,17 @@ const RoadvalidationSchema = Yup.object().shape(
 );
 const SeavalidationSchema = Yup.object().shape(
   {
-    CustomerName: Yup.string().required("Customer Name is required"),
-    CustomerAddress: Yup.string().required("Customer Address is required"),
-    CustomerEmail: Yup.string().required("Customer Email is required"),
+    CustomerName: Yup.string(),
+    CustomerAddress: Yup.string(),
+    CustomerEmail: Yup.string(),
     CustomerPhoneNo: Yup.string(),
-    SalesPerson: Yup.string().required("Sales Person is required"),
-    PortOfOrigin: Yup.string().required("Port of Origin is required"),
-    PortOfDestination: Yup.string().required("Port of Destination is required"),
-    Weight: Yup.string().required("Weight is required"),
-    Dimensions: Yup.string().required("Dimensions are required"),
-    TransitTime: Yup.string().required("Transit Time is required"),
-    ShipmentTerms: Yup.string().required("Shipment Terms are required"),
+    SalesPerson: Yup.string(),
+    PortOfOrigin: Yup.string(),
+    PortOfDestination: Yup.string(),
+    Weight: Yup.string(),
+    Dimensions: Yup.string(),
+    TransitTime: Yup.string(),
+    ShipmentTerms: Yup.string(),
     ContainerType: Yup.string()
       .when("CustomContainerType", ([CustomContainerType], schema) => {
         return CustomContainerType
@@ -104,11 +104,9 @@ const SeavalidationSchema = Yup.object().shape(
     Departure: Yup.string(),
     EstimatedArrival: Yup.string(),
     CustomerTRN: Yup.string(),
-    VesselName: Yup.string().required("Carrier Name is required"),
-    VesselDetails: Yup.string().required("Vessel Details are required"),
-    ShippingLaneDetails: Yup.string().required(
-      "Shipping Lane Details are required"
-    ),
+    VesselName: Yup.string(),
+    VesselDetails: Yup.string(),
+    ShippingLaneDetails: Yup.string(),
     CustomContainerType: Yup.string()
       .when("ContainerType", ([ContainerType], schema) => {
         return ContainerType
@@ -125,8 +123,8 @@ const SeavalidationSchema = Yup.object().shape(
         then: (schema) => schema.required("Units Are required"),
         otherwise: (schema) => schema.notRequired(),
       }),
-    TypeOfCargo: Yup.string().required("Type of Cargo is required"),
-    CarrierName: Yup.string().required("Carrier Name is required"),
+    TypeOfCargo: Yup.string(),
+    CarrierName: Yup.string(),
     Arrival: Yup.string(),
 
     Periodicity: Yup.string(),
