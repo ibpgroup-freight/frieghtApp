@@ -15,6 +15,7 @@ import logo from "../assets/images/Logo.png";
 import { storage } from "../firebase";
 import { ref, uploadBytes } from "firebase/storage";
 import { toast } from "react-toastify";
+import useInquiryItem from "../store/Inquiry";
 
 const styles = StyleSheet.create({
   page: {
@@ -60,6 +61,7 @@ function BillOfLaddle() {
     (l) => l.key === ladleInfo.officeAddress
   );
   const [isSaving, setisSaving] = useState<boolean>(false);
+  const { ladingbasisItems } = useInquiryItem();
 
   const handleSavePdf = async () => {
     try {
@@ -115,7 +117,7 @@ function BillOfLaddle() {
                 border: 1,
               }}
             >
-              <Column3 jobInfo={ladleInfo} />
+              <Column3 jobInfo={ladleInfo} ladingBasis={ladingbasisItems} />
               <Column4 jobInfo={ladleInfo} />
             </View>
           </Page>
@@ -188,7 +190,7 @@ function BillOfLaddle() {
                 border: 1,
               }}
             >
-              <Column3 jobInfo={ladleInfo} />
+              <Column3 jobInfo={ladleInfo} ladingBasis={ladingbasisItems} />
               <Column4 jobInfo={ladleInfo} />
             </View>
           </Page>
@@ -250,7 +252,6 @@ function Column1({
           {jobInfo?.ShipperAddress} {"\n"}
           {jobInfo?.ShipperEmail} {"\n"}
           {jobInfo?.ShipperPhone} {"\n"}
-     
           {jobInfo?.OtherShipperInfo}
           {"\n"}
           TRN {jobInfo?.ShippersTRN}
@@ -710,294 +711,447 @@ const InvoiceTableHeader = () => (
   </View>
 );
 
-function Column3({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
+function Column3({
+  jobInfo,
+  ladingBasis,
+}: {
+  jobInfo: cargoInfo & ladleInquiry;
+  ladingBasis: basisItems[];
+}) {
   return (
-    <View
-      style={{
-        width: "50%",
-        borderRight: 1,
-      }}
-    >
+    <>
       <View
         style={{
-          borderColor: "black",
-          width: "100%",
-          minHeight: 40,
-          borderBottom: 1,
-          borderBottomColor: "black",
-          padding: 5,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={{ flexDirection: "column", width: "50%" }}>
-          <Text
-            style={{
-              fontSize: 8,
-              fontFamily: "Courier-Bold",
-            }}
-          >
-            Total Containers Received By Carrier
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
-
-              fontSize: 12,
-            }}
-          >
-            {jobInfo.TotalContainers}
-          </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "column",
-            width: "50%",
-
-            borderLeft: 1,
-            paddingLeft: 3,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 8,
-              fontFamily: "Courier-Bold",
-            }}
-          >
-            Packages Received By Carrier
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontSize: 12,
-              fontFamily: "Courier-Bold",
-              marginTop: 4,
-            }}
-          >
-            {jobInfo.PackagesReceived}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          borderColor: "black",
-          width: "100%",
-          minHeight: 40,
-          borderBottom: 1,
-          borderBottomColor: "black",
-          padding: 5,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <View style={{ flexDirection: "column" }}>
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-              fontSize: 8,
-            }}
-          >
-            Movement
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
-              fontSize: 12,
-            }}
-          >
-            {jobInfo.Movement}
-          </Text>
-        </View>
-        <View style={{ flexDirection: "column" }}>
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-              fontSize: 8,
-            }}
-          >
-            Currency
-          </Text>
-          <Text
-            style={{
-              marginHorizontal: 4,
-              fontFamily: "Courier-Bold",
-              fontSize: 12,
-            }}
-          >
-            {jobInfo.Currency}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          borderRightColor: "black",
-          width: "100%",
-          minHeight: 150,
-          borderBottom: 1,
-          borderBottomColor: "black",
-          padding: 5,
-          flexDirection: "row",
-          justifyContent: "space-between",
+          width: "50%",
+          borderRight: 1,
         }}
       >
         <View
           style={{
-            width: "18%",
-            padding: 1,
-            borderRightWidth: 1,
-            borderRightColor: "black",
+            borderColor: "black",
+            width: "100%",
+            minHeight: 40,
+            borderBottom: 1,
+            borderBottomColor: "black",
+            padding: 5,
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
+          <View style={{ flexDirection: "column", width: "50%" }}>
+            <Text
+              style={{
+                fontSize: 8,
+                fontFamily: "Courier-Bold",
+              }}
+            >
+              Total Containers Received By Carrier
+            </Text>
+            <Text
+              style={{
+                marginHorizontal: 4,
+                fontFamily: "Courier-Bold",
 
-              fontSize: 8,
+                fontSize: 12,
+              }}
+            >
+              {jobInfo.TotalContainers}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "column",
+              width: "50%",
+
+              borderLeft: 1,
+              paddingLeft: 3,
             }}
           >
-            Charge
-          </Text>
+            <Text
+              style={{
+                fontSize: 8,
+                fontFamily: "Courier-Bold",
+              }}
+            >
+              Packages Received By Carrier
+            </Text>
+            <Text
+              style={{
+                marginHorizontal: 4,
+                fontSize: 12,
+                fontFamily: "Courier-Bold",
+                marginTop: 4,
+              }}
+            >
+              {jobInfo.PackagesReceived}
+            </Text>
+          </View>
         </View>
         <View
           style={{
-            width: "18%",
-            padding: 1,
-            borderRightWidth: 1,
-            borderRightColor: "black",
+            borderColor: "black",
+            width: "100%",
+            minHeight: 40,
+            borderBottom: 1,
+            borderBottomColor: "black",
+            padding: 5,
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-
-              fontSize: 8,
-            }}
-          >
-            Rate
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "18%",
-            padding: 1,
-            borderRightWidth: 1,
-            borderRightColor: "black",
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-
-              fontSize: 8,
-            }}
-          >
-            Basis
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "18%",
-            padding: 1,
-            borderRightWidth: 1,
-            borderRightColor: "black",
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-
-              fontSize: 8,
-            }}
-          >
-            Wt/Vol/Val
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "18%",
-            padding: 1,
-            borderRightWidth: 1,
-            borderRightColor: "black",
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-
-              fontSize: 8,
-            }}
-          >
-            P/C
-          </Text>
-        </View>
-        <View
-          style={{
-            width: "18%",
-            padding: 1,
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "Courier-Bold",
-
-              fontSize: 8,
-            }}
-          >
-            Amount
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          borderRightColor: "black",
-          width: "100%",
-          minHeight: 30,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          borderBottomColor: "black",
-          padding: 5,
-        }}
-      >
-        <View
-          style={{
-            borderRight: 1,
-            paddingHorizontal: 1,
-            alignItems: "flex-start",
-          }}
-        >
-          <Text style={{ fontSize: 7, fontFamily: "Courier-Bold" }}>
-            Total Freight Prepaid
-          </Text>
-          <Text style={{ fontSize: 11, fontFamily: "Courier-Bold" }}>
-            {jobInfo.FreightPrepaid}
-          </Text>
-        </View>
-        <View
-          style={{
-            borderRight: 1,
-            paddingHorizontal: 1,
-            alignItems: "flex-start",
-          }}
-        >
-          <Text style={{ fontSize: 7, fontFamily: "Courier-Bold" }}>
-            Total Freight Collected
-          </Text>
-          <Text style={{ fontSize: 11, fontFamily: "Courier-Bold" }}>
-            {jobInfo.FreightCollected}
-          </Text>
+          <View style={{ flexDirection: "column" }}>
+            <Text
+              style={{
+                fontFamily: "Courier-Bold",
+                fontSize: 8,
+              }}
+            >
+              Movement
+            </Text>
+            <Text
+              style={{
+                marginHorizontal: 4,
+                fontFamily: "Courier-Bold",
+                fontSize: 12,
+              }}
+            >
+              {jobInfo.Movement}
+            </Text>
+          </View>
+          <View style={{ flexDirection: "column" }}>
+            <Text
+              style={{
+                fontFamily: "Courier-Bold",
+                fontSize: 8,
+              }}
+            >
+              Currency
+            </Text>
+            <Text
+              style={{
+                marginHorizontal: 4,
+                fontFamily: "Courier-Bold",
+                fontSize: 12,
+              }}
+            >
+              {jobInfo.Currency}
+            </Text>
+          </View>
         </View>
         <View>
-          <Text style={{ fontSize: 7, fontFamily: "Courier-Bold" }}>
-            Total Freight
-          </Text>
-          <Text style={{ fontSize: 11, fontFamily: "Courier-Bold" }}>
-            {jobInfo.TotalFreight}
-          </Text>
+          <View
+            style={{
+              borderRightColor: "black",
+              width: "100%",
+              minHeight: 10,
+              borderBottom: 1,
+              borderBottomColor: "black",
+              paddingHorizontal: 5,
+              paddingVertical: 2,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View
+              style={{
+                width: "18%",
+                padding: 1,
+                borderRightWidth: 1,
+                borderRightColor: "black",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+
+                  fontSize: 8,
+                }}
+              >
+                Charge
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "18%",
+                padding: 1,
+                borderRightWidth: 1,
+                borderRightColor: "black",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+
+                  fontSize: 8,
+                }}
+              >
+                Rate
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "18%",
+                padding: 1,
+                borderRightWidth: 1,
+                borderRightColor: "black",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+
+                  fontSize: 8,
+                }}
+              >
+                Basis
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "18%",
+                padding: 1,
+                borderRightWidth: 1,
+                borderRightColor: "black",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+
+                  fontSize: 7.5,
+                }}
+              >
+                Wt/Vol/Val
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "18%",
+                padding: 1,
+                borderRightWidth: 1,
+                borderRightColor: "black",
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+
+                  fontSize: 8,
+                }}
+              >
+                P/C
+              </Text>
+            </View>
+            <View
+              style={{
+                width: "18%",
+                padding: 1,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "Courier-Bold",
+
+                  fontSize: 8,
+                }}
+              >
+                Amount
+              </Text>
+            </View>
+          </View>
+          <View style={{ minHeight: 150, borderBottom: 1 }}>
+            {ladingBasis.map((i) => (
+              <View
+                style={{
+                  borderRightColor: "black",
+                  width: "100%",
+                  minHeight: 10,
+
+                  borderBottomColor: "black",
+                  paddingHorizontal: 3,
+                  paddingVertical: 0,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View
+                  style={{
+                    width: "18%",
+
+                    borderRightWidth: 1,
+                    borderRightColor: "black",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+
+                      fontSize: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    {i.charge}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: "18%",
+
+                    borderRightWidth: 1,
+                    borderRightColor: "black",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+
+                      fontSize: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    {i.rate}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: "18%",
+
+                    borderRightWidth: 1,
+                    borderRightColor: "black",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+
+                      fontSize: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    {i.basis}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: "18%",
+
+                    borderRightWidth: 1,
+                    borderRightColor: "black",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+
+                      fontSize: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    {i.wtvolval}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: "18%",
+
+                    borderRightWidth: 1,
+                    borderRightColor: "black",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+
+                      fontSize: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    {i.pc}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: "18%",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontFamily: "Courier-Bold",
+                      fontSize: 8,
+                      textAlign: "center",
+                    }}
+                  >
+                    {i.amount}
+                  </Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View
+          style={{
+            borderRightColor: "black",
+            width: "100%",
+            minHeight: 30,
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            borderBottomColor: "black",
+          }}
+        >
+          <View
+            style={{
+              borderRight: 1,
+              alignItems: "flex-start",
+              flexGrow: 1,
+              paddingHorizontal: 1,
+            }}
+          >
+            <Text style={{ fontSize: 7, fontFamily: "Courier-Bold" }}>
+              Total Freight Prepaid
+            </Text>
+            <Text style={{ fontSize: 11, fontFamily: "Courier-Bold" }}>
+              {jobInfo.FreightPrepaid}
+            </Text>
+          </View>
+          <View
+            style={{
+              borderRight: 1,
+              alignItems: "flex-start",
+              flexGrow: 2,
+              paddingHorizontal: 1,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 7,
+                fontFamily: "Courier-Bold",
+                textAlign: "left",
+              }}
+            >
+              Total Freight Collected
+            </Text>
+            <Text style={{ fontSize: 11, fontFamily: "Courier-Bold" }}>
+              {jobInfo.FreightCollected}
+            </Text>
+          </View>
+          <View
+            style={{
+              alignItems: "flex-start",
+              flexGrow: 1,
+              paddingHorizontal: 1,
+            }}
+          >
+            <Text style={{ fontSize: 7, fontFamily: "Courier-Bold" }}>
+              Total Freight
+            </Text>
+            <Text style={{ fontSize: 11, fontFamily: "Courier-Bold" }}>
+              {jobInfo.TotalFreight}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 }
 
