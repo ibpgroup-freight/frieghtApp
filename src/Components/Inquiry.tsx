@@ -5,23 +5,21 @@ import { ErrorMessage, Field, useFormik, FormikProvider } from "formik";
 import { redirect, useNavigate, useSearchParams } from "react-router-dom";
 const RoadvalidationSchema = Yup.object().shape(
   {
-    CustomerName: Yup.string().required("Customer Name is required"),
-    CustomerAddress: Yup.string().required("Customer Address is required"),
-    CustomerEmail: Yup.string().required("Customer Email is required"),
+    CustomerName: Yup.string(),
+    CustomerAddress: Yup.string(),
+    CustomerEmail: Yup.string(),
     CustomerPhoneNo: Yup.string(),
-    SalesPerson: Yup.string().required("Sales Person is required"),
-    VehicleDetails: Yup.string().required("Vehicle Details required"),
-    DriverDetails: Yup.string().required("Driver Details required"),
-    RouteDetails: Yup.string().required("Route Details required"),
-    PlaceOfOrigin: Yup.string().required("Place of Origin is required"),
-    PlaceOfDestination: Yup.string().required(
-      "Place of Destination is required"
-    ),
-    Weight: Yup.string().required("Weight is required"),
-    TypeOfCargo: Yup.string().required("Type Of Cargo is required"),
-    Dimensions: Yup.string().required("Dimensions are required"),
-    TransitTime: Yup.string().required("Transit Time is required"),
-    ShipmentTerms: Yup.string().required("Shipment Terms are required"),
+    SalesPerson: Yup.string(),
+    VehicleDetails: Yup.string(),
+    DriverDetails: Yup.string(),
+    RouteDetails: Yup.string(),
+    PlaceOfOrigin: Yup.string(),
+    PlaceOfDestination: Yup.string(),
+    Weight: Yup.string(),
+    TypeOfCargo: Yup.string(),
+    Dimensions: Yup.string(),
+    TransitTime: Yup.string(),
+    ShipmentTerms: Yup.string(),
     ContainerType: Yup.string()
       .when("CustomContainerType", ([CustomContainerType], schema) => {
         return CustomContainerType
@@ -54,7 +52,7 @@ const RoadvalidationSchema = Yup.object().shape(
         then: (schema) => schema.required("Units Are required"),
         otherwise: (schema) => schema.notRequired(),
       }),
-    CarrierName: Yup.string().required("Carrier Name is required"),
+    CarrierName: Yup.string(),
 
     Departure: Yup.string(),
     EstimatedArrival: Yup.string(),
@@ -139,21 +137,19 @@ const SeavalidationSchema = Yup.object().shape(
   [["CustomContainerType", "ContainerType"]]
 );
 const AirvalidationSchema = Yup.object().shape({
-  CustomerName: Yup.string().required("Customer Name is required"),
-  CustomerAddress: Yup.string().required("Customer Address is required"),
-  CustomerEmail: Yup.string().required("Customer Email is required"),
+  CustomerName: Yup.string(),
+  CustomerAddress: Yup.string(),
+  CustomerEmail: Yup.string(),
   CustomerPhoneNo: Yup.string(),
-  SalesPerson: Yup.string().required("Sales Person is required"),
-  AirportOfOrigin: Yup.string().required("Airport of Origin is required"),
-  AirportOfDestination: Yup.string().required(
-    "Airport of Destination is required"
-  ),
-  Weight: Yup.string().required("Weight is required"),
-  Dimensions: Yup.string().required("Dimensions are required"),
-  TransitTime: Yup.string().required("Transit Time is required"),
-  ShipmentTerms: Yup.string().required("Shipment Terms are required"),
-  TypeOfCargo: Yup.string().required("Type of Cargo is required"),
-  CarrierName: Yup.string().required("Carrier Name is required"),
+  SalesPerson: Yup.string(),
+  AirportOfOrigin: Yup.string(),
+  AirportOfDestination: Yup.string(),
+  Weight: Yup.string(),
+  Dimensions: Yup.string(),
+  TransitTime: Yup.string(),
+  ShipmentTerms: Yup.string(),
+  TypeOfCargo: Yup.string(),
+  CarrierName: Yup.string(),
   FlightInformation: Yup.string().notRequired(),
   Departure: Yup.string(),
   EstimatedArrival: Yup.string(),
