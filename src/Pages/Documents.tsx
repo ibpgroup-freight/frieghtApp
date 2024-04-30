@@ -5,6 +5,7 @@ import {
   where,
   Timestamp,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import React, { useCallback, useRef, useState } from "react";
 import { db, storage } from "../firebase";
@@ -13,7 +14,7 @@ import CustomLoader from "../Components/CustomLoader";
 import { useNavigate } from "react-router-dom";
 import useItemStore from "../store/Item";
 import useInquiryItem from "../store/Inquiry";
-import { getDownloadURL, list, ref } from "firebase/storage";
+import { deleteObject, getDownloadURL, list, ref } from "firebase/storage";
 import { toast } from "react-toastify";
 import { LoaderIcon } from "react-hot-toast";
 import AddDocument from "../Components/AddDocument";
@@ -39,10 +40,12 @@ function Documents() {
       const files = await Promise.all(
         listResult.items.map(async (item: any) => {
           console.log(item);
+
           const url = await getDownloadURL(ref(storage, item._location.path_));
           return {
             name: item.name,
             downloadUrl: url,
+            location: item._location.path_,
           };
         })
       );
@@ -124,8 +127,25 @@ function Documents() {
                           {ans.name}
                         </td>
                         <td className="border border-slate-300 p-4 text-left">
-                          <a className="pointer-cursor" href={ans.downloadUrl}>
+                          <a className="pointer-cursor " href={ans.downloadUrl}>
                             Download
+                          </a>
+                          <a
+                            className="pointer-cursor ml-12 text-red-700"
+                            onClick={async () => {
+                              try {
+                                setisloading(true);
+                                const docref = ref(storage, ans.location);
+                                await deleteObject(docref);
+                                toast.success("Deleted");
+                              } catch (e) {
+                                toast.error("Couldnt Delete Document " + e);
+                              } finally {
+                                setisloading(false);
+                              }
+                            }}
+                          >
+                            Delete
                           </a>
                         </td>
                       </tr>
