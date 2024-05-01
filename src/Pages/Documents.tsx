@@ -21,13 +21,13 @@ import AddDocument from "../Components/AddDocument";
 type searchType = "jobs" | "quotations";
 
 function Documents() {
-  const [searchType, setSearchType] = useState<searchType>("jobs"); // Default search type
   const [searchValue, setsearchValue] = useState<string>(""); // Default search type
   const [mode, setmode] = useState<boolean>(false);
   const [loading, setisloading] = useState<boolean>(false);
-  const [SearchResults, setSearchResults] = useState<any>([]);
-  const [searchby, setsearchby] = useState<string>("");
-  const idref = useRef<any>();
+  const [SearchResults, setSearchResults] = useState<
+    { name: string; downloadUrl: string; location: string }[]
+  >([]);
+
   const submitHandler = async () => {
     try {
       setisloading(true);
@@ -62,6 +62,31 @@ function Documents() {
       toast.error("Couldnt Fetch Your Documents.Please Try Again.");
     } finally {
       setisloading(false);
+    }
+  };
+
+  const deleteFileFromdb = async (location: string, name: string) => {
+    try {
+      const docref = ref(storage, location);
+      await toast.promise(
+        new Promise(async (res, rej) => {
+          try {
+            await deleteObject(docref);
+            res("Success");
+          } catch (e) {
+            rej("An Error Occured");
+          }
+        }),
+        {
+          error: "Couldnt Delete Document",
+          pending: "Deleting",
+          success: "Deleted Successfully",
+        }
+      );
+      await submitHandler();
+    } catch (e) {
+      toast.error("Couldnt Delete Document " + e);
+    } finally {
     }
   };
   return (
@@ -131,19 +156,12 @@ function Documents() {
                             Download
                           </a>
                           <a
-                            className="pointer-cursor ml-12 text-red-700"
-                            onClick={async () => {
-                              try {
-                                setisloading(true);
-                                const docref = ref(storage, ans.location);
-                                await deleteObject(docref);
-                                toast.success("Deleted");
-                              } catch (e) {
-                                toast.error("Couldnt Delete Document " + e);
-                              } finally {
-                                setisloading(false);
-                              }
-                            }}
+                            className="pointer-cursor ml-12 text-red-700 cursor-pointer"
+                            onClick={deleteFileFromdb.bind(
+                              null,
+                              ans.location,
+                              ans.name
+                            )}
                           >
                             Delete
                           </a>
