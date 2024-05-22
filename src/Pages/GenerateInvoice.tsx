@@ -174,17 +174,7 @@ const validationSchema = yup.object().shape(
       .required("Carrier Name is required"),
     // TodaysDate: yup.string().required("Carrier Name is required"),
     TransitTime: yup.string(),
-    CustomerTRN: yup
-      .string()
-      .when("type", {
-        is: (type: string) =>
-          type !== "CargoManifest" &&
-          type !== "ProofOfDelivery" &&
-          type !== "BillOfLading",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Customer TRN is required"),
+    CustomerTRN: yup.string(),
     Weight: yup.string(),
     Dimensions: yup.string(),
     ShipmentTerms: yup.string(),
