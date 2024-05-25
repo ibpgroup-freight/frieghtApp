@@ -201,6 +201,7 @@ function AddQuotation({
     editPodItem,
   } = useItemStore();
   // const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
+  console.log("toEdit", toEdit);
   const formikobj = useFormik({
     initialValues: {
       id: "",
@@ -242,7 +243,7 @@ function AddQuotation({
       HeaderAddress: "",
       HAWBNo: "",
       CBM: "",
-      isEditing: false,
+      isEditingJob: false,
       type: quotationType,
       ...(toEdit ?? {}),
     },
@@ -254,7 +255,7 @@ function AddQuotation({
         if (values.type === "BillOfLading") {
           console.log("bol err 2");
 
-          if (values.isEditing) {
+          if (values.isEditingJob) {
             editLadingItem(
               {
                 ContainerNo: values.ContainerNo,
@@ -279,7 +280,7 @@ function AddQuotation({
         } else if (values.type === "AirwayBill") {
           console.log("awb edit err 2");
 
-          if (values.isEditing) {
+          if (values.isEditingJob) {
             editAirwayItem(values, values.index);
           } else {
             AddAirwayItem(values);
@@ -287,7 +288,7 @@ function AddQuotation({
         } else if (values.type === "CargoManifest") {
           console.log("cam edit err 2");
 
-          if (values.isEditing) {
+          if (values.isEditingJob) {
             editManifestItem(values, values.index);
           } else {
             addManifestItem(values);
@@ -295,12 +296,12 @@ function AddQuotation({
         } else if (values.type === "ProofOfDelivery") {
           console.log("pod edit err 2");
 
-          if (values.isEditing) {
+          if (values.isEditingJob) {
             editPodItem(values, values.index);
           } else {
             addPODItem(values);
           }
-        } else if (values.isEditing) {
+        } else if (values.isEditingJob) {
           console.log("editing err");
           editItem(values, values.index);
         } else {

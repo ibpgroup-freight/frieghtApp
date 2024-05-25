@@ -40,18 +40,20 @@ function AddPrestation({
   // const [val, setval] = React.useState("");
   const { prestation, setPrestation, editPrestation } = useInquiryItem();
   // const [state, dispatch] = React.useReducer(AddQuotationReducer, InitialState);
+
+
   const formikobj = useFormik({
     initialValues: {
       currency: "",
       description: "",
       total: 0,
-      isEditing: false,
+      isEditingJob: false,
       ...(toEdit ?? {}),
     },
     validationSchema,
     onSubmit: (values) => {
       console.log(values);
-      values.isEditing
+      values.isEditingJob
         ? editPrestation(values, values.index)
         : setPrestation({
             currency: values.currency,
@@ -72,7 +74,8 @@ function AddPrestation({
     { label: "Currency", name: "currency", type: "text" },
     { label: "Total", name: "total", type: "number" },
   ];
-
+  console.log("to edit",toEdit)
+  console.log("to values",formikobj.values)
   console.log(formikobj.errors);
   return (
     <FormikProvider value={formikobj}>
