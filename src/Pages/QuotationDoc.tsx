@@ -747,7 +747,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry }) {
           </Text>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
           borderBottomWidth: 1,
           width: "100%",
@@ -776,7 +776,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry }) {
             {jobInfo?.Incharge}
           </Text>
         </View>
-      </View>
+      </View> */}
       <View
         style={{
           borderBottomWidth: 1,
@@ -1349,7 +1349,7 @@ function TableFooterCol2({
               fontSize: 7,
             }}
           >
-            {Total}
+            {jobInfo.Subtotal || ""}
           </Text>
         </View>
       </View>
@@ -1387,7 +1387,7 @@ function TableFooterCol2({
               fontSize: 7,
             }}
           >
-            {Total}
+            {jobInfo.SubtotalExceptTaxes || ""}
           </Text>
         </View>
       </View>

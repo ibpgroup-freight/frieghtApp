@@ -92,6 +92,8 @@ type Inquiry = {
   From?: string;
   To?: string;
   Destination?: string;
+  SubtotalExceptTaxes?: string;
+  Subtotal?: string;
 };
 type PrestationItem = {
   description: string;

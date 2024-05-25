@@ -257,23 +257,22 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Payable at required"),
-    Departure: yup
-      .string()
-      .when("type", {
-        is: (type: string) =>
-          type !== "CargoManifest" &&
-          type !== "ProofOfDelivery" &&
-          type !== "BillOfLading" &&
-          type !== "AirwayBill",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      })
-      .required("Departure Time is required"),
+    Departure: yup.string().when("type", {
+      is: (type: string) =>
+        type !== "CargoManifest" &&
+        type !== "Quotation" &&
+        type !== "ProofOfDelivery" &&
+        type !== "BillOfLading" &&
+        type !== "AirwayBill",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
     EstimatedArrival: yup
       .string()
       .when("type", {
         is: (type: string) =>
           type !== "CargoManifest" &&
+          type !== "Quotation" &&
           type !== "ProofOfDelivery" &&
           type !== "BillOfLading" &&
           type !== "AirwayBill",
@@ -295,6 +294,7 @@ const validationSchema = yup.object().shape(
           !type?.includes("Lading") &&
           !type?.includes("Air") &&
           type !== "CargoManifest" &&
+          type !== "Quotation" &&
           type !== "ProofOfDelivery" &&
           type !== "Quotation",
         then: (schema) => schema.required(),
@@ -314,6 +314,7 @@ const validationSchema = yup.object().shape(
           !type?.includes("Lading") &&
           !type?.includes("Air") &&
           type !== "CargoManifest" &&
+          type !== "Quotation" &&
           type !== "ProofOfDelivery" &&
           type !== "Quotation",
         then: (schema) => schema.required(),
@@ -326,6 +327,17 @@ const validationSchema = yup.object().shape(
     }),
     PortOfDischarge: yup.string().when("type", {
       is: (type: string) => type?.includes("Lading"),
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    Subtotal: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+      then: (schema) => schema.required(),
+      otherwise: (schema) => schema.notRequired(),
+    }),
+    SubtotalExceptTaxes: yup.string().when("type", {
+      is: (type: string) => type === "Quotation",
+
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -656,21 +668,17 @@ const validationSchema = yup.object().shape(
       otherwise: (schema) => schema.notRequired(),
     }),
 
-    Department: yup.string().when("type", {
-      is: (type: string) => type === "Quotation",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    Department: yup.string(),
     Yref: yup.string().when("type", {
       is: (type: string) => type === "Quotation",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    Incharge: yup.string().when("type", {
-      is: (type: string) => type === "Quotation",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    // Incharge: yup.string().when("type", {
+    //   is: (type: string) => type === "Quotation",
+    //   then: (schema) => schema.required(),
+    //   otherwise: (schema) => schema.notRequired(),
+    // }),
     validFrom: yup.string().when("type", {
       is: (type: string) => type === "Quotation",
       then: (schema) => schema.required(),
@@ -949,11 +957,7 @@ function GenerateInvoice() {
             name: "Departure",
             type: "text",
           },
-          {
-            label: "Enter EstimatedArrival",
-            name: "EstimatedArrival",
-            type: "text",
-          },
+
           {
             label: "Enter From",
             name: "From",
@@ -967,6 +971,16 @@ function GenerateInvoice() {
           {
             label: "Enter Destination",
             name: "Destination",
+            type: "text",
+          },
+          {
+            label: "Enter Subtotal",
+            name: "Subtotal",
+            type: "text",
+          },
+          {
+            label: "Enter Subtotal Except Taxes",
+            name: "SubtotalExceptTaxes",
             type: "text",
           },
         ]
@@ -1512,20 +1526,15 @@ function GenerateInvoice() {
     },
 
     {
-      label: "Department",
-      name: "Department",
-      type: "text",
-    },
-    {
       label: "Yref",
       name: "Yref",
       type: "text",
     },
-    {
-      label: "Incharge",
-      name: "Incharge",
-      type: "text",
-    },
+    // {
+    //   label: "Incharge",
+    //   name: "Incharge",
+    //   type: "text",
+    // },
     {
       label: "validFrom",
       name: "validFrom",

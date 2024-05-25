@@ -148,6 +148,7 @@ const useInquiryItem = create<InquiryStore>((set) => ({
           validFrom: "",
           validTo: "",
           Yref: "",
+      
         },
       };
     });
