@@ -3,10 +3,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../firebase.js";
+import { auth, db } from "../firebase.js";
 import useUser from "../store/User";
 import { useNavigate } from "react-router-dom";
 import CustomLoader from "../Components/CustomLoader";
+import { addDoc, doc, serverTimestamp, setDoc } from "firebase/firestore";
 function Authenticate() {
   const [Loading, setLoading] = useState<boolean>(false);
   const [signup, setsignup] = useState(false);
@@ -14,6 +15,8 @@ function Authenticate() {
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const phoneRed = useRef<HTMLInputElement | null>(null);
+
   const navigate = useNavigate();
   const logInUser = async () => {
     setLoading(true);
@@ -24,7 +27,7 @@ function Authenticate() {
         passwordRef.current?.value!
       ).then(async (r) => {
         console.log(r.user);
-        AuthStateLogIn();
+        // AuthStateLogIn();
         navigate("/");
       });
     } catch (error) {
@@ -36,12 +39,17 @@ function Authenticate() {
   const registerUser = async () => {
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(
+      const u = await createUserWithEmailAndPassword(
         auth,
         emailRef.current?.value!,
         passwordRef.current?.value!
-      ).then(async (r) => {
-        console.log(r.user);
+      );
+      await setDoc(doc(db, "users", u.user.uid), {
+        email: emailRef.current?.value!,
+        username: nameRef.current?.value!,
+        role: "User",
+        phone: phoneRed.current?.value,
+        createdAt: serverTimestamp(),
       });
     } catch (error) {
       alert(error);
@@ -60,6 +68,14 @@ function Authenticate() {
             placeholder="Enter Name"
             className="focus:outline-none px-2 py-3 border-2 border-slate-500 rounded-md w-80"
             ref={nameRef}
+          />
+        )}
+        {signup && (
+          <input
+            type="text"
+            placeholder="Enter Phone"
+            className="focus:outline-none px-2 py-3 border-2 border-slate-500 rounded-md w-80"
+            ref={phoneRed}
           />
         )}
         <input

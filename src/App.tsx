@@ -16,7 +16,7 @@ import CustomLoader from "./Components/CustomLoader";
 import { FormikProvider } from "formik";
 import TestingInvoice from "./Components/TestingInvoice";
 import Ejspagestest from "./Pages/ejspagestest.js";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import useCompanyInfo from "./store/CompanyInfo";
 import ProofOfDelivery from "./Pages/ProofOfDelivery";
 import Invoice from "./Pages/Invoice";
@@ -46,9 +46,16 @@ function App() {
   const { setInformation } = useCompanyInfo();
   useEffect(() => {
     setisloading((p) => true);
-    const sub = onAuthStateChanged(auth, (user) => {
+    const sub = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        AuthStateLogIn();
+        console.log("logged inuid", user.uid);
+        const u = await getDoc(doc(db, "users", user.uid));
+        AuthStateLogIn(
+          u.data()?.role,
+          true,
+          u.data()?.username,
+          u.data()?.email
+        );
       } else {
         // User is signed out
         // ...

@@ -6,9 +6,10 @@ const useUser = create<UserStore>((set) => ({
   name: "",
   email: "",
   billType: "",
-  AuthStateLogIn() {
+  phone: "",
+  AuthStateLogIn(role, isloggedIn, name, email) {
     set((state) => {
-      return { ...state, isloggedIn: true };
+      return { ...state, isloggedIn: true, role, name, email };
     });
   },
   AuthStateLogOut() {

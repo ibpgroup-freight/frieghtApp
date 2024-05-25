@@ -114,7 +114,7 @@ function AddUser() {
                   type={i.type}
                 >
                   {i.options?.map((o) => (
-                    <option>{o}</option>
+                    <option key={o}>{o}</option>
                   ))}
                 </Field>
                 <ErrorMessage

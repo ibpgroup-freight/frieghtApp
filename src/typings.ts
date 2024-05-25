@@ -209,8 +209,14 @@ type UserStore = {
   isloggedIn: boolean;
   name: string;
   email: string;
+  phone: string;
   billType: string;
-  AuthStateLogIn: () => void;
+  AuthStateLogIn: (
+    role: string,
+    isloggedIn: boolean,
+    name: string,
+    email: string
+  ) => void;
   AuthStateLogOut: () => void;
   setbillType: (bill: string) => void;
 };
