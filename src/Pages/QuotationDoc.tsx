@@ -1513,24 +1513,19 @@ function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
               alignSelf: "flex-end",
             }}
           >
-            {jobinfo?.type?.includes("sea") || jobinfo?.type?.includes("Sea")
-              ? SeaFreightTerms
-              : jobinfo?.type?.includes("air") || jobinfo?.type?.includes("Air")
-              ? AirFreightTerms
-              : RoadFreightTerms}
-            {jobinfo?.termsAndConditions?.includes(".") ? (
-              jobinfo?.termsAndConditions.split(".").map((s: string, index) => (
-                <Text key={index} wrap={false}>
-                  {s + `${"\n"}`}
+            {jobinfo.termsAndConditions?.map((s, ind) => (
+              <React.Fragment key={ind}>
+                <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
+                  {ind}
                 </Text>
-              ))
-            ) : (
-              <Text>{jobinfo?.termsAndConditions}</Text>
-            )}
+
+                <Text style={{ fontSize: 10, fontFamily: "Courier-Bold" }}> {s + `${"\n"}`}</Text>
+              </React.Fragment>
+            ))}
           </Text>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
           flexDirection: "row",
           marginVertical: 5,
@@ -1557,7 +1552,7 @@ function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
         >
           30 DAYS AFTER DATE OF INVOICE
         </Text>
-      </View>
+      </View> */}
     </View>
   );
 }

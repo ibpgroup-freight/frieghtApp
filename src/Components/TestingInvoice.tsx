@@ -159,14 +159,9 @@ const TestingInvoice = () => {
                   lineHeight: 1,
                 }}
               >
-                {jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
-                  ? SeaFreightTerms
-                  : jobInfo.type.includes("air") || jobInfo.type.includes("Air")
-                  ? AirFreightTerms
-                  : RoadFreightTerms}
+    
                 {jobInfo.termsAndConditions
-                  ?.split(".")
-                  .map((s) => s + `${"\n"}`)
+                  ?.map((s) => s + `${"\n"}`)
                   .join("\n")
                   .toString()}
               </Text>

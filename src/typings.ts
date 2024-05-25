@@ -88,7 +88,7 @@ type Inquiry = {
   Incharge?: string;
   validFrom?: string;
   validTo?: string;
-  termsAndConditions?: string;
+  termsAndConditions?: Array<string>;
   From?: string;
   To?: string;
   Destination?: string;
@@ -303,7 +303,7 @@ type cargoInfo = {
   VATAmount: number;
   officeAddress: string;
   specialInstructions?: string;
-  termsAndConditions?: string;
+  termsAndConditions?: Array<string>;
   ShipperName: string;
   ShipperEmail: string;
   ShipperPhone: number;

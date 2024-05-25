@@ -105,7 +105,7 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Your Address is required"),
-    termsAndConditions: yup.string().notRequired(),
+    termsAndConditions: yup.array().of(yup.string()),
     specialInstructions: yup.string().notRequired(),
     ConsigneeReference: yup.string().notRequired(),
     type: yup.string().required("Type of bill is Required"),
@@ -652,11 +652,7 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    Arrival: yup.string().when("type", {
-      is: (type: string) => type === "Quotation",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    Arrival: yup.string(),
     IncoTerm: yup.string().when("type", {
       is: (type: string) => type === "Quotation",
       then: (schema) => schema.required(),
@@ -820,8 +816,7 @@ function GenerateInvoice() {
     },
     validationSchema,
   });
-  console.log("qi", formikObj.errors);
-  console.log("valuies", formikObj.values.type);
+  console.log("qi", formikObj.values);
 
   const CargoManifestTable = [
     { label: "Index", name: "Sr no" },
@@ -1538,17 +1533,17 @@ function GenerateInvoice() {
     {
       label: "validFrom",
       name: "validFrom",
-      type: "text",
+      type: "date",
     },
     {
       label: "validTo",
       name: "validTo",
-      type: "text",
+      type: "date",
     },
     {
       label: "other Shipping Details",
       name: "othershippingDetails",
-      type: "text",
+      type: "textarea",
     },
   ];
   const PODCol1 = [
@@ -2079,20 +2074,61 @@ function GenerateInvoice() {
               {formikObj.values.type === "Quotation" && (
                 <div className="w-4/5  flex flex-col lg:flex-row flex-wrap justify-center items-center lg:justify-start mx-auto gap-3 ">
                   <div className="px-4 w-4/5">
-                    <label className="text-xl">
-                      Other Terms And Conditions (If Any)
-                    </label>
+                    <label className="text-xl">Terms And Conditions</label>
+                    {formikObj.values.termsAndConditions?.map((t, ind) => (
+                      <div
+                        className="flex flex-row w-full items-center"
+                        key={ind}
+                      >
+                        <h1 className="text-xl">{ind + 1}</h1>
 
-                    <Field
-                      as="textarea"
-                      name="termsAndConditions"
-                      className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                    />
-                    <ErrorMessage
-                      name={"termsaAndConditions"}
-                      component="div"
-                      className="text-red-500"
-                    />
+                        <div className="w-full ml-5">
+                          <Field
+                            as="textarea"
+                            name={`termsAndConditions.${ind}`}
+                            className="w-full border-gray-300 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                          />
+                          <ErrorMessage
+                            name={`termsAndConditions.${ind}`}
+                            component="div"
+                            className="text-red-500"
+                          />
+                        </div>
+                        <h2
+                          className="text-xl ml-5 text-white w-8 text-center  bg-red-500 rounded-2xl cursor-pointer"
+                          onClick={() => {
+                            formikObj.setFieldValue(
+                              "termsAndConditions",
+                              formikObj.values.termsAndConditions?.filter(
+                                (t, i) => i !== ind
+                              )
+                            );
+                          }}
+                        >
+                          X
+                        </h2>
+                      </div>
+                    ))}
+                    {
+                      <div className="absolute right-80">
+                        <button
+                          className="text-lg rounded-full bg-green-600 text-white p-2"
+                          onClick={(e) => {
+                            console.log("Here");
+                            if (!formikObj.values.type) {
+                              return toast.error("Select Type Of Bill First");
+                            }
+                            formikObj.setFieldValue("termsAndConditions", [
+                              ...formikObj.values.termsAndConditions!,
+                              "",
+                            ]);
+                          }}
+                          type="button"
+                        >
+                          Add Another Condition
+                        </button>
+                      </div>
+                    }
                   </div>
                 </div>
               )}
