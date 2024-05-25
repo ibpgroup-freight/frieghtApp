@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom";
 import ButtonBlue from "./ButtonBlue";
 import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  Timestamp,
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
 type pageProps = {
@@ -70,7 +76,16 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
         <td className="border border-slate-300 p-4 text-blue-500 font-bold">
           {job.jobid}
         </td>
-
+        <td className="border border-slate-300 p-4 text-blue-500 font-bold">
+          {/*@ts-ignore */}
+          {`${new Timestamp(job.createdAt.seconds, job.createdAt.nanoseconds)
+            .toDate()
+            .toLocaleDateString()} `}
+          {/*@ts-ignore */}
+          {`${new Timestamp(job.createdAt.seconds, job.createdAt.nanoseconds)
+            .toDate()
+            .toLocaleTimeString()} `}
+        </td>
         {/* <td className="border border-slate-300 p-4">{i.QuoteValidity}</td> */}
         <td className="border border-slate-300 p-4">{inquiry.CustomerName}</td>
         {/* <td className="border border-slate-300 p-4">{i.UnitPerKg}</td> */}

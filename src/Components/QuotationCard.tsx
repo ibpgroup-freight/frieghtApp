@@ -4,7 +4,13 @@ import { useNavigate } from "react-router-dom";
 import ButtonBlue from "./ButtonBlue";
 import useInquiryItem from "../store/Inquiry";
 import useItemStore from "../store/Item";
-import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
 import useQuotation from "../store/Quotations";
@@ -83,7 +89,21 @@ function QuotationCard({
         <td className="border border-slate-300 p-4  text-blue-500 font-bold">
           {quotation.quotationId}
         </td>
-
+        <td className="border border-slate-300 p-4 text-blue-500 font-bold">
+          {`${new Timestamp(
+            (quotation as any).createdAt.seconds,
+            (quotation as any).createdAt.nanoseconds
+          )
+            .toDate()
+            .toLocaleDateString()} `}
+          {/*@ts-ignore */}
+          {`${new Timestamp(
+            (quotation as any).createdAt.seconds,
+            (quotation as any).createdAt.nanoseconds
+          )
+            .toDate()
+            .toLocaleTimeString()} `}
+        </td>
         {/* <td className="border border-slate-300 p-4 ">{i.QuoteValidity}</td> */}
         <td className="border border-slate-300 p-4 ">{inquiry.CustomerName}</td>
         {/* <td className="border border-slate-300 p-4 ">{i.UnitPerKg}</td> */}
