@@ -14,6 +14,7 @@ import {
 import { db } from "../firebase";
 import { toast } from "react-toastify";
 import useQuotation from "../store/Quotations";
+import useUser from "../store/User";
 type pageProps = {
   quotation: Quotation;
   ondelete: () => void;
@@ -33,6 +34,7 @@ function QuotationCard({
   const { setQuotation } = useQuotation();
   const { setItemInquiry, setPrestationArray } = useInquiryItem();
   const { setitemsArray } = useItemStore();
+  const { role } = useUser();
   const [isdeleting, setisdeleting] = useState<{
     status: boolean;
     id: string;
@@ -82,7 +84,7 @@ function QuotationCard({
       setisdeleting({ id: "", status: false });
     }
   };
-  console.log("Quotation card", quotation);
+  console.log("User role", role);
   return (
     quotation && (
       <>
@@ -117,18 +119,22 @@ function QuotationCard({
             </td> */}
         <td className=" flex flex-col  space-y-2 px-2 justify-center self-center my-2 items-start">
           <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
-          <ButtonBlue
-            text="Edit"
-            onclick={editJob}
-            customStyle={"text-green-900 hover:text-green-500 "}
-          />
-          <ButtonBlue
-            text="Delete"
-            onclick={deleteJob.bind(null, quotation.id!)}
-            customStyle={"text-red-900 hover:text-red-500 "}
-            isloading={isdeleting?.status}
-            disabled={isdeleting?.status}
-          />
+          {role === "Admin" && (
+            <ButtonBlue
+              text="Edit"
+              onclick={editJob}
+              customStyle={"text-green-900 hover:text-green-500 "}
+            />
+          )}
+          {role === "Admin" && (
+            <ButtonBlue
+              text="Delete"
+              onclick={deleteJob.bind(null, quotation.id!)}
+              customStyle={"text-red-900 hover:text-red-500 "}
+              isloading={isdeleting?.status}
+              disabled={isdeleting?.status}
+            />
+          )}
         </td>
         <td className="border border-slate-300 p-4 ">{status}</td>
         <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">

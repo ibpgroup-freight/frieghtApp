@@ -73,7 +73,7 @@ function AddUser() {
           createdAt: serverTimestamp(),
           phone: Phone,
         });
-        toast.success("Successfully created User");
+        toast.success("Successfully created And Signed Is As New User");
       } catch (e) {
         console.log(e);
         toast.error("Couldnt Create User.Try Again Later ." + e);

@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
+import useUser from "../store/User";
 type pageProps = {
   job: Job;
   ondelete: () => void;
@@ -22,7 +23,7 @@ type pageProps = {
 };
 function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
   const navigate = useNavigate();
-  console.log("New job", job);
+
   const { setJob } = useJob();
   const { setItemInquiry } = useInquiryItem();
   const { setitemsArray } = useItemStore();
@@ -70,6 +71,7 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
       setisdeleting({ id: "", status: false });
     }
   };
+  const { role } = useUser();
   return (
     job && (
       <>
@@ -97,18 +99,22 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
             </td> */}
         <td className=" flex flex-col   px-2 justify-center self-center my-1 items-start">
           <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
-          <ButtonBlue
-            text="Edit"
-            onclick={editJob}
-            customStyle={"text-green-900 hover:text-green-500 "}
-          />
-          <ButtonBlue
-            text="Delete"
-            onclick={deleteJob.bind(null, job.id!)}
-            customStyle={"text-red-400 hover:text-red-800 "}
-            isloading={isdeleting?.status}
-            disabled={isdeleting?.status}
-          />
+          {role === "Admin" && (
+            <ButtonBlue
+              text="Edit"
+              onclick={editJob}
+              customStyle={"text-green-900 hover:text-green-500 "}
+            />
+          )}
+          {role === "Admin" && (
+            <ButtonBlue
+              text="Delete"
+              onclick={deleteJob.bind(null, job.id!)}
+              customStyle={"text-red-400 hover:text-red-800 "}
+              isloading={isdeleting?.status}
+              disabled={isdeleting?.status}
+            />
+          )}
         </td>
         <td className="border border-slate-300 p-4">{status}</td>
         <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">
