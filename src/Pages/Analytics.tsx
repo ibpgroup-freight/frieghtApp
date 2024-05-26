@@ -11,10 +11,8 @@ import useQuotation from "../store/Quotations";
 import QuotationCard from "../Components/QuotationCard";
 function Analytics() {
   const Column1 = [
-
     { label: "Id", name: "Id" },
     { label: "Created", name: "Created" },
-
     // { label: "Quote Validity", name: "QuoteValidity" },
     { label: "Customer Name", name: "CustomerName" },
     { label: "Customer Email", name: "CustomerEmail" },

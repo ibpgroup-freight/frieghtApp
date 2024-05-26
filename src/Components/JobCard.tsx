@@ -80,11 +80,11 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
         </td>
         <td className="border border-slate-300 p-4 text-blue-500 font-bold">
           {/*@ts-ignore */}
-          {`${new Timestamp(job.createdAt.seconds, job.createdAt.nanoseconds)
+          {`${new Timestamp(job?.createdAt?.seconds, job?.createdAt?.nanoseconds)
             .toDate()
             .toLocaleDateString()} `}
           {/*@ts-ignore */}
-          {`${new Timestamp(job.createdAt.seconds, job.createdAt.nanoseconds)
+          {`${new Timestamp(job?.createdAt?.seconds, job?.createdAt?.nanoseconds)
             .toDate()
             .toLocaleTimeString()} `}
         </td>

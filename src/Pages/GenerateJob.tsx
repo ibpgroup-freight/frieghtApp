@@ -117,10 +117,10 @@ const validationSchema = yup.object().shape(
       .string()
       .matches(/^\d+$/, "Invalid TRN")
       .required("Customer TRN is required"),
-    Weight: yup.string().required("Weight is required"),
-    Dimensions: yup.string().required("Dimensions are required"),
-    ShipmentTerms: yup.string().required("Shipment Terms are required"),
-    TypeOfCargo: yup.string().required("Type of Cargo is required"),
+    Weight: yup.string(),
+    Dimensions: yup.string(),
+    ShipmentTerms: yup.string(),
+    TypeOfCargo: yup.string(),
     FlightInformation: yup
       .string()
       .when("type", {
@@ -249,7 +249,7 @@ function GenerateJob() {
           prestation: prestation,
         });
         toast.success("Job Generated Successfully");
-        navigate("/analytics");
+        // navigate("/analytics");
       } catch (e) {
         console.log(e);
         toast.error("Failed To Generate Job");
@@ -435,7 +435,7 @@ function GenerateJob() {
     {
       label: "Enter Transit Time",
       name: "TransitTime",
-      type: "number",
+      type: "text",
     },
     { label: "Enter Todays Date", name: "TodaysDate", type: "date" },
 
