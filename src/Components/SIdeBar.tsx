@@ -20,7 +20,10 @@ import { useNavigate } from "react-router-dom";
 import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
 import useInquiryItem from "../store/Inquiry";
 import useinvoiceStore from "../store/Invoice";
+import useUser from "../store/User";
 function SideBar({ showSideBar }: { showSideBar: boolean }) {
+  const { role } = useUser();
+
   const Options = [
     {
       path: "/analytics",
@@ -69,12 +72,16 @@ function SideBar({ showSideBar }: { showSideBar: boolean }) {
       icon: faBriefcase,
       reload: true,
     },
-    {
-      path: "/manageUsers",
-      name: "Users",
-      icon: faUser,
-      reload: true,
-    },
+    ...(role === "Admin"
+      ? [
+          {
+            path: "/manageUsers",
+            name: "Users",
+            icon: faUser,
+            reload: true,
+          },
+        ]
+      : []),
     {
       path: "/manageContacts",
       name: "Contacts",

@@ -40,7 +40,7 @@ const SearchPage = React.lazy(() => import("./Pages/Search"));
 const AirwayBill = React.lazy(() => import("./Pages/AirwayBill"));
 const QuotationDetails = React.lazy(() => import("./Pages/QuotationDetails"));
 function App() {
-  const { isloggedIn, AuthStateLogIn } = useUser();
+  const { isloggedIn, AuthStateLogIn, role } = useUser();
   const [isloading, setisloading] = useState(true);
   const [showSideBar, setshowSideBar] = useState<boolean>(false);
   const { setInformation } = useCompanyInfo();
@@ -103,7 +103,9 @@ function App() {
                 <Route path="/testPdf" Component={TestingInvoice} />
                 <Route path="/quotationDoc" Component={QuotationDoc} />
 
-                <Route path="/manageUsers" Component={ManageUsers} />
+                {role === "Admin" && (
+                  <Route path="/manageUsers" Component={ManageUsers} />
+                )}
                 <Route path="/search" Component={SearchPage} />
                 <Route path="/analytics" Component={Analytics} />
                 <Route path="/billofladdle" Component={BillOfLaddle} />
