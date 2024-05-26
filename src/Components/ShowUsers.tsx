@@ -12,7 +12,6 @@ function Showusers() {
     { name: "Role" },
     { name: "Phone" },
     // { name: "Address" },
-    { name: "Actions" },
   ];
   const [users, setusers] = useState<User[]>();
   const [reload, setreload] = useState<boolean>(false);
@@ -75,13 +74,13 @@ function Showusers() {
                   <td className="border border-slate-300 p-4">{c.role}</td>
                   <td className="border border-slate-300 p-4">{c.phone}</td>
 
-                  <td className="border border-slate-300 p-4 space-y-2">
+                  {/* <td className="border border-slate-300 p-4 space-y-2">
                     <ButtonBlue onclick={() => {}} text="View" />
                     <ButtonBlue
                       onclick={deleteDocument.bind(null, c.userId!)}
                       text="Delete"
                     />
-                  </td>
+                  </td> */}
                 </tr>
               ))}
             </tbody>

@@ -64,7 +64,10 @@ function Quotation(props: InquiryAndQuotationProps) {
           inquiry,
           Items: items,
           quotationId:
-            JobInitials + `-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
+            JobInitials +
+            `-${new Date().toLocaleDateString()}-${Math.floor(
+              Math.random() * 10000
+            )}`,
           type: jobType,
           jobInitials: JobInitials,
           method: JobMode,

@@ -241,7 +241,9 @@ function GenerateJob() {
           Items: quotationItemsStore,
           jobid:
             quotationidRef.current?.value!.slice(0, 2) +
-            `-J-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+            `-J-${new Date().toLocaleDateString()}-${Math.floor(
+              Math.random() * 100000
+            )}`,
           status: "pending",
           method: inquiry.method,
           prestation: prestation,
