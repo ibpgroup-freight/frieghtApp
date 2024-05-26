@@ -451,7 +451,7 @@ function GenerateJob() {
   console.log(temp_Items, "   ", jobInfo);
   return (
     <div>
-      <div className="relative mx-auto w-5/6">
+      <div className="relative mx-auto w-full">
         {showQuotation && (
           <AddQuotation
             closeQuotation={setshowQuotation}

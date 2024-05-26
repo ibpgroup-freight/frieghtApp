@@ -330,17 +330,8 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    Subtotal: yup.string().when("type", {
-      is: (type: string) => type === "Quotation",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
-    SubtotalExceptTaxes: yup.string().when("type", {
-      is: (type: string) => type === "Quotation",
-
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    Subtotal: yup.string(),
+    SubtotalExceptTaxes: yup.string(),
     ExportReference: yup.string(),
     ForwardingAgent: yup.string(),
     JobNo: yup.string().when("type", {
@@ -968,16 +959,6 @@ function GenerateInvoice() {
             name: "Destination",
             type: "text",
           },
-          {
-            label: "Enter Subtotal",
-            name: "Subtotal",
-            type: "text",
-          },
-          {
-            label: "Enter Subtotal Except Taxes",
-            name: "SubtotalExceptTaxes",
-            type: "text",
-          },
         ]
       : []),
     ...(formikObj.values.type !== "Quotation" &&
@@ -1536,6 +1517,16 @@ function GenerateInvoice() {
       type: "date",
     },
     {
+      label: "Subtotal",
+      name: "Subtotal",
+      type: "text",
+    },
+    {
+      label: "Enter Subtotal Except Taxes",
+      name: "SubtotalExceptTaxes",
+      type: "text",
+    },
+    {
       label: "validTo",
       name: "validTo",
       type: "date",
@@ -1644,7 +1635,7 @@ function GenerateInvoice() {
       setloadingdetails(false);
     }
   };
-
+  console.log(formikObj.errors, "errors");
   return (
     <div className="w-full ">
       <FormikProvider value={formikObj}>
@@ -2110,7 +2101,7 @@ function GenerateInvoice() {
                       </div>
                     ))}
                     {
-                      <div className="absolute right-80">
+                      <div className="">
                         <button
                           className="text-lg rounded-full bg-green-600 text-white p-2"
                           onClick={(e) => {
@@ -2672,7 +2663,7 @@ function GenerateInvoice() {
               )}
               <button
                 type="submit"
-                className="bg-blue-700 w-40 !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-center"
+                className="bg-blue-700  !mx-auto   text-white rounded-lg px-5 py-3 text-2xl self-center"
               >
                 Preview
               </button>
