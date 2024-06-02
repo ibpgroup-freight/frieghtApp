@@ -411,7 +411,7 @@ function AddQuotation({
   console.log(quotationType, "Qtype");
   return (
     <FormikProvider value={formikobj}>
-      <div className="fixed mx-auto md:w-4/5 max-h-fit px-10 bg-white border border-black z-1000 py-10 rounded-md">
+      <div className="relative mx-auto md:w-4/5 max-h-screen px-10 bg-white border border-black z-1000 py-10 rounded-md overflow-y-auto">
         <form
           onSubmit={(e) => {
             e.stopPropagation();

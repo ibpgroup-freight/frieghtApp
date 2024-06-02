@@ -1640,7 +1640,11 @@ function GenerateInvoice() {
     <div className="w-full ">
       <FormikProvider value={formikObj}>
         <div className="flex flex-col w-full py-4 space-y-3 items-center">
-          <div className="absolute mx-auto w-5/6">
+          <div
+            className={`fixed ${
+              showQuotation && "inset-0 bg-black bg-opacity-50"
+            } flex items-center justify-center overflow-auto`}
+          >
             {showQuotation && (
               <AddQuotation
                 closeQuotation={setshowQuotation}

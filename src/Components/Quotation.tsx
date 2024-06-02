@@ -137,7 +137,11 @@ function Quotation(props: InquiryAndQuotationProps) {
   return (
     <div className="w-full">
       <div className={`md:px-5 flex justify-evenly  w-full `}>
-        <div className="absolute z-50 w-full top-5 mx-auto overflow-auto">
+        <div
+          className={`fixed ${
+            showQuotation && "inset-0"
+          } flex items-center justify-center overflow-auto`}
+        >
           {showQuotation && (
             <AddQuotation
               closeQuotation={setshowQuotation}
