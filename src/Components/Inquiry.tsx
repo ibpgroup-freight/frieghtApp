@@ -1,8 +1,12 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import useInquiryItem from "../store/Inquiry";
 import * as Yup from "yup";
 import { ErrorMessage, Field, useFormik, FormikProvider } from "formik";
 import { redirect, useNavigate, useSearchParams } from "react-router-dom";
+import CustomLoader from "./CustomLoader";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
 const RoadvalidationSchema = Yup.object().shape(
   {
     CustomerName: Yup.string(),
@@ -179,6 +183,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
     }
   }, []);
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       ...inquiry,
       type: Airtype ? "air" : Seatype ? "sea" : "road",
@@ -380,132 +385,218 @@ function Inquiry(props: InquiryAndQuotationProps) {
       type: "date",
     },
   ];
-  return (
-    <FormikProvider value={formik}>
-      <div className="w-full flex flex-col justify-center space-y-7 py-5 flex-wrap ">
-        <form onSubmit={formik.handleSubmit}>
-          <div className="px-5 flex flex-col lg:flex-row justify-between w-full my-5">
-            <Field hidden name={"type"} />
-            <div className="flex flex-col space-y-1">
-              {Column1Items.map((i) => (
-                <div key={i.name} className="px-4">
-                  <label className="text-xl" key={i.name}>
-                    {i.label}
-                  </label>
-                  <Field
-                    as={i.type === "textarea" ? "textarea" : "input"}
-                    type={i.type}
-                    name={i.name}
-                    className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                  />
-                  <ErrorMessage
-                    name={i.name}
-                    component="div"
-                    className="text-red-500"
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col space-y-1">
-              {Column2Items.map((i) => (
-                <div key={i.name} className="px-4">
-                  <label className="text-xl" key={i.name}>
-                    {i.label}
-                  </label>
-                  {i.type === "select" ? (
-                    <>
-                      <Field
-                        as="select"
-                        name={i.name}
-                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                      >
-                        <option value="">Select Value </option>
-                        {i.options?.map((o) => (
-                          <option value={o} key={o}>
-                            {o}
-                          </option>
-                        ))}
-                      </Field>
-                      <ErrorMessage
-                        name={i.name}
-                        component="div"
-                        className="text-red-500"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Field
-                        as={i.type === "textarea" ? "textarea" : "input"}
-                        type={i.type}
-                        name={i.name}
-                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                      />
-                      <ErrorMessage
-                        name={i.name}
-                        component="div"
-                        className="text-red-500"
-                      />
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="flex flex-col space-y-1">
-              {Column3.map((i) => (
-                <div key={i.name} className="px-4">
-                  <label className="text-xl" key={i.name}>
-                    {i.label}
-                  </label>
-                  {i.type === "select" ? (
-                    <>
-                      <Field
-                        as="select"
-                        name={i.name}
-                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                      >
-                        <option value="">Select Value </option>
-                        {i.options?.map((o) => (
-                          <option value={o} key={o}>
-                            {o}
-                          </option>
-                        ))}
-                      </Field>
-                      <ErrorMessage
-                        name={i.name}
-                        component="div"
-                        className="text-red-500"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Field
-                        type={i.type}
-                        name={i.name}
-                        className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
-                      />
-                      <ErrorMessage
-                        name={i.name}
-                        component="div"
-                        className="text-red-500"
-                      />
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+  const [searchBy, setSearchBy] = useState<string>("id"); // Default search type
+  const [loading, setisloading] = useState<boolean>(false);
+  const [searchValue, setsearchValue] = useState<string>(""); // Default search type
 
-          <div className="flex w-full justify-center">
-            <button
-              className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
-              type="submit"
-            >
-              Add And Proceed To {props.actionName}
-            </button>
-          </div>
-        </form>
+  const submitHandler = async () => {
+    try {
+      setisloading(true);
+      console.log("Search by ", searchBy);
+      console.log("Search vall ", searchValue);
+
+      let searchResults = await getDocs(
+        query(collection(db, "contacts"), where(searchBy, "==", searchValue))
+      );
+
+      const res: any = [];
+      if (searchResults.empty) {
+        toast.info("No Result");
+        return console.log("empty");
+      }
+      console.log(searchResults.docs[0].data());
+      setItemInquiry({
+        ...inquiry,
+        CustomerName: searchResults.docs[0].data().name,
+        CustomerAddress: searchResults.docs[0].data().address,
+        CustomerEmail: searchResults.docs[0].data().email,
+        CustomerPhoneNo: searchResults.docs[0].data().phone,
+        CustomerTRN: searchResults.docs[0].data().trn,
+      });
+    } catch (e) {
+      console.log(e);
+      toast.error("An Error Occured , Please Try Later");
+    } finally {
+      setisloading(false);
+    }
+  };
+  return (
+    <div>
+      <div className="flex flex-col md:flex-row justify-between items-center space-x-6 ">
+        <div className="mb-4 w-full">
+          <label
+            htmlFor="searchBy"
+            className="block text-sm font-medium text-gray-600 mb-1"
+          >
+            Search Contact By
+          </label>
+          <select
+            id="searchBy"
+            className="border p-2 w-full rounded-md"
+            value={searchBy}
+            onChange={(e) => setSearchBy(e.target.value)}
+          >
+            <option value={""}>Select</option>
+            {/* <option value={"contactId"}>Id</option> */}
+            <option value="email">Email</option>
+            <option value="phone">Number</option>
+            <option value={"name"}>Name</option>
+            <option value={"company"}>Company</option>
+          </select>
+        </div>
+        <div className="mb-4 w-full">
+          <label
+            htmlFor="searchInput"
+            className="block text-sm font-medium text-gray-600 mb-1"
+          >
+            Search {searchBy}
+          </label>
+          <input
+            type="text"
+            id="searchInput"
+            className="border p-2 w-full rounded-md"
+            placeholder={`Enter ${searchBy}`}
+            onChange={(e) => setsearchValue(e.target.value)}
+          />
+        </div>
+        <button
+          className="bg-blue-500 rounded-md text-white px-3 py-2 my-4 lg:my-0"
+          onClick={submitHandler}
+          disabled={loading}
+        >
+          {loading ? (
+            <CustomLoader customStyle="!h-12" height={50} />
+          ) : (
+            "Search"
+          )}
+        </button>
       </div>
-    </FormikProvider>
+      <FormikProvider value={formik}>
+        <div className="w-full flex flex-col justify-center space-y-7 py-5 flex-wrap ">
+          <form onSubmit={formik.handleSubmit}>
+            <div className="px-5 flex flex-col lg:flex-row justify-between w-full my-5">
+              <Field hidden name={"type"} />
+              <div className="flex flex-col space-y-1">
+                {Column1Items.map((i) => (
+                  <div key={i.name} className="px-4">
+                    <label className="text-xl" key={i.name}>
+                      {i.label}
+                    </label>
+                    <Field
+                      as={i.type === "textarea" ? "textarea" : "input"}
+                      type={i.type}
+                      name={i.name}
+                      className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                    />
+                    <ErrorMessage
+                      name={i.name}
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col space-y-1">
+                {Column2Items.map((i) => (
+                  <div key={i.name} className="px-4">
+                    <label className="text-xl" key={i.name}>
+                      {i.label}
+                    </label>
+                    {i.type === "select" ? (
+                      <>
+                        <Field
+                          as="select"
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        >
+                          <option value="">Select Value </option>
+                          {i.options?.map((o) => (
+                            <option value={o} key={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Field
+                          as={i.type === "textarea" ? "textarea" : "input"}
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col space-y-1">
+                {Column3.map((i) => (
+                  <div key={i.name} className="px-4">
+                    <label className="text-xl" key={i.name}>
+                      {i.label}
+                    </label>
+                    {i.type === "select" ? (
+                      <>
+                        <Field
+                          as="select"
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        >
+                          <option value="">Select Value </option>
+                          {i.options?.map((o) => (
+                            <option value={o} key={o}>
+                              {o}
+                            </option>
+                          ))}
+                        </Field>
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <Field
+                          type={i.type}
+                          name={i.name}
+                          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+                        />
+                        <ErrorMessage
+                          name={i.name}
+                          component="div"
+                          className="text-red-500"
+                        />
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex w-full justify-center">
+              <button
+                className="bg-blue-700 text-white rounded-md px-5 py-3 text-2xl text-center"
+                type="submit"
+              >
+                Add And Proceed To {props.actionName}
+              </button>
+            </div>
+          </form>
+        </div>
+      </FormikProvider>
+    </div>
   );
 }
 

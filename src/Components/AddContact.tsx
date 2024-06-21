@@ -22,6 +22,7 @@ function AddContact() {
     { label: "Phone", type: "number" },
     { label: "Company", type: "text" },
     { label: "Address", type: "text" },
+    { label: "Customer TRN", name: "trn", type: "number" },
   ];
   const formikObj = useFormik<Contact>({
     initialValues: {
