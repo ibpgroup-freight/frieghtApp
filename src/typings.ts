@@ -94,6 +94,7 @@ type Inquiry = {
   Destination?: string;
   SubtotalExceptTaxes?: string;
   Subtotal?: string;
+  licenseNo?: number;
 };
 type PrestationItem = {
   description: string;
@@ -321,6 +322,7 @@ type Contact = {
   Address: string;
   Phone: string;
   Company: string;
+  CustomerTrn: string;
 };
 
 type FetchContact = { id: string; contacts: Contact };

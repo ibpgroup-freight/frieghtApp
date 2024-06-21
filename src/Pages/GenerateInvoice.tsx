@@ -37,16 +37,7 @@ import AddLadingBasis from "../Components/AddLadingBasis";
 // };
 const validationSchema = yup.object().shape(
   {
-    Jobid: yup.string().when("type", {
-      is: (type: string) =>
-        !type?.includes("Lading") &&
-        !type?.includes("Airway") &&
-        type !== "CargoManifest" &&
-        type !== "ProofOfDelivery" &&
-        type !== "Quotation",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    Jobid: yup.string(),
     CustomerName: yup
       .string()
       .when("type", {
@@ -753,6 +744,7 @@ function GenerateInvoice() {
       Jobid: jobidRef.current?.value || "",
       ...inquiry,
       type: billType || "",
+    
     },
 
     onSubmit(values) {
@@ -761,6 +753,10 @@ function GenerateInvoice() {
       //   toast.error("Add Some Items First");
       //   return;
       // }
+      if (jobidRef.current?.value === "" || !jobidRef.current?.value) {
+        toast.error("Id is Required");
+        return;
+      }
       if (!values.type) {
         toast.error("Select Bill Type First");
         return;
@@ -1267,6 +1263,11 @@ function GenerateInvoice() {
             name: "CustomerPhoneNo",
             type: "text",
           },
+          {
+            label: "licenseNo",
+            name: "licenseNo",
+            type: "text",
+          },
         ]
       : []),
     ...(formikObj.values.type?.includes("Lading")
@@ -1585,12 +1586,13 @@ function GenerateInvoice() {
   const filljobDetailsbyId = async () => {
     try {
       setloadingdetails(true);
-      console.log("job", jobidRef.current?.value);
-      if (jobidRef.current?.value === "")
+      console.log("searchType", searchType);
+      console.log(jobidRef.current?.value);
+      if (jobidRef.current?.value === "" || !jobidRef.current?.value)
         return toast.error("Job Id is Required");
       let jobtype;
       let mydoc;
-      if (formikObj.values.type === "quotation") {
+      if (searchType === "quotation") {
         const docs = await getDocs(
           query(
             collection(db, "quotations"),
@@ -1636,6 +1638,7 @@ function GenerateInvoice() {
     }
   };
   console.log(formikObj.errors, "errors");
+  const [searchType, setsearchType] = useState<string>("quotation");
   return (
     <div className="w-full ">
       <FormikProvider value={formikObj}>
@@ -1705,9 +1708,10 @@ function GenerateInvoice() {
           <select
             className="w-3/5 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
             onChange={(e) => {
+              setsearchType(e.target.value);
               formikObj.setFieldValue("type", e.target.value);
             }}
-            defaultValue={"job"}
+            defaultValue={"quotation"}
           >
             <option>Search By</option>
             <option value={"quotation"}>Quotation</option>
@@ -1715,18 +1719,13 @@ function GenerateInvoice() {
           </select>
           <div className="flex items-center w-3/5 justify-between">
             <label className="text-xl" htmlFor="jobid">
-              Enter{" "}
-              {formikObj.values.type === "quotation"
-                ? "Quotation Id"
-                : "Job Id"}
+              Enter {searchType === "quotation" ? "Quotation Id" : "Job Id"}
             </label>
             <input
               type={"text"}
               name={"Jobid"}
               placeholder={
-                formikObj.values.type === "quotation"
-                  ? "Quotation Id"
-                  : "Job Id"
+                searchType === "quotation" ? "Quotation Id" : "Job Id"
               }
               className="w-3/5 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:border-blue-500"
               ref={jobidRef}

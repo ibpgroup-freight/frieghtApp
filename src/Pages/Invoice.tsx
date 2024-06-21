@@ -42,6 +42,7 @@ function Invoice() {
   const companyLocation = Location.find(
     (l) => l.key === jobInfo?.officeAddress
   );
+  console.log("jobinfo", jobInfo);
   const handleSavePdf = async () => {
     try {
       const myDoc = (
@@ -61,7 +62,7 @@ function Invoice() {
             <ItemsTableHeader jobInfo={jobInfo} />
             <TableRows items={Items} />
             <TableFooter items={Items} jobInfo={jobInfo} />
-            <PageFooter companyInfo={companyLocation!} />
+            <PageFooter companyInfo={companyLocation!} jobInfo={jobInfo} />
           </Page>
         </Document>
       );
@@ -101,7 +102,7 @@ function Invoice() {
             <ItemsTableHeader jobInfo={jobInfo} />
             <TableRows items={Items} />
             <TableFooter items={Items} jobInfo={jobInfo} />
-            <PageFooter companyInfo={companyLocation!} />
+            <PageFooter companyInfo={companyLocation!} jobInfo={jobInfo} />
           </Page>
         </Document>
       </PDFViewer>
@@ -660,7 +661,19 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Invoice No
           </Text>
         </View>
-        <View style={{ width: "70%" }}></View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.quotationId +
+              "-" +
+              new Date().getMilliseconds().toString()}
+          </Text>
+        </View>
       </View>
       <View
         style={{
@@ -1297,7 +1310,14 @@ function TableFooterCol2({
   );
 }
 
-function PageFooter({ companyInfo }: { companyInfo: CompanyLocationInfo }) {
+function PageFooter({
+  companyInfo,
+  jobInfo,
+}: {
+  companyInfo: CompanyLocationInfo;
+
+  jobInfo: Inquiry & cargoInfo;
+}) {
   return (
     <View
       style={{
@@ -1307,7 +1327,10 @@ function PageFooter({ companyInfo }: { companyInfo: CompanyLocationInfo }) {
       }}
     >
       <View style={{ width: "30%" }}>
-        <Text style={{ fontFamily: "Courier", fontSize: 12 }}>License No#</Text>
+        <Text style={{ fontFamily: "Courier-Bold", fontSize: 12 }}>License No#</Text>
+        <Text style={{ fontFamily: "Courier", fontSize: 12 }}>
+          {jobInfo.licenseNo}
+        </Text>
       </View>
       <View style={{ width: "35%" }}>
         <Text

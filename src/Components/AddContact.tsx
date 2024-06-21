@@ -31,6 +31,7 @@ function AddContact() {
       Address: "",
       Phone: "",
       Company: "",
+      CustomerTrn: "",
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {

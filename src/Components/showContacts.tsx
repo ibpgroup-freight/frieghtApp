@@ -11,6 +11,9 @@ function ShowContacts() {
     { name: "Email" },
     { name: "Phone" },
     { name: "Address" },
+    { name: "Customer TRN" },
+    { name: "Company" },
+
     { name: "Actions" },
   ];
   const [contacts, setcontacts] = useState<FetchContact[]>();
@@ -33,6 +36,7 @@ function ShowContacts() {
             Email: doc.data().email,
             Name: doc.data().name,
             Phone: doc.data().phone,
+            CustomerTrn: doc.data().trn,
             contactId: doc.data().contactId,
           } as Contact,
           id: doc.id,
@@ -92,8 +96,14 @@ function ShowContacts() {
                   <td className="border border-slate-300 p-4">
                     {c.contacts.Address}
                   </td>
+                  <td className="border border-slate-300 p-4">
+                    {c.contacts.CustomerTrn}
+                  </td>
+                  <td className="border border-slate-300 p-4">
+                    {c.contacts.Company}
+                  </td>
                   <td className="border border-slate-300 p-4 space-y-2">
-                    <ButtonBlue onclick={() => {}} text="View" />
+                    {/* <ButtonBlue onclick={() => {}} text="View" /> */}
                     <ButtonBlue
                       onclick={deleteDocument.bind(null, c.id)}
                       text="Delete"
