@@ -95,6 +95,7 @@ type Inquiry = {
   SubtotalExceptTaxes?: string;
   Subtotal?: string;
   licenseNo?: number;
+  bankDetails?: string;
 };
 type PrestationItem = {
   description: string;
@@ -484,4 +485,19 @@ type CargoManifestItems = {
   Shipper: string;
   Charges: string;
   Collect: string;
+};
+
+type BankDetail = {
+  bank: string;
+  branch: string;
+  accountName: string;
+  accountNumber: string;
+  currency: string;
+  foreignPayments: string;
+  IBAN: string;
+  SWIFT: string;
+};
+
+type BankDetails = {
+  [key: string]: BankDetail;
 };
