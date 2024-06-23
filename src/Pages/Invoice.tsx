@@ -669,9 +669,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            {jobInfo?.quotationId +
-              "-" +
-              new Date().getMilliseconds().toString()}
+            {jobInfo?.quotationId}
           </Text>
         </View>
       </View>
