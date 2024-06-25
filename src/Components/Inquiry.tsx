@@ -442,6 +442,7 @@ function Inquiry(props: InquiryAndQuotationProps) {
             <option value="phone">Number</option>
             <option value={"name"}>Name</option>
             <option value={"company"}>Company</option>
+            <option value={"cref"}>Customer Reference Number</option>
           </select>
         </div>
         <div className="mb-4 w-full">

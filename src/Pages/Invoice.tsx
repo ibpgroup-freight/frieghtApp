@@ -793,13 +793,11 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            {(jobInfo.quotationId || jobInfo.Jobid) +
+            {new Date().getMonth() +
               "-" +
-              new Date().getDate() +
+              new Date().getFullYear() +
               "-" +
-              new Date().getMonth() +
-              "-" +
-              new Date().getFullYear()}
+              (jobInfo.quotationId || jobInfo.Jobid)}
           </Text>
         </View>
       </View>

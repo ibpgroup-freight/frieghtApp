@@ -1156,7 +1156,6 @@ function GenerateInvoice() {
       : []),
   ];
   const AWBCol1 = [
-    { name: "Reference Number", label: "ReferenceNumber", type: "text" },
 
     { name: "AgentsIATA", label: "AgentsIATA", type: "text" },
     {
