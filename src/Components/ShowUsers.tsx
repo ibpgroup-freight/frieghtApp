@@ -11,6 +11,7 @@ function Showusers() {
     { name: "Email" },
     { name: "Role" },
     { name: "Phone" },
+
     // { name: "Address" },
   ];
   const [users, setusers] = useState<User[]>();
@@ -73,6 +74,7 @@ function Showusers() {
                   <td className="border border-slate-300 p-4">{c.email}</td>
                   <td className="border border-slate-300 p-4">{c.role}</td>
                   <td className="border border-slate-300 p-4">{c.phone}</td>
+                  
 
                   {/* <td className="border border-slate-300 p-4 space-y-2">
                     <ButtonBlue onclick={() => {}} text="View" />

@@ -23,6 +23,7 @@ function AddContact() {
     { label: "Company", type: "text" },
     { label: "Address", type: "text" },
     { label: "Customer TRN", name: "trn", type: "number" },
+    { label: "Customer Reference Number", name: "cref", type: "number" },
   ];
   const formikObj = useFormik<Contact>({
     initialValues: {
@@ -32,6 +33,7 @@ function AddContact() {
       Phone: "",
       Company: "",
       CustomerTrn: "",
+      cref: "",
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {
@@ -46,6 +48,7 @@ function AddContact() {
           company: values.Company,
           contactId,
           createdAt: serverTimestamp(),
+          cref: values.cref,
         });
         toast.success("Contact Added Successfully");
         formikHelpers.resetForm();

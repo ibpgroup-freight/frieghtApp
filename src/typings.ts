@@ -96,6 +96,7 @@ type Inquiry = {
   Subtotal?: string;
   licenseNo?: number;
   bankDetails?: string;
+  cref?: string;
 };
 type PrestationItem = {
   description: string;
@@ -324,6 +325,7 @@ type Contact = {
   Phone: string;
   Company: string;
   CustomerTrn: string;
+  cref: string;
 };
 
 type FetchContact = { id: string; contacts: Contact };
@@ -487,17 +489,17 @@ type CargoManifestItems = {
   Collect: string;
 };
 
-type BankDetail = {
-  bank: string;
-  branch: string;
+type BankDetails = {
   accountName: string;
+  bank: string;
+  country: string;
+  branch: string;
   accountNumber: string;
   currency: string;
-  foreignPayments: string;
-  IBAN: string;
-  SWIFT: string;
+  iban: string;
+  swift: string;
 };
 
-type BankDetails = {
-  [key: string]: BankDetail;
+type Accounts = {
+  [companyName: string]: BankDetails[];
 };

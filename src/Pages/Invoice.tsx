@@ -200,6 +200,99 @@ function About({
   companyLocation: CompanyLocationInfo;
   jobInfo: Inquiry & cargoInfo;
 }) {
+  const bankDetails: Accounts = {
+    "IBP TRADING W.L.L": [
+      {
+        accountName: "IBP TRADING W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Hidd Branch",
+        accountNumber: "0073026352",
+        currency: "BHD",
+        iban: "BH41NBOB00000073026352",
+        swift: "NBOBBHBM",
+      },
+      {
+        accountName: "IBP TRADING W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Hidd Branch",
+        accountNumber: "0048016926",
+        currency: "USD",
+        iban: "BH04NBOB00000048016926",
+        swift: "NBOBBHBM",
+      },
+    ],
+    "IBP CARGO AND CONSTRUCTION W.L.L": [
+      {
+        accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Palace Avenue Branch",
+        accountNumber: "0075113929",
+        currency: "BHD",
+        iban: "BH28NBOB00000075113929",
+        swift: "NBOBBHBM",
+      },
+    ],
+    "IBP TRADE SERVICES CO.WLL": [
+      {
+        accountName: "IBP TRADE SERVICES CO.WLL",
+        bank: "Ahli United Bank",
+        country: "Bahrain",
+        branch: "Exhibition Avenue Branch",
+        accountNumber: "0011137153001",
+        currency: "BHD",
+        iban: "BH32AUBB00011137153001",
+        swift: "AUBBBHBM",
+      },
+    ],
+    "IBP CARGO SERVICES LLC": [
+      {
+        accountName: "IBP CARGO SERVICES LLC",
+        bank: "Emirates Islamic Bank",
+        country: "UAE",
+        branch: "Jebel Ali Branch",
+        accountNumber: "3708448510701",
+        currency: "AED",
+        iban: "AE840340003708448510701",
+        swift: "MEBLAEADXXX",
+      },
+      {
+        accountName: "IBP CARGO SERVICES LLC",
+        bank: "Emirates Islamic Bank",
+        country: "UAE",
+        branch: "Jebel Ali Branch",
+        accountNumber: "3708448510702",
+        currency: "USD",
+        iban: "AE570340003708448510702",
+        swift: "MEBLAEADXXX",
+      },
+    ],
+    "IBP TRADING LLC": [
+      {
+        accountName: "IBP TRADING LLC",
+        bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
+        country: "UAE",
+        branch: "Sharjah Branch",
+        accountNumber: "0333178283001",
+        currency: "AED",
+        iban: "AE610400000333178283001",
+        swift: "NRAKAEAK",
+      },
+      {
+        accountName: "IBP TRADING LLC",
+        bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
+        country: "UAE",
+        branch: "Sharjah Branch",
+        accountNumber: "0333178283002",
+        currency: "USD",
+        iban: "AE340400000333178283002",
+        swift: "NRAKAEAK",
+      },
+    ],
+  };
+  const selectedBank = bankDetails[jobInfo.bankDetails!];
   return (
     <>
       <View
@@ -219,7 +312,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {companyLocation?.name}
+            {selectedBank[0]?.accountName}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -319,7 +412,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
             Posting Date
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -349,7 +442,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
             Due Date
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -379,7 +472,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
             Origin
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -413,7 +506,7 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
             Destination
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -426,6 +519,36 @@ function AuxiliaryInfo({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
               : jobInfo.type.includes("sea") || jobInfo.type.includes("Sea")
               ? jobInfo.PortOfDestination
               : jobInfo.AirportOfDestination}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "100%",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ borderRight: 1, width: "30%", padding: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Customer Ref
+          </Text>
+        </View>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo.cref}
           </Text>
         </View>
       </View>
@@ -496,7 +619,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Bill To {"   "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -526,7 +649,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             TRN Number {"  "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -556,7 +679,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Address {"  "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -586,7 +709,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Phone
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -616,7 +739,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Email
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -632,6 +755,7 @@ function ReceiverCol1({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
   );
 }
 function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
+  console.log(jobInfo, "jobinfo");
   return (
     <View
       style={{
@@ -661,7 +785,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Invoice No
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -669,7 +793,13 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               fontSize: 7,
             }}
           >
-            {jobInfo?.quotationId}
+            {(jobInfo.quotationId || jobInfo.Jobid) +
+              "-" +
+              new Date().getDate() +
+              "-" +
+              new Date().getMonth() +
+              "-" +
+              new Date().getFullYear()}
           </Text>
         </View>
       </View>
@@ -691,7 +821,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             bl # {"  "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -721,7 +851,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Served By {"   "}
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -751,7 +881,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             Job #
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           {" "}
           <Text
             style={{
@@ -783,7 +913,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
             H.A.W.B
           </Text>
         </View>
-        <View style={{ width: "70%" }}>
+        <View style={{ width: "70%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1316,87 +1446,97 @@ function PageFooter({
 
   jobInfo: Inquiry & cargoInfo;
 }) {
-  const bankDetails: BankDetails = {
-    "IBP TRADING WLL-BHD": {
-      bank: "NATIONAL BANK OF BAHRAIN",
-      branch: "HIDD BRANCH",
-      accountName: "IBP TRADING W.L.L",
-      accountNumber: "0073026352",
-      currency: "BAHRAIN DINAR CURRENT ACCOUNT",
-      foreignPayments: "",
-      IBAN: "BH41NBOB00000073026352",
-      SWIFT: "NBOBBHBM",
-    },
-    "IBP TRADING WLL-USD": {
-      bank: "NATIONAL BANK OF BAHRAIN",
-      branch: "HIDD BRANCH",
-      accountName: "IBP TRADING W.L.L",
-      accountNumber: "0048016926",
-      currency: "USD CURRENT ACCOUNT",
-      foreignPayments: "",
-      IBAN: "BH04NBOB00000048016926",
-      SWIFT: "NBOBBHBM",
-    },
-    "IBP CARGO AND CONSTRUCTION WLL-BHD": {
-      bank: "NATIONAL BANK OF BAHRAIN",
-      branch: "PALACE AVENUE BRANCH",
-      accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
-      accountNumber: "0075113929",
-      currency: "BAHRAIN DINAR CURRENT ACCOUNT",
-      foreignPayments: "",
-      IBAN: "BH28NBOB00000075113929",
-      SWIFT: "NBOBBHBM",
-    },
-    "IBP TRADE SERVICE WLL.-BHD": {
-      bank: "AHLI UNITED BANK",
-      branch: "EXHIBITION AVENUE BRANCH",
-      accountName: "IBP TRADE SERVICES CO.WLL",
-      accountNumber: "0011137153001",
-      currency: "BAHRAIN DINAR CURRENT ACCOUNT",
-      foreignPayments: "",
-      IBAN: "BH32AUBB00011137153001",
-      SWIFT: "AUBBBHBM",
-    },
-    "IBP CARGO SERVICES LLC.-AED": {
-      bank: "EMIRATES ISLAMIC BANK",
-      branch: "JEBEL ALI BRANCH",
-      accountName: "IBP CARGO SERVICES LLC.",
-      accountNumber: "3708448510701",
-      currency: "ARAB EMIRATES DIRHAM ACCOUNT",
-      foreignPayments: "",
-      IBAN: "AE840340003708448510701",
-      SWIFT: "MEBLAEADXXX",
-    },
-    "IBP CARGO SERVICES LLC.-USD": {
-      bank: "EMIRATES ISLAMIC BANK",
-      branch: "JEBEL ALI BRANCH",
-      accountName: "IBP CARGO SERVICES LLC.",
-      accountNumber: "3708448510702",
-      currency: "USD CURRENT ACCOUNT",
-      foreignPayments: "",
-      IBAN: "AE570340003708448510702",
-      SWIFT: "MEBLAEADXXX",
-    },
-    "IBP TRADING LLC.-AED": {
-      bank: "THE NATIONAL BANK OF RAS AL KHAIMAH (RAK-BANK)",
-      branch: "SHARJAH BRANCH",
-      accountName: "IBP TRADING LLC",
-      accountNumber: "0333178283001",
-      currency: "ARAB EMIRATES DIRHAM ACCOUNT",
-      foreignPayments: "",
-      IBAN: "AE610400000333178283001",
-      SWIFT: "NRAKAEAK",
-    },
-    "IBP TRADING LLC.-USD": {
-      bank: "THE NATIONAL BANK OF RAS AL KHAIMAH (RAK-BANK)",
-      branch: "SHARJAH BRANCH",
-      accountName: "IBP TRADING LLC",
-      accountNumber: "0333178283002",
-      currency: "USD CURRENT ACCOUNT",
-      foreignPayments: "",
-      IBAN: "AE340400000333178283002",
-      SWIFT: "NRAKAEAK",
-    },
+  const bankDetails: Accounts = {
+    "IBP TRADING W.L.L": [
+      {
+        accountName: "IBP TRADING W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Hidd Branch",
+        accountNumber: "0073026352",
+        currency: "BHD",
+        iban: "BH41NBOB00000073026352",
+        swift: "NBOBBHBM",
+      },
+      {
+        accountName: "IBP TRADING W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Hidd Branch",
+        accountNumber: "0048016926",
+        currency: "USD",
+        iban: "BH04NBOB00000048016926",
+        swift: "NBOBBHBM",
+      },
+    ],
+    "IBP CARGO AND CONSTRUCTION W.L.L": [
+      {
+        accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Palace Avenue Branch",
+        accountNumber: "0075113929",
+        currency: "BHD",
+        iban: "BH28NBOB00000075113929",
+        swift: "NBOBBHBM",
+      },
+    ],
+    "IBP TRADE SERVICES CO.WLL": [
+      {
+        accountName: "IBP TRADE SERVICES CO.WLL",
+        bank: "Ahli United Bank",
+        country: "Bahrain",
+        branch: "Exhibition Avenue Branch",
+        accountNumber: "0011137153001",
+        currency: "BHD",
+        iban: "BH32AUBB00011137153001",
+        swift: "AUBBBHBM",
+      },
+    ],
+    "IBP CARGO SERVICES LLC": [
+      {
+        accountName: "IBP CARGO SERVICES LLC",
+        bank: "Emirates Islamic Bank",
+        country: "UAE",
+        branch: "Jebel Ali Branch",
+        accountNumber: "3708448510701",
+        currency: "AED",
+        iban: "AE840340003708448510701",
+        swift: "MEBLAEADXXX",
+      },
+      {
+        accountName: "IBP CARGO SERVICES LLC",
+        bank: "Emirates Islamic Bank",
+        country: "UAE",
+        branch: "Jebel Ali Branch",
+        accountNumber: "3708448510702",
+        currency: "USD",
+        iban: "AE570340003708448510702",
+        swift: "MEBLAEADXXX",
+      },
+    ],
+    "IBP TRADING LLC": [
+      {
+        accountName: "IBP TRADING LLC",
+        bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
+        country: "UAE",
+        branch: "Sharjah Branch",
+        accountNumber: "0333178283001",
+        currency: "AED",
+        iban: "AE610400000333178283001",
+        swift: "NRAKAEAK",
+      },
+      {
+        accountName: "IBP TRADING LLC",
+        bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
+        country: "UAE",
+        branch: "Sharjah Branch",
+        accountNumber: "0333178283002",
+        currency: "USD",
+        iban: "AE340400000333178283002",
+        swift: "NRAKAEAK",
+      },
+    ],
   };
   const selectedBank = bankDetails[jobInfo.bankDetails!];
   return (
@@ -1416,35 +1556,37 @@ function PageFooter({
         </Text>
       </View>
       <View style={{ width: "35%" }}>
-        <Text
-          style={{
-            textDecoration: "underline",
-            fontFamily: "Courier",
-            fontSize: 12,
-          }}
-        >
-          BANK Details AED Account
-        </Text>
-        <View>
-          <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
-            Account Name: {"   "} {selectedBank?.accountName}
-          </Text>
-          <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
-            Account No: {"   "} {selectedBank?.accountNumber}
-          </Text>
-          <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
-            Bank Name: {"   "} {selectedBank?.bank}
-          </Text>
-          <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
-            IBAN: {"   "} {selectedBank?.IBAN}
-          </Text>
-          <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
-            Branch Name: {"   "} {selectedBank?.branch}
-          </Text>
-          <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
-            Swift Code: {"   "} {selectedBank?.SWIFT}
-          </Text>
-        </View>
+        {selectedBank.map((b, i) => (
+          <View>
+            <Text
+              style={{
+                textDecoration: "underline",
+                fontFamily: "Courier-Bold",
+                fontSize: 12,
+              }}
+            >
+              BANK Details {b.currency.toLocaleUpperCase()} Account
+            </Text>
+            <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+              Account Name: {"   "} {b?.accountName}
+            </Text>
+            <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+              Account No: {"   "} {b?.accountNumber}
+            </Text>
+            <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+              Bank Name: {"   "} {b?.bank}
+            </Text>
+            <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+              IBAN: {"   "} {b?.iban}
+            </Text>
+            <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+              Branch Name: {"   "} {b?.branch}
+            </Text>
+            <Text style={{ fontSize: 9, fontFamily: "Courier" }}>
+              Swift Code: {"   "} {b?.swift}
+            </Text>
+          </View>
+        ))}
       </View>
     </View>
   );
