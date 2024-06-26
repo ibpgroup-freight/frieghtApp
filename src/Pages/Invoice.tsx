@@ -56,7 +56,7 @@ function Invoice() {
               )}
               fixed
             />
-            <InvoiceHeader jobInfo={jobInfo} />
+            <InvoiceHeader jobInfo={jobInfo} location={companyLocation!} />
             <CompanyInfo jobInfo={jobInfo} location={companyLocation!} />
             <BillToInfo jobInfo={jobInfo} />
             <ItemsTableHeader jobInfo={jobInfo} />
@@ -96,7 +96,7 @@ function Invoice() {
               )}
               fixed
             />
-            <InvoiceHeader jobInfo={jobInfo} />
+            <InvoiceHeader jobInfo={jobInfo} location={companyLocation!} />
             <CompanyInfo jobInfo={jobInfo} location={companyLocation!} />
             <BillToInfo jobInfo={jobInfo} />
             <ItemsTableHeader jobInfo={jobInfo} />
@@ -116,7 +116,14 @@ function Invoice() {
   );
 }
 
-function InvoiceHeader({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
+function InvoiceHeader({
+  jobInfo,
+  location,
+}: {
+  jobInfo: Inquiry & cargoInfo;
+
+  location: CompanyLocationInfo;
+}) {
   const bankDetails: Accounts = {
     "IBP TRADING W.L.L (Bahrain)": [
       {
@@ -238,7 +245,7 @@ function InvoiceHeader({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
       </View>
       <View style={{ width: "70%", alignItems: "flex-start" }}>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          {selectedBank[0]?.accountName}
+          {location.name}
         </Text>
       </View>
     </View>
