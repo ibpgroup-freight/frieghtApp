@@ -898,7 +898,8 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               "-" +
               new Date().getFullYear() +
               "-" +
-              (jobInfo.quotationId || jobInfo.Jobid)}
+              (jobInfo.quotationId?.slice(-1, -3) ||
+                jobInfo?.Jobid?.slice(-1, -3))}
           </Text>
         </View>
       </View>
