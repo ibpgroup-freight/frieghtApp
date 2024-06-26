@@ -1241,6 +1241,11 @@ function GenerateInvoice() {
             name: "cref",
             type: "text",
           },
+          {
+            label: "Currency",
+            name: "currency",
+            type: "text",
+          },
         ]
       : []),
     ...(formikObj.values.type?.includes("Lading")

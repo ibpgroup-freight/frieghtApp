@@ -97,6 +97,7 @@ type Inquiry = {
   licenseNo?: number;
   bankDetails?: string;
   cref?: string;
+  currency?: string;
 };
 type PrestationItem = {
   description: string;

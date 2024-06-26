@@ -1139,7 +1139,7 @@ function ItemsTableHeader({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
         <Text
           style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
         >
-          Total Amount AED
+          Total Amount {jobInfo?.currency || ""}
         </Text>
       </View>
     </View>
@@ -1360,7 +1360,7 @@ function TableFooterCol2({
             Total Before VAT
           </Text>
         </View>
-        <View style={{ width: "40%",paddingLeft:2 }}>
+        <View style={{ width: "40%", paddingLeft: 2 }}>
           {" "}
           <Text
             style={{
@@ -1399,7 +1399,7 @@ function TableFooterCol2({
             VAT Amount
           </Text>
         </View>
-        <View style={{ width: "40%",paddingLeft:2 }}>
+        <View style={{ width: "40%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1437,7 +1437,7 @@ function TableFooterCol2({
             After VAT
           </Text>
         </View>
-        <View style={{ width: "40%",paddingLeft:2 }}>
+        <View style={{ width: "40%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1475,7 +1475,7 @@ function TableFooterCol2({
             Outstanding Dues
           </Text>
         </View>
-        <View style={{ width: "40%",paddingLeft:2 }}>
+        <View style={{ width: "40%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1514,7 +1514,7 @@ function TableFooterCol2({
             Grand Total
           </Text>
         </View>
-        <View style={{ width: "40%",paddingLeft:2 }}>
+        <View style={{ width: "40%", paddingLeft: 2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
