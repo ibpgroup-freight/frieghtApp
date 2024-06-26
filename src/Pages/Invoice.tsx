@@ -56,7 +56,7 @@ function Invoice() {
               )}
               fixed
             />
-            <InvoiceHeader />
+            <InvoiceHeader jobInfo={jobInfo} />
             <CompanyInfo jobInfo={jobInfo} location={companyLocation!} />
             <BillToInfo jobInfo={jobInfo} />
             <ItemsTableHeader jobInfo={jobInfo} />
@@ -96,7 +96,7 @@ function Invoice() {
               )}
               fixed
             />
-            <InvoiceHeader />
+            <InvoiceHeader jobInfo={jobInfo} />
             <CompanyInfo jobInfo={jobInfo} location={companyLocation!} />
             <BillToInfo jobInfo={jobInfo} />
             <ItemsTableHeader jobInfo={jobInfo} />
@@ -116,7 +116,100 @@ function Invoice() {
   );
 }
 
-function InvoiceHeader() {
+function InvoiceHeader({ jobInfo }: { jobInfo: Inquiry & cargoInfo }) {
+  const bankDetails: Accounts = {
+    "IBP TRADING W.L.L (Bahrain)": [
+      {
+        accountName: "IBP TRADING W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Hidd Branch",
+        accountNumber: "0073026352",
+        currency: "BHD",
+        iban: "BH41NBOB00000073026352",
+        swift: "NBOBBHBM",
+      },
+      {
+        accountName: "IBP TRADING W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Hidd Branch",
+        accountNumber: "0048016926",
+        currency: "USD",
+        iban: "BH04NBOB00000048016926",
+        swift: "NBOBBHBM",
+      },
+    ],
+    "IBP CARGO AND CONSTRUCTION W.L.L (Bahrain)": [
+      {
+        accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
+        bank: "National Bank of Bahrain",
+        country: "Bahrain",
+        branch: "Palace Avenue Branch",
+        accountNumber: "0075113929",
+        currency: "BHD",
+        iban: "BH28NBOB00000075113929",
+        swift: "NBOBBHBM",
+      },
+    ],
+    "IBP TRADE SERVICES CO.WLL (Bahrain)": [
+      {
+        accountName: "IBP TRADE SERVICES CO.WLL",
+        bank: "Ahli United Bank",
+        country: "Bahrain",
+        branch: "Exhibition Avenue Branch",
+        accountNumber: "0011137153001",
+        currency: "BHD",
+        iban: "BH32AUBB00011137153001",
+        swift: "AUBBBHBM",
+      },
+    ],
+    "IBP CARGO SERVICES LLC (UAE)": [
+      {
+        accountName: "IBP CARGO SERVICES LLC",
+        bank: "Emirates Islamic Bank",
+        country: "UAE",
+        branch: "Jebel Ali Branch",
+        accountNumber: "3708448510701",
+        currency: "AED",
+        iban: "AE840340003708448510701",
+        swift: "MEBLAEADXXX",
+      },
+      {
+        accountName: "IBP CARGO SERVICES LLC",
+        bank: "Emirates Islamic Bank",
+        country: "UAE",
+        branch: "Jebel Ali Branch",
+        accountNumber: "3708448510702",
+        currency: "USD",
+        iban: "AE570340003708448510702",
+        swift: "MEBLAEADXXX",
+      },
+    ],
+    "IBP TRADING LLC (UAE)": [
+      {
+        accountName: "IBP TRADING LLC",
+        bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
+        country: "UAE",
+        branch: "Sharjah Branch",
+        accountNumber: "0333178283001",
+        currency: "AED",
+        iban: "AE610400000333178283001",
+        swift: "NRAKAEAK",
+      },
+      {
+        accountName: "IBP TRADING LLC",
+        bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
+        country: "UAE",
+        branch: "Sharjah Branch",
+        accountNumber: "0333178283002",
+        currency: "USD",
+        iban: "AE340400000333178283002",
+        swift: "NRAKAEAK",
+      },
+    ],
+  };
+  const selectedBank = bankDetails[jobInfo.bankDetails!];
   return (
     <View
       style={{
@@ -145,7 +238,7 @@ function InvoiceHeader() {
       </View>
       <View style={{ width: "70%", alignItems: "flex-start" }}>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          IBP Cargo Services L.L.C
+          {selectedBank[0]?.accountName}
         </Text>
       </View>
     </View>
@@ -201,7 +294,7 @@ function About({
   jobInfo: Inquiry & cargoInfo;
 }) {
   const bankDetails: Accounts = {
-    "IBP TRADING W.L.L": [
+    "IBP TRADING W.L.L (Bahrain)": [
       {
         accountName: "IBP TRADING W.L.L",
         bank: "National Bank of Bahrain",
@@ -223,7 +316,7 @@ function About({
         swift: "NBOBBHBM",
       },
     ],
-    "IBP CARGO AND CONSTRUCTION W.L.L": [
+    "IBP CARGO AND CONSTRUCTION W.L.L (Bahrain)": [
       {
         accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
         bank: "National Bank of Bahrain",
@@ -235,7 +328,7 @@ function About({
         swift: "NBOBBHBM",
       },
     ],
-    "IBP TRADE SERVICES CO.WLL": [
+    "IBP TRADE SERVICES CO.WLL (Bahrain)": [
       {
         accountName: "IBP TRADE SERVICES CO.WLL",
         bank: "Ahli United Bank",
@@ -247,7 +340,7 @@ function About({
         swift: "AUBBBHBM",
       },
     ],
-    "IBP CARGO SERVICES LLC": [
+    "IBP CARGO SERVICES LLC (UAE)": [
       {
         accountName: "IBP CARGO SERVICES LLC",
         bank: "Emirates Islamic Bank",
@@ -269,7 +362,7 @@ function About({
         swift: "MEBLAEADXXX",
       },
     ],
-    "IBP TRADING LLC": [
+    "IBP TRADING LLC (UAE)": [
       {
         accountName: "IBP TRADING LLC",
         bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
@@ -293,6 +386,7 @@ function About({
     ],
   };
   const selectedBank = bankDetails[jobInfo.bankDetails!];
+  console.log("selectedBank", selectedBank);
   return (
     <>
       <View
@@ -312,7 +406,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {selectedBank[0]?.accountName}
+            {companyLocation?.name}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
@@ -1266,7 +1360,7 @@ function TableFooterCol2({
             Total Before VAT
           </Text>
         </View>
-        <View style={{ width: "40%" }}>
+        <View style={{ width: "40%",paddingLeft:2 }}>
           {" "}
           <Text
             style={{
@@ -1305,7 +1399,7 @@ function TableFooterCol2({
             VAT Amount
           </Text>
         </View>
-        <View style={{ width: "40%" }}>
+        <View style={{ width: "40%",paddingLeft:2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1343,7 +1437,7 @@ function TableFooterCol2({
             After VAT
           </Text>
         </View>
-        <View style={{ width: "40%" }}>
+        <View style={{ width: "40%",paddingLeft:2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1381,7 +1475,7 @@ function TableFooterCol2({
             Outstanding Dues
           </Text>
         </View>
-        <View style={{ width: "40%" }}>
+        <View style={{ width: "40%",paddingLeft:2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1420,7 +1514,7 @@ function TableFooterCol2({
             Grand Total
           </Text>
         </View>
-        <View style={{ width: "40%" }}>
+        <View style={{ width: "40%",paddingLeft:2 }}>
           <Text
             style={{
               fontFamily: "Courier-Bold",
@@ -1445,7 +1539,7 @@ function PageFooter({
   jobInfo: Inquiry & cargoInfo;
 }) {
   const bankDetails: Accounts = {
-    "IBP TRADING W.L.L": [
+    "IBP TRADING W.L.L (Bahrain)": [
       {
         accountName: "IBP TRADING W.L.L",
         bank: "National Bank of Bahrain",
@@ -1467,7 +1561,7 @@ function PageFooter({
         swift: "NBOBBHBM",
       },
     ],
-    "IBP CARGO AND CONSTRUCTION W.L.L": [
+    "IBP CARGO AND CONSTRUCTION W.L.L (Bahrain)": [
       {
         accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
         bank: "National Bank of Bahrain",
@@ -1479,7 +1573,7 @@ function PageFooter({
         swift: "NBOBBHBM",
       },
     ],
-    "IBP TRADE SERVICES CO.WLL": [
+    "IBP TRADE SERVICES CO.WLL (Bahrain)": [
       {
         accountName: "IBP TRADE SERVICES CO.WLL",
         bank: "Ahli United Bank",
@@ -1491,7 +1585,7 @@ function PageFooter({
         swift: "AUBBBHBM",
       },
     ],
-    "IBP CARGO SERVICES LLC": [
+    "IBP CARGO SERVICES LLC (UAE)": [
       {
         accountName: "IBP CARGO SERVICES LLC",
         bank: "Emirates Islamic Bank",
@@ -1513,7 +1607,7 @@ function PageFooter({
         swift: "MEBLAEADXXX",
       },
     ],
-    "IBP TRADING LLC": [
+    "IBP TRADING LLC (UAE)": [
       {
         accountName: "IBP TRADING LLC",
         bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
@@ -1537,6 +1631,7 @@ function PageFooter({
     ],
   };
   const selectedBank = bankDetails[jobInfo.bankDetails!];
+  console.log("selecteddddd bank ", jobInfo);
   return (
     <View
       style={{
@@ -1554,7 +1649,7 @@ function PageFooter({
         </Text>
       </View>
       <View style={{ width: "35%" }}>
-        {selectedBank.map((b, i) => (
+        {selectedBank?.map((b, i) => (
           <View>
             <Text
               style={{

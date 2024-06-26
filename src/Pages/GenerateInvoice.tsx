@@ -271,46 +271,8 @@ const validationSchema = yup.object().shape(
         otherwise: (schema) => schema.notRequired(),
       })
       .required("Estimated Arrival Time is required"),
-    ContainerType: yup
-      .string()
-      .when("CustomContainerType", ([CustomContainerType], schema) => {
-        return CustomContainerType
-          ? schema.notRequired()
-          : schema.required(
-              "Either Container Type Or Custom Container Type is required"
-            );
-      })
-      .when("type", {
-        is: (type: string) =>
-          !type?.includes("Lading") &&
-          !type?.includes("Air") &&
-          type !== "CargoManifest" &&
-          type !== "Quotation" &&
-          type !== "ProofOfDelivery" &&
-          type !== "Quotation",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      }),
-    CustomContainerType: yup
-      .string()
-      .when("ContainerType", ([ContainerType], schema) => {
-        return ContainerType
-          ? schema.notRequired()
-          : schema.required(
-              "Either Container Type Or Custom Container Type is required"
-            );
-      })
-      .when("type", {
-        is: (type: string) =>
-          !type?.includes("Lading") &&
-          !type?.includes("Air") &&
-          type !== "CargoManifest" &&
-          type !== "Quotation" &&
-          type !== "ProofOfDelivery" &&
-          type !== "Quotation",
-        then: (schema) => schema.required(),
-        otherwise: (schema) => schema.notRequired(),
-      }),
+    ContainerType: yup.string(),
+    CustomContainerType: yup.string(),
     PortOfLoading: yup.string().when("type", {
       is: (type: string) => type?.includes("Lading"),
       then: (schema) => schema.required(),
@@ -1156,7 +1118,6 @@ function GenerateInvoice() {
       : []),
   ];
   const AWBCol1 = [
-
     { name: "AgentsIATA", label: "AgentsIATA", type: "text" },
     {
       name: "IssuingCarriersName",
@@ -1420,7 +1381,6 @@ function GenerateInvoice() {
             name: "CustomerAccount",
             type: "text",
           },
-       
         ]
       : []),
     ,
@@ -1653,7 +1613,7 @@ function GenerateInvoice() {
   console.log(formikObj.errors, "errors");
   const [searchType, setsearchType] = useState<string>("quotation");
   const bankDetails: Accounts = {
-    "IBP TRADING W.L.L": [
+    "IBP TRADING W.L.L (Bahrain)": [
       {
         accountName: "IBP TRADING W.L.L",
         bank: "National Bank of Bahrain",
@@ -1675,7 +1635,7 @@ function GenerateInvoice() {
         swift: "NBOBBHBM",
       },
     ],
-    "IBP CARGO AND CONSTRUCTION W.L.L": [
+    "IBP CARGO AND CONSTRUCTION W.L.L (Bahrain)": [
       {
         accountName: "IBP CARGO AND CONSTRUCTION W.L.L",
         bank: "National Bank of Bahrain",
@@ -1687,7 +1647,7 @@ function GenerateInvoice() {
         swift: "NBOBBHBM",
       },
     ],
-    "IBP TRADE SERVICES CO.WLL": [
+    "IBP TRADE SERVICES CO.WLL (Bahrain)": [
       {
         accountName: "IBP TRADE SERVICES CO.WLL",
         bank: "Ahli United Bank",
@@ -1699,7 +1659,7 @@ function GenerateInvoice() {
         swift: "AUBBBHBM",
       },
     ],
-    "IBP CARGO SERVICES LLC": [
+    "IBP CARGO SERVICES LLC (UAE)": [
       {
         accountName: "IBP CARGO SERVICES LLC",
         bank: "Emirates Islamic Bank",
@@ -1721,7 +1681,7 @@ function GenerateInvoice() {
         swift: "MEBLAEADXXX",
       },
     ],
-    "IBP TRADING LLC": [
+    "IBP TRADING LLC (UAE)": [
       {
         accountName: "IBP TRADING LLC",
         bank: "The National Bank of Ras Al Khaimah (RAK-BANK)",
