@@ -900,6 +900,7 @@ function ReceiverCol2({ jobInfo }: { jobInfo: cargoInfo & Inquiry }) {
               "-" +
               (jobInfo.quotationId?.slice(-1, -3) ||
                 jobInfo?.Jobid?.slice(-1, -3))}
+            +{Math.random() * 10}
           </Text>
         </View>
       </View>
