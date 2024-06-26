@@ -245,7 +245,7 @@ function InvoiceHeader({
       </View>
       <View style={{ width: "70%", alignItems: "flex-start" }}>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          {location.name}
+          {selectedBank[0]?.accountName}
         </Text>
       </View>
     </View>
@@ -413,7 +413,7 @@ function About({
               fontSize: 7,
             }}
           >
-            {companyLocation?.name}
+            {selectedBank[0]?.accountName}
           </Text>
         </View>
         <View style={{ borderBottomWidth: 1, width: "100%", padding: 1 }}>
