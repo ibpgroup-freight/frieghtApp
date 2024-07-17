@@ -450,7 +450,7 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & ladleInquiry }) {
         <Image style={[styles.logo]} src={logo} />
         <Text style={{ fontFamily: "Courier-Bold", fontSize: 10 }}>
           Bill Of Lading .{`\n`}
-          Issued By IBP CARGO SERVICES LLC.
+          Issued By {jobInfo.IssuedBy}
         </Text>
       </View>
       <View

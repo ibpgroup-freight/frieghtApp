@@ -98,6 +98,7 @@ type Inquiry = {
   bankDetails?: string;
   cref?: string;
   currency?: string;
+  IssuedBy?: string;
 };
 type PrestationItem = {
   description: string;
@@ -282,6 +283,7 @@ type ladleInquiry = {
   FreightCollected: string;
   TotalFreight: string;
   OriginalBSL: string;
+  IssuedBy?: string;
 };
 type InvoiceStore = {
   jobInfo: cargoInfo & Inquiry;
@@ -441,6 +443,7 @@ type AirwayBillInquiry = {
   secondBy: string;
   thirdTo: string;
   thirdBy: string;
+  IssuedBy?: string;
 };
 
 type AirwayItem = {

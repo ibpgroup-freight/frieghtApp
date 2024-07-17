@@ -525,7 +525,7 @@ function InvoiceHeader({ jobinfo }: { jobinfo: Inquiry }) {
       </View>
       <View style={{ width: "70%", alignItems: "flex-start" }}>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
-          IBP Cargo Services L.L.C
+          {jobinfo.IssuedBy}
         </Text>
         <Text style={{ fontFamily: "Courier", fontSize: 15 }}>
           Quotation Number {jobinfo?.quotationId}
@@ -1519,7 +1519,10 @@ function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
                   {ind}
                 </Text>
 
-                <Text style={{ fontSize: 10, fontFamily: "Courier-Bold" }}> {s + `${"\n"}`}</Text>
+                <Text style={{ fontSize: 10, fontFamily: "Courier-Bold" }}>
+                  {" "}
+                  {s + `${"\n"}`}
+                </Text>
               </React.Fragment>
             ))}
           </Text>

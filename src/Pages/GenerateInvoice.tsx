@@ -409,6 +409,7 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
+    IssuedBy: yup.string(),
     bankDetails: yup.string().when("type", {
       is: (type: string) =>
         type === "AirFreight" ||
@@ -495,11 +496,7 @@ const validationSchema = yup.object().shape(
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
-    OtherColl: yup.string().when("type", {
-      is: (type: string) => type === "AirwayBill",
-      then: (schema) => schema.required(),
-      otherwise: (schema) => schema.notRequired(),
-    }),
+    OtherColl: yup.string(),
     DeclaredValCarriage: yup.string().when("type", {
       is: (type: string) => type === "AirwayBill",
       then: (schema) => schema.required(),
@@ -1183,6 +1180,11 @@ function GenerateInvoice() {
       name: "AccountingInformation",
       type: "textarea",
     },
+    {
+      label: "Issued By (Company name)",
+      name: "IssuedBy",
+      type: "text",
+    },
   ];
   const Column2Items = [
     ...(formikObj.values.type === "AirwayBill"
@@ -1237,6 +1239,7 @@ function GenerateInvoice() {
             name: "licenseNo",
             type: "text",
           },
+
           {
             label: "Customer Ref",
             name: "cref",
@@ -1331,6 +1334,11 @@ function GenerateInvoice() {
           {
             label: "Original BSL",
             name: "OriginalBSL",
+            type: "text",
+          },
+          {
+            label: "Issued By (Company Name)",
+            name: "IssuedBy",
             type: "text",
           },
         ]
@@ -1510,6 +1518,11 @@ function GenerateInvoice() {
       label: "validTo",
       name: "validTo",
       type: "date",
+    },
+    {
+      label: "Issued By(Enter Company name)",
+      name: "IssuedBy",
+      type: "text",
     },
     {
       label: "other Shipping Details",

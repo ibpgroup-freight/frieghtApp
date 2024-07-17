@@ -644,8 +644,8 @@ function Column2({ jobInfo }: { jobInfo: cargoInfo & AirwayBillInquiry }) {
         <Image style={styles.logo} src={logo} />
         <Text style={{ fontFamily: "Courier-Bold", fontSize: 7 }}>
           Not Negotiable .{`\n`}
-          Issued By IBP CARGO SERVICES LLC.{"\n"} Copies1,2 and 3 of this
-          AirWaybill{`\n`} are originals and have the same{"\n"} validity
+          Issued By {jobInfo.IssuedBy}.{"\n"} Copies1,2 and 3 of this AirWaybill
+          {`\n`} are originals and have the same{"\n"} validity
         </Text>
       </View>
       <View
