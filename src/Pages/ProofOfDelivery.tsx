@@ -46,7 +46,8 @@ function ProofOfDelivery() {
       const myDoc = (
         <Document>
           <Page size="A4" style={styles.page}>
-            <PageHeader />
+            <PageHeader info={PODInfo} />
+
             <PresentationHeader />
             <Table />
             <TableRows podItems={PODItems} />
@@ -74,7 +75,7 @@ function ProofOfDelivery() {
       <PDFViewer className="w-full h-screen">
         <Document>
           <Page size="A4" style={styles.page}>
-            <PageHeader />
+            <PageHeader info={PODInfo} />
             <PresentationHeader />
             <Table />
             <TableRows podItems={PODItems} />
@@ -94,7 +95,7 @@ function ProofOfDelivery() {
   );
 }
 
-function PageHeader() {
+function PageHeader({ info }: { info: cargoInfo & ProofOfDeliveryInquiry }) {
   return (
     <View
       style={{
@@ -126,7 +127,7 @@ function PageHeader() {
             textAlign: "left",
           }}
         >
-          IBP Cargo Services LLC
+          {info.HeaderAddress}
         </Text>
       </View>
     </View>
@@ -198,7 +199,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
               fontWeight: "ultralight",
@@ -215,7 +216,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -231,7 +232,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -247,7 +248,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -263,7 +264,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -279,7 +280,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -299,7 +300,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -315,7 +316,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -331,7 +332,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -349,7 +350,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -365,7 +366,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}
@@ -381,7 +382,7 @@ function TableHeader({ podInfo }: { podInfo: ProofOfDeliveryInquiry }) {
           <Text
             style={{
               fontFamily: "Courier-Bold",
-              
+
               textAlign: "center",
               fontSize: 13,
             }}

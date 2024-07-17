@@ -275,6 +275,7 @@ const useinvoiceStore = create<InvoiceStore>((set, get) => ({
     ShippersPO: 0,
     ShippersTRN: 0,
     ShipperEmail: "",
+    HeaderAddress: "",
   },
   ManifestItems: [],
   PODItems: [],

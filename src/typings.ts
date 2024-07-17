@@ -466,6 +466,7 @@ type ProofOfDeliveryInquiry = {
   MobileNumber: string;
   CompanyStamp: string;
   Remarks: string;
+  HeaderAddress: string;
 };
 
 type ProofOfDeliveryItems = {

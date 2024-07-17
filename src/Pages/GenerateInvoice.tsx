@@ -374,7 +374,8 @@ const validationSchema = yup.object().shape(
       otherwise: (schema) => schema.notRequired(),
     }),
     HeaderAddress: yup.string().when("type", {
-      is: (type: string) => type === "CargoManifest",
+      is: (type: string) =>
+        type === "CargoManifest" || type == "ProofOfDelivery",
       then: (schema) => schema.required(),
       otherwise: (schema) => schema.notRequired(),
     }),
@@ -1535,6 +1536,8 @@ function GenerateInvoice() {
     { label: "Mobile Number", name: "MobileNumber", type: "text" },
     { label: "Company Stamp", name: "CompanyStamp", type: "text" },
     { label: "Remarks", name: "Remarks", type: "textarea" },
+    { label: "Header Address", name: "HeaderAddress", type: "textarea" },
+
     {
       label: "Address",
       name: "officeAddress",
