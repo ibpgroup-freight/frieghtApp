@@ -193,7 +193,13 @@ type Quotation = {
   prestation: PrestationItem[];
   method: string;
 };
-type JobStatus = "completed" | "pending" | "cancelled";
+type JobStatus =
+  | "completed"
+  | "pending"
+  | "cancelled"
+  | "In transit"
+  | "under Customs Clearance"
+  | "Delivered";
 type QuotationStatus = "approved" | "pending" | "disapproved";
 
 type JobStore = {

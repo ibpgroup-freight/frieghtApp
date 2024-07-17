@@ -165,6 +165,11 @@ function Search() {
                 <>
                   <option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
+                  <option value="In transit">In Transit</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="under Customs Clearance">
+                    Under Customs Clearance
+                  </option>
                 </>
               )}
               {searchType == "quotations" && searchBy == "status" && (

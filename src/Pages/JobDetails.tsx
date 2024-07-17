@@ -34,7 +34,7 @@ const JobDetails = () => {
     // { label: "Cost And Sell Section", name: "CostAndSellSection" },
   ];
   return (
-    <div className="w-full px-8 lg:px-0  container mx-auto my-8">
+    <div className="w-full px-8   container mx-auto my-8">
       <h1 className="text-3xl font-bold mb-6">Job Details</h1>
 
       <div className="bg-gray-100 p-6 rounded-md mb-6">

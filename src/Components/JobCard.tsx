@@ -80,11 +80,17 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
         </td>
         <td className="border border-slate-300 p-4 text-blue-500 font-bold">
           {/*@ts-ignore */}
-          {`${new Timestamp(job?.createdAt?.seconds, job?.createdAt?.nanoseconds)
+          {`${new Timestamp(
+            (job as any)?.createdAt?.seconds,
+            (job as any)?.createdAt?.nanoseconds
+          )
             .toDate()
             .toLocaleDateString()} `}
           {/*@ts-ignore */}
-          {`${new Timestamp(job?.createdAt?.seconds, job?.createdAt?.nanoseconds)
+          {`${new Timestamp(
+            (job as any)?.createdAt?.seconds,
+            (job as any)?.createdAt?.nanoseconds
+          )
             .toDate()
             .toLocaleTimeString()} `}
         </td>
@@ -97,7 +103,7 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
         {/* <td className="border border-slate-300 p-4">
               {i.CostAndSellSection}
             </td> */}
-        <td className=" flex flex-col   px-2 justify-center self-center my-1 items-start">
+        <td className="border border-slate-300 p-4 border-none text-blue-500  flex flex-col    justify-center self-center  items-start">
           <ButtonBlue text="View" onclick={ViewJob} customStyle={""} />
           {role === "Admin" && (
             <ButtonBlue
@@ -117,17 +123,39 @@ function JobCard({ job, ondelete, status, refresh, inquiry }: pageProps) {
           )}
         </td>
         <td className="border border-slate-300 p-4">{status}</td>
-        <td className="border-0 border-slate-300 px-1 flex justify-center flex-col space-y-4">
+        <td className="border border-slate-300 p-4 text-blue-500  flex flex-col    justify-center self-center  items-start">
           <ButtonBlue
             text="Cancel Job"
-            customStyle="!px-0 hover:text-black"
+            customStyle="!px-0 hover:text-black !my-0 !mx-0 "
             onclick={() => changeJob(job.id!, "cancelled")}
             isloading={job?.id === isdeleting?.id}
             disabled={job?.id === isdeleting?.id}
           />
           <ButtonBlue
             text="Mark Completed"
+            customStyle="!px-0 hover:text-black !my-0 !mx-0  whitespace-nowrap"
             onclick={() => changeJob(job.id!, "completed")}
+            isloading={job?.id === isdeleting?.id}
+            disabled={job?.id === isdeleting?.id}
+          />
+          <ButtonBlue
+            text="In Transit"
+            customStyle="!px-0 hover:text-black !my-0 !mx-0  whitespace-nowrap"
+            onclick={() => changeJob(job.id!, "In transit")}
+            isloading={job?.id === isdeleting?.id}
+            disabled={job?.id === isdeleting?.id}
+          />
+          <ButtonBlue
+            text="under Customs Clearance"
+            customStyle="!px-0 hover:text-black !my-0 !mx-0  whitespace-nowrap"
+            onclick={() => changeJob(job.id!, "under Customs Clearance")}
+            isloading={job?.id === isdeleting?.id}
+            disabled={job?.id === isdeleting?.id}
+          />
+          <ButtonBlue
+            text="Delivered"
+            customStyle="!px-0 hover:text-black !my-0 !mx-0  whitespace-nowrap"
+            onclick={() => changeJob(job.id!, "Delivered")}
             isloading={job?.id === isdeleting?.id}
             disabled={job?.id === isdeleting?.id}
           />
