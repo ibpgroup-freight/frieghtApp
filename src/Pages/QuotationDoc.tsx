@@ -1112,6 +1112,96 @@ function ReceiverCol2({ jobInfo }: { jobInfo: Inquiry }) {
           </Text>{" "}
         </View>
       </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "100%",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ borderRight: 1, width: "30%", padding: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Customer Email
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerEmail}
+          </Text>{" "}
+        </View>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "100%",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ borderRight: 1, width: "30%", padding: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Customer Name
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerName}
+          </Text>{" "}
+        </View>
+      </View>
+      <View
+        style={{
+          borderBottomWidth: 1,
+          width: "100%",
+          flexDirection: "row",
+        }}
+      >
+        <View style={{ borderRight: 1, width: "30%", padding: 1 }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            Customer Phone
+          </Text>
+        </View>
+        <View style={{ width: "70%" }}>
+          <Text
+            style={{
+              fontFamily: "Courier-Bold",
+
+              fontSize: 7,
+            }}
+          >
+            {jobInfo?.CustomerPhoneNo}
+          </Text>{" "}
+        </View>
+      </View>
     </View>
   );
 }
@@ -1204,7 +1294,7 @@ function PrestationTableRows({ items }: { items: PrestationItem[] }) {
         <Text
           style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
         >
-          {index}{" "}
+          {index + 1}{" "}
         </Text>
       </View>
       <View
@@ -1516,7 +1606,7 @@ function SalesTerms({ jobinfo }: { jobinfo: Inquiry }) {
             {jobinfo.termsAndConditions?.map((s, ind) => (
               <React.Fragment key={ind}>
                 <Text style={{ fontFamily: "Courier-Bold", fontSize: 15 }}>
-                  {ind}
+                  {ind + 1}
                 </Text>
 
                 <Text style={{ fontSize: 10, fontFamily: "Courier-Bold" }}>
@@ -1662,7 +1752,7 @@ function GoodsTableRows({ items }: { items: QuotationItem[] }) {
         <Text
           style={{ fontFamily: "Courier", fontSize: 9, textAlign: "center" }}
         >
-          {ind}
+          {ind + 1}
         </Text>
       </View>
       <View

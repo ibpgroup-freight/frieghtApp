@@ -129,11 +129,7 @@ const validationSchema = Yup.object().shape({
     then: (schema) => schema.required("RatePerCharge is required"),
     otherwise: (schema) => schema.notRequired(),
   }),
-  MAWB: Yup.string().when("type", {
-    is: (type: string) => type === "ProofOfDelivery",
-    then: (schema) => schema.required("MAWB is required"),
-    otherwise: (schema) => schema.notRequired(),
-  }),
+  MAWB: Yup.string(),
   HAWBNo: Yup.string(),
   CBM: Yup.string().when("type", {
     is: (type: string) => type === "ProofOfDelivery",
