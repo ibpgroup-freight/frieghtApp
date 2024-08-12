@@ -80,7 +80,7 @@ function AddContact() {
           ))}
 
           <button
-            className="w-32 text-center bg-blue-700 mx-auto text-white my-5 mx-auto p-2 py-3 rounded-md cursor-pointer"
+            className="w-32 text-center bg-blue-700 mx-auto text-white my-5 p-2 py-3 rounded-md cursor-pointer"
             type="submit"
           >
             {loading ? (
