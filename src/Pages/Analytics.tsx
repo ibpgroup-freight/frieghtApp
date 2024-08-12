@@ -3,7 +3,7 @@ import SideBar from "../Components/SIdeBar";
 import useJob from "../store/Jobs";
 import JobCard from "../Components/JobCard";
 import { useNavigate } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase";
 import CustomLoader from "../Components/CustomLoader";
 import { toast } from "react-toastify";
@@ -41,7 +41,9 @@ function Analytics() {
     try {
       setisloading(true);
       const jobs: Job[] = [];
-      const docSnapshot = await getDocs(collection(db, "jobs"));
+      const docSnapshot = await getDocs(
+        query(collection(db, "jobs"), orderBy("createdAt",'desc'))
+      );
       if (docSnapshot.empty) return populateJobs([]);
       docSnapshot.forEach((doc) => {
         jobs.push({ ...(doc.data() as Job), id: doc.id });
@@ -58,7 +60,10 @@ function Analytics() {
     try {
       setisloading(true);
       const Quotations: Quotation[] = [];
-      const docSnapshot = await getDocs(collection(db, "quotations"));
+
+      const docSnapshot = await getDocs(
+        query(collection(db, "quotations"), orderBy("createdAt",'desc'))
+      );
       if (docSnapshot.empty) return populateQuotations([]);
       docSnapshot.forEach((doc) => {
         Quotations.push({ ...(doc.data() as Quotation), id: doc.id });
