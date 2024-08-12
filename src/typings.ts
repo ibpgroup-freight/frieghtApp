@@ -334,7 +334,7 @@ type Contact = {
   Phone: string;
   Company: string;
   CustomerTrn: string;
-  cref: string;
+  CustomerReferenceNumber: string;
 };
 
 type FetchContact = { id: string; contacts: Contact };

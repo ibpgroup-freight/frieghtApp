@@ -17,13 +17,13 @@ const validationSchema = Yup.object().shape({
 function AddContact() {
   const [loading, setisloading] = useState<boolean>(false);
   const inputOptions = [
-    { label: "Name", type: "text" },
-    { label: "Email", type: "email" },
-    { label: "Phone", type: "number" },
-    { label: "Company", type: "text" },
-    { label: "Address", type: "text" },
-    { label: "Customer TRN", name: "trn", type: "number" },
-    { label: "Customer Reference Number", name: "cref", type: "number" },
+    { label: "Name", name: "name", type: "text" },
+    { label: "Email", name: "email", type: "email" },
+    { label: "Phone", name: "phone", type: "number" },
+    { label: "Company", name: "company", type: "text" },
+    { label: "Address", name: "address", type: "text" },
+    // { label: "Customer TRN", name: "trn", type: "number" },
+    { label: "CustomerReferenceNumber", name: "cref", type: "number" },
   ];
   const formikObj = useFormik<Contact>({
     initialValues: {
@@ -33,7 +33,7 @@ function AddContact() {
       Phone: "",
       Company: "",
       CustomerTrn: "",
-      cref: "",
+      CustomerReferenceNumber: "",
     },
     validationSchema,
     async onSubmit(values, formikHelpers) {
@@ -48,7 +48,7 @@ function AddContact() {
           company: values.Company,
           contactId,
           createdAt: serverTimestamp(),
-          cref: values.cref,
+          cref: values.CustomerReferenceNumber,
         });
         toast.success("Contact Added Successfully");
         formikHelpers.resetForm();

@@ -11,7 +11,7 @@ function ShowContacts() {
     { name: "Email" },
     { name: "Phone" },
     { name: "Address" },
-    { name: "Customer TRN" },
+    // { name: "Customer TRN" },
     { name: "Company" },
     { name: "Customer Ref" },
 
@@ -39,7 +39,7 @@ function ShowContacts() {
             Phone: doc.data().phone,
             CustomerTrn: doc.data().trn,
             contactId: doc.data().contactId,
-            cref: doc.data().cref,
+            CustomerReferenceNumber: doc.data().cref,
           } as Contact,
           id: doc.id,
         })
@@ -98,14 +98,14 @@ function ShowContacts() {
                   <td className="border border-slate-300 p-4">
                     {c.contacts.Address}
                   </td>
-                  <td className="border border-slate-300 p-4">
+                  {/* <td className="border border-slate-300 p-4">
                     {c.contacts.CustomerTrn}
-                  </td>
+                  </td> */}
                   <td className="border border-slate-300 p-4">
                     {c.contacts.Company}
                   </td>
                   <td className="border border-slate-300 p-4">
-                    {c.contacts.cref}
+                    {c.contacts.CustomerReferenceNumber}
                   </td>
                   <td className="border border-slate-300 p-4 space-y-2">
                     {/* <ButtonBlue onclick={() => {}} text="View" /> */}
