@@ -9,14 +9,13 @@ import { useNavigate } from "react-router-dom";
 import CustomLoader from "../Components/CustomLoader";
 import { addDoc, doc, serverTimestamp, setDoc } from "firebase/firestore";
 function Authenticate() {
-  const [Loading, setLoading] = useState<boolean>(false);
   const [signup, setsignup] = useState(false);
   const { AuthStateLogIn } = useUser();
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const phoneRed = useRef<HTMLInputElement | null>(null);
-
+  const [Loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const logInUser = async () => {
     setLoading(true);
@@ -90,6 +89,12 @@ function Authenticate() {
           className="focus:outline-none px-2 py-3 border-2 border-slate-500 rounded-md w-80"
           ref={passwordRef}
         />
+        <button
+          className="  text-sky-400 rounded-md px-2 py-3 "
+          onClick={() => navigate("/forgotpassword")}
+        >
+          Forgot Password?
+        </button>
         <button
           className="bg-sky-500  text-white rounded-md px-2 py-3 "
           onClick={signup ? registerUser : logInUser}

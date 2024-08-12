@@ -21,6 +21,7 @@ import useCompanyInfo from "./store/CompanyInfo";
 import ProofOfDelivery from "./Pages/ProofOfDelivery";
 import Invoice from "./Pages/Invoice";
 import Documents from "./Pages/Documents";
+import ForgotPassword from "./Pages/ForgotPassword";
 const CargoManifest = React.lazy(() => import("./Pages/CargoManifest"));
 const GenerateJob = React.lazy(() => import("./Pages/GenerateJob"));
 const BillOfLaddle = React.lazy(() => import("./Pages/BillOfLaddle"));
@@ -124,6 +125,8 @@ function App() {
         ) : (
           <Routes>
             <Route path="/auth" Component={Authenticate} />
+            <Route path="/forgotpassword" Component={ForgotPassword} />
+
             <Route path="*" Component={Authenticate} />
           </Routes>
         )}
