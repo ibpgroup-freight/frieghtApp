@@ -18,6 +18,8 @@ import { deleteObject, getDownloadURL, list, ref } from "firebase/storage";
 import { toast } from "react-toastify";
 import { LoaderIcon } from "react-hot-toast";
 import AddDocument from "../Components/AddDocument";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 type searchType = "jobs" | "quotations";
 
 function Documents() {
@@ -50,12 +52,6 @@ function Documents() {
         })
       );
 
-      // Filter files based on search query
-      console.log("files", files);
-      // const filteredFiles = files.filter((file) =>
-      //   file.name.includes(searchValue)
-      // );
-
       setSearchResults(files);
     } catch (error) {
       console.error("Error searching files:", error);
@@ -64,7 +60,34 @@ function Documents() {
       setisloading(false);
     }
   };
-
+  const downloadAllHandler = async () => {
+    try {
+      toast.info("Downloading Now");
+      const storageRef = ref(storage, searchValue);
+      const listResult = await list(storageRef);
+      if (listResult.items.length == 0) {
+        toast.info("No Documents For This Id Exists.");
+        return;
+      }
+      const zip = new JSZip();
+      for (const file of SearchResults) {
+        console.log(file.downloadUrl);
+        const url = await getDownloadURL(ref(storage, file.location));
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Failed to fetch ${file.name}`);
+        const blob = await res?.blob();
+        zip.file(file.name, blob);
+      }
+      await zip.generateAsync({ type: "blob" }).then((content) => {
+        saveAs(content, searchValue);
+      });
+    } catch (error) {
+      console.error("Error Downloading files:", error);
+      toast.error("Couldnt Download Your Documents.Please Try Again.");
+    } finally {
+      setisloading(false);
+    }
+  };
   const deleteFileFromdb = async (location: string, name: string) => {
     try {
       const docref = ref(storage, location);
@@ -132,6 +155,15 @@ function Documents() {
                 "Search"
               )}
             </button>
+            {SearchResults.length > 1 && (
+              <button
+                className="bg-blue-500 rounded-md text-white px-3 py-2 my-4 lg:my-0"
+                onClick={downloadAllHandler}
+                disabled={loading}
+              >
+                Download All
+              </button>
+            )}
           </div>
           <div className="w-full  lg:mx-auto overflow-auto ">
             {loading ? (
