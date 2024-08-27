@@ -319,7 +319,7 @@ function AddQuotation({
     // { label: "Min Units", name: "minUnits", type: "number" },
     { label: "Units", name: "Units", type: "text" },
     { label: "Weight (Optional)", name: "Weight", type: "number" },
-    { label: "Dimensions (Optional)", name: "Dimensions", type: "text" },
+    { label: "Dimensions (L X W X H)", name: "Dimensions", type: "text" },
   ];
   const Column2 = [
     {
