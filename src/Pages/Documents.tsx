@@ -14,7 +14,14 @@ import CustomLoader from "../Components/CustomLoader";
 import { useNavigate } from "react-router-dom";
 import useItemStore from "../store/Item";
 import useInquiryItem from "../store/Inquiry";
-import { deleteObject, getDownloadURL, list, ref } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  list,
+  ref,
+  getBlob,
+  listAll,
+} from "firebase/storage";
 import { toast } from "react-toastify";
 import { LoaderIcon } from "react-hot-toast";
 import AddDocument from "../Components/AddDocument";
@@ -64,23 +71,34 @@ function Documents() {
     try {
       toast.info("Downloading Now");
       const storageRef = ref(storage, searchValue);
-      const listResult = await list(storageRef);
-      if (listResult.items.length == 0) {
+
+      // Fetch all items under the path
+      const listResult = await listAll(storageRef);
+
+      if (listResult.items.length === 0) {
         toast.info("No Documents For This Id Exists.");
         return;
       }
+
       const zip = new JSZip();
-      for (const file of SearchResults) {
-        console.log(file.downloadUrl);
-        const url = await getDownloadURL(ref(storage, file.location));
+
+      for (const fileRef of listResult.items) {
+        // Get the file as a Blob
+        const url = await getDownloadURL(ref(storage, fileRef.fullPath));
+        console.log("download url", url);
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`Failed to fetch ${file.name}`);
+        if (!res.ok) throw new Error(`Failed to fetch ${fileRef.name}`);
         const blob = await res?.blob();
-        zip.file(file.name, blob);
+
+        // Add the file to the ZIP archive
+        zip.file(fileRef.name, blob);
       }
-      await zip.generateAsync({ type: "blob" }).then((content) => {
-        saveAs(content, searchValue);
-      });
+
+      // Generate the ZIP file and trigger the download
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      saveAs(zipBlob, `${searchValue}.zip`);
+
+      toast.success("Files downloaded successfully!");
     } catch (error) {
       console.error("Error Downloading files:", error);
       toast.error("Couldnt Download Your Documents.Please Try Again.");
@@ -88,6 +106,7 @@ function Documents() {
       setisloading(false);
     }
   };
+
   const deleteFileFromdb = async (location: string, name: string) => {
     try {
       const docref = ref(storage, location);
@@ -155,7 +174,7 @@ function Documents() {
                 "Search"
               )}
             </button>
-            {SearchResults.length > 1 && (
+            {/* {SearchResults.length > 1 && (
               <button
                 className="bg-blue-500 rounded-md text-white px-3 py-2 my-4 lg:my-0"
                 onClick={downloadAllHandler}
@@ -163,7 +182,7 @@ function Documents() {
               >
                 Download All
               </button>
-            )}
+            )} */}
           </div>
           <div className="w-full  lg:mx-auto overflow-auto ">
             {loading ? (
